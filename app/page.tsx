@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import '../app/styles/global.css'
 import styles from './styles/header.module.css'
 import Admin from './admin/page'
 
