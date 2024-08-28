@@ -80,6 +80,11 @@
   border-top: none; /* Remove top border to avoid double borders between items */
 }
 
+.dropdownContent a:hover {
+  background-color: #d0f0c0;
+  color: black
+}
+
 .dropdownContent a:first-child {
   border-top-left-radius: 8px; /* Round the top-left corner */
   border-top-right-radius: 8px; /* Round the top-right corner */
