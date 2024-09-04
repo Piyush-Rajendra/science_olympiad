@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import styles from './styles/header.module.css'
-import Admin from './admin/page'
 import NewTournamentForm from './components/newTournamentForm';
 import TournamentView from './components/tournamentView';
 
@@ -33,9 +32,7 @@ export default function app() {
     </nav>
   </div>
   <div>
-    <Admin>
       <NewTournamentForm />
-    </Admin>
   </div>
 </div>
  );
