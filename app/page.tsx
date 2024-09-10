@@ -1,5 +1,6 @@
-import NewTournamentForm from './components/newTournamentForm';
+import TournamentSum from './components/TournamentSum';
 import TournamentView from './components/tournamentView';
+import Groups from './components/Groups';
 
 
 export default function app() {
@@ -16,7 +17,7 @@ export default function app() {
  );*/
  return (
   <div>
-    <NewTournamentForm />
+    <TournamentSum />
   </div>
  )
 }
