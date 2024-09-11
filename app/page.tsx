@@ -4,6 +4,7 @@ import Link from 'next/link'
 import './styles/header.module.css'
 import NewTournamentForm from './components/newTournamentForm';
 import TournamentView from './components/tournamentView';
+import AttendanceView from './components/AttendanceView'
 import home_logo from './images/house.png'
 import book_logo from './images/book-bookmark.png'
 import chart_logo from './images/chart-bar.png'
@@ -94,6 +95,9 @@ export default function app() {
         </ul>
         <button className="sign-out-button">Sign Out</button>
   </div>
+  <div>
+  </div>
+  
 </div>
  );
 }
