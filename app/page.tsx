@@ -25,74 +25,75 @@ export default function app() {
  
   return (
 
-
+<div>
   <div className="sidebar">
-  <div className="sidebar-header">
-      <h1>Science Olympiad</h1>
-  </div>
-   <ul className="sidebar-menu">
-        <li
-          className={selected === 'home' ? 'selected' : ''}
-          onClick={() => handleClick('home')}
-        >
+    <div className="sidebar-header">
+        <h1>Admin Panel</h1>
+    </div>
+    <ul className="sidebar-menu">
+          <li
+            className={selected === 'home' ? 'selected' : ''}
+            onClick={() => handleClick('home')}
+          >
 
-          <h2><Image
-            src={home_logo}
-            alt="Logo"
-          />Home</h2>
-        </li>
-        <li
-          className={selected === 'create' ? 'selected' : ''}
-          onClick={() => handleClick('create')}
-        >
-                    
-          <h2><Image
-            src={plus_logo}
-            alt="Logo"
-          />Create Tournament</h2>
-        </li>
-        <li
-          className={selected === 'manage' ? 'selected' : ''}
-          onClick={() => handleClick('manage')}
-        >
-                    
-          <h2><Image
-            src={share_logo}
-            alt="Logo"
-          />Manage Tournaments</h2>
-        </li>
-        <li
-          className={selected === 'attendance' ? 'selected' : ''}
-          onClick={() => handleClick('attendance')}
-        >
-                    
-          <h2><Image
-            src={user_logo}
-            alt="Logo"
-          />Attendance</h2>
-        </li>
-        <li
-          className={selected === 'score' ? 'selected' : ''}
-          onClick={() => handleClick('score')}
-        >
-                    
-          <h2><Image
-            src={chart_logo}
-            alt="Logo"
-          />Score</h2>
-        </li>
-        <li
-          className={selected === 'resources' ? 'selected' : ''}
-          onClick={() => handleClick('resources')}
-        >
-                    
-          <h2><Image
-            src={book_logo}
-            alt="Logo"
-          />Resource Library</h2>
-        </li>
-      </ul>
-      <button className="sign-out-button">Sign Out</button>
+            <h2><Image
+              src={home_logo}
+              alt="Logo"
+            />Home</h2>
+          </li>
+          <li
+            className={selected === 'create' ? 'selected' : ''}
+            onClick={() => handleClick('create')}
+          >
+                      
+            <h2><Image
+              src={plus_logo}
+              alt="Logo"
+            />Create Tournament</h2>
+          </li>
+          <li
+            className={selected === 'manage' ? 'selected' : ''}
+            onClick={() => handleClick('manage')}
+          >
+                      
+            <h2><Image
+              src={share_logo}
+              alt="Logo"
+            />Manage Tournaments</h2>
+          </li>
+          <li
+            className={selected === 'attendance' ? 'selected' : ''}
+            onClick={() => handleClick('attendance')}
+          >
+                      
+            <h2><Image
+              src={user_logo}
+              alt="Logo"
+            />Attendance</h2>
+          </li>
+          <li
+            className={selected === 'score' ? 'selected' : ''}
+            onClick={() => handleClick('score')}
+          >
+                      
+            <h2><Image
+              src={chart_logo}
+              alt="Logo"
+            />Score</h2>
+          </li>
+          <li
+            className={selected === 'resources' ? 'selected' : ''}
+            onClick={() => handleClick('resources')}
+          >
+                      
+            <h2><Image
+              src={book_logo}
+              alt="Logo"
+            />Resource Library</h2>
+          </li>
+        </ul>
+        <button className="sign-out-button">Sign Out</button>
+  </div>
 </div>
  );
 }
