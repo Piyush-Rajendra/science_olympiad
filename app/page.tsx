@@ -2,11 +2,16 @@ import Link from 'next/link'
 import styles from './styles/header.module.css'
 import NewTournamentForm from './components/newTournamentForm';
 import TournamentView from './components/tournamentView';
+import CreateTourney from './create-tourney/create-tourney';
+import CreateEvent from './create-tourney/create-event';
+import EventItem from './create-tourney/event-item';
+import NewEventForm from './create-tourney/new-event-form';
+import TimeBlockItem from './create-tourney/time-block-item';
 
 export default function app() {
  return (
-  <div>
-  <div className={styles.header}>
+  <div className='bg-white'>
+  {/*<div className={styles.header}>
     <div className={styles.titleSection}>
       <h1 className={styles.title}>Science Olympiad</h1>
       <p className={styles.subtitle}>Exploring the world of science</p>
@@ -30,9 +35,9 @@ export default function app() {
       <div className={styles.separator} />
       <Link href="/account" className={styles.navLink}>Account</Link>
     </nav>
-  </div>
-  <div>
-      <NewTournamentForm />
+  </div> */}
+  <div> 
+    <CreateEvent />
   </div>
 </div>
  );
