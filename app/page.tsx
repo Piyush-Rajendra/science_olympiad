@@ -13,6 +13,11 @@ import share_logo from './images/share-network.png'
 import user_logo from './images/user-list.png'
 import Image from 'next/image';
 import { useState } from 'react';
+import CreateTourney from './create-tourney/create-tourney';
+import CreateEvent from './create-tourney/create-event';
+import EventItem from './create-tourney/event-item';
+import NewEventForm from './create-tourney/new-event-form';
+import TimeBlockItem from './create-tourney/time-block-item';
 
 export default function app() {
  
@@ -96,8 +101,8 @@ export default function app() {
         <button className="sign-out-button">Sign Out</button>
   </div>
   <div>
+    <CreateEvent/>
   </div>
-  
 </div>
  );
 }
