@@ -16,7 +16,7 @@ export default function App() {
   const [selected, setSelected] = useState<MenuItem | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true'); // Track login state
 
-  type MenuItem = 'home' | 'create' | 'manage' | 'attendance' | 'score' | 'resources';
+  type MenuItem = 'home' | 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
 
   const handleClick = (item: MenuItem) => {
     setSelected(item);
@@ -68,12 +68,21 @@ export default function App() {
                   </h2>
                 </li>
                 <li
-                  className={selected === 'manage' ? 'selected' : ''}
-                  onClick={() => handleClick('manage')}
+                  className={selected === 'manage_t' ? 'selected' : ''}
+                  onClick={() => handleClick('manage_t')}
                 >
                   <h2>
                     <img src="/images/share-network.png" alt="Logo" />
                     Manage Tournaments
+                  </h2>
+                </li>
+                <li
+                  className={selected === 'manage_a&e' ? 'selected' : ''}
+                  onClick={() => handleClick('manage_a&e')}
+                >
+                  <h2>
+                    <img src="/images/address-book.png" alt="Logo" />
+                    Manage Admins and ES
                   </h2>
                 </li>
                 <li
@@ -110,6 +119,11 @@ export default function App() {
               {/* Display content based on selection */}
               {selected === 'attendance' && <AttendanceView />}
               {selected === 'create' && <CreateTournament />}
+              {selected === 'home'}
+              {selected === 'manage_t'}
+              {selected === 'manage_a&e'}
+              {selected === 'score'}
+              {selected === 'resources'}
             </div>
           </div>
       </div>
