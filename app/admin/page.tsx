@@ -108,6 +108,7 @@ export default function App() {
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTournament />}
+          {selected === 'manage_t' && <div>Manage Tournament</div>}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
           {selected === 'score' && <div>Score</div>}
           {selected === 'resources' && <div>Resource Library</div>}
