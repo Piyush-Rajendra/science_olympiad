@@ -38,7 +38,7 @@ export default function app() {
     </nav>
   </div> */}
   <div> 
-    <CreateEvent />
+    <Score />
   </div>
 </div>
  );
