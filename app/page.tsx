@@ -40,7 +40,6 @@ export default function App() {
   if (isLoggedIn !== true) {
     return null;
   }
-
     return (
       <div>
           <div>
