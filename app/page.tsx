@@ -7,6 +7,7 @@ import CreateEvent from './create-tourney/create-event';
 import EventItem from './create-tourney/event-item';
 import NewEventForm from './create-tourney/new-event-form';
 import TimeBlockItem from './create-tourney/time-block-item';
+import Score from './score/score';
 
 export default function app() {
  return (
