@@ -32,7 +32,7 @@ body {
     justify-content: center; /* Horizontally centers the text */
     align-items: center; /* Vertically centers the text */
     text-align: center;
-    height: 91px; /* Optional: Adjust the height of the header as needed */
+    height: 80px; /* Optional: Adjust the height of the header as needed */
   }
   .sidebar-header img {
     margin-right: 10px; /* Adds some space between the image and text */
@@ -88,4 +88,8 @@ body {
 
   .sidebar-menu li.selected h2 {
     background-color: grey; /* Color for the selected item */
+  }
+
+  .content {
+    margin-left: 300px; /* Matches the sidebar width */
   }
