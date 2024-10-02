@@ -1,7 +1,5 @@
-import TournamentSum from './components/TournamentSum';
-import TournamentView from './components/tournamentView';
-import Groups from './components/Groups';
-
+import ManageTournament from "./components/ManageTournament/ManageTournament"
+import Groups from "./components/Groups/Groups"
 
 export default function app() {
  /*return (
@@ -17,7 +15,7 @@ export default function app() {
  );*/
  return (
   <div>
-    <TournamentSum />
+    <ManageTournament />
   </div>
  )
 }
