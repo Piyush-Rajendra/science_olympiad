@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import GeneralRules from '../components/generalRules';
+import GeneralRules from './generalRules';
+import FAQ from './faq';
 
 const ResourceLibrary = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -15,11 +16,11 @@ const ResourceLibrary = () => {
         <h1 className="font-bold text-2xl">Resource Library</h1>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 pl-10">
         {/* Tabs */}
         <div className="bloc-tabs flex space-x-2">
           <div
-            className={`tabs cursor-pointer py-2 px-4 rounded-lg transition-all duration-300 ${
+            className={`tabs cursor-pointer py-2 px-4 rounded-t-lg transition-all duration-300 ${
               activeTab === 1
                 ? 'bg-green-700 text-white font-semibold outline outline-2 outline-black'
                 : 'bg-gray-200 text-gray-600 hover:bg-green-300'
@@ -29,7 +30,7 @@ const ResourceLibrary = () => {
             General Rules
           </div>
           <div
-            className={`tabs cursor-pointer py-2 px-4 rounded-lg transition-all duration-300 ${
+            className={`tabs cursor-pointer py-2 px-4 rounded-t-lg transition-all duration-300 ${
               activeTab === 2
                 ? 'bg-green-700 text-white font-semibold outline outline-2 outline-black'
                 : 'bg-gray-200 text-gray-600 hover:bg-green-300'
@@ -39,16 +40,17 @@ const ResourceLibrary = () => {
             FAQ
           </div>
         </div>
+        <hr className="border-t-2 border-gray-300 w-full" />
 
         {/* Tab Content */}
-        <div className="content-tabs mt-6">
+        <div className="content-tabs">
           {activeTab === 1 && (
             <GeneralRules/>
           )}
           {activeTab === 2 && (
-            <div className="content active-content">
-              <h2 className="text-xl font-bold mb-4">FAQ</h2>
-              <p className="text-gray-600">This is where the FAQ content will go.</p>
+            <div className="">
+              {/* <p className="text-gray-600">This is where the FAQ content will go.</p> */}
+              <FAQ/>
             </div>
           )}
         </div>

@@ -31,18 +31,18 @@ const GeneralRules = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto pr-4 py-6">
 
       {/* Tab Content */}
-      <div className="content-tabs mt-6">
+      <div className="content-tabs">
         {activeTab === 1 && (
           <div>
-            <div className="content active-content flex items-center justify-center bg-gray-100">
+            <div className="flex items-center justify-center bg-gray-100">
               <DocViewer pdfUrl={pdfUrl} />
             </div>
 
             {/* Sticky Bottom container for buttons */}
-            <div className="fixed bottom-0 left-[310px] w-[1225px] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
+            <div className="fixed bottom-0 left-[300px] w-[calc(100%-300px)] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
               {/* Open File Explorer Button */}
               <label className="cursor-pointer flex items-center text-green-700 rounded-lg p-2">
                 <input
@@ -58,8 +58,7 @@ const GeneralRules = () => {
               {/* Save Changes Button */}
               <button
                 onClick={handleSaveChanges}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-750"
-              >
+                className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-750">
                 Save Changes
               </button>
             </div>
