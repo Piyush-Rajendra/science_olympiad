@@ -9,6 +9,9 @@ import { useState, useEffect } from 'react';
 import CreateTourney from '../components/create-tourney/create-tourney';
 import CreateTourneyLanding from '../components/create-tourney/create-tourney-landing';
 import Score from '../components/score/score';
+import ManageUsers from '../pages/manageUsers';
+import ManageTournament from '../components/ManageTournament/ManageTournament';
+import 
 
 export default function App() {
   const router = useRouter();
@@ -123,8 +126,8 @@ export default function App() {
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTourneyLanding />}
-          {selected === 'manage_t' && <div>Manage Tournament</div>}
-          {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
+          {selected === 'manage_t' && <div><ManageTournament/></div>}
+          {selected === 'manage_a&e' && <div><ManageUsers/></div>}
           {selected === 'score' && <Score />}
           {selected === 'resources' && <div>Resource Library</div>}
         </div>
