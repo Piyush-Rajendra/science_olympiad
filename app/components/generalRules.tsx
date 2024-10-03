@@ -45,14 +45,15 @@ const GeneralRules = () => {
             <div className="h-20 border-b border-gray-300 flex items-center pl-10">
             <div className="fixed bottom-0 left-[310px] w-[1225px] p-4 flex justify-between items-center bg-white shadow-lg">
               {/* Open File Explorer Button */}
-              <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Open File
+              <label className="cursor-pointer flex items-center text-green-700 rounded-lg p-2">
                 <input
                   type="file"
                   accept="application/pdf"
                   className="hidden"
                   onChange={handleFileChange}
                 />
+                <span className="text-2xl font-bold mr-2">+</span>
+                <span className="font-medium">Upload PDF File</span>
               </label>
 
               {/* Save Changes Button */}
