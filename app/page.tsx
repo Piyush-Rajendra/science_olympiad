@@ -13,8 +13,14 @@ export default function App() {
     // Simulating a successful login - you can replace this with actual login logic
     if (email === 'admin@example.com' && password === 'password123') {
       localStorage.setItem('isLoggedIn', 'true');
-      router.push('/admin?loggedIn=true'); // Redirect to home or another route after login
-    } else {
+      router.push('/admin?loggedIn=true&role=admin'); // Redirect to home or another route after login
+    } else if (email === 'es@example.com' && password === 'password123') {
+      router.push('/admin?loggedIn=true&role=es');
+    } else if (email === 'superadmin@example.com' && password === 'password123') {
+      router.push('/admin?loggedIn=true&role=admin');
+    }
+    
+    else {
       alert('Invalid email or password'); // Basic error handling
     }
   };

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import '../styles/header.module.css';
 import AttendanceView from '../pages/attendanceView';
 import CreateTournament from '../pages/create-tournament';
-import Login from '../log-in/page';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
@@ -12,11 +11,13 @@ export default function App() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const loggedIn = searchParams.get('loggedIn');
+  const userType = searchParams.get('role');
 
   // Track login state and set default selected menu item to 'create'
   const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true'); 
+  const [isAdmin, setIsAdmin] = useState(userType ===  'admin');
   type MenuItem = 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
-  const [selected, setSelected] = useState<MenuItem>('create');
+  const [selected, setSelected] = useState<MenuItem>(isAdmin ? 'create' : 'resources');
 
   const handleClick = (item: MenuItem) => {
     setSelected(item);
@@ -42,27 +43,37 @@ export default function App() {
       <div>
         <div className="sidebar">
           <div className="sidebar-header">
-            <h1>Admin Panel</h1>
+            {isAdmin &&
+            <h1>Admin Portal</h1>
+            }
+            {!isAdmin &&
+            <h1>ES Portal</h1>
+            }
           </div>
           <ul className="sidebar-menu">
-            <li
-              className={selected === 'create' ? 'selected' : ''}
-              onClick={() => handleClick('create')}
-            >
-              <h2>
-                <img src="/images/plus-circle.png" alt="Logo" />
-                Create Tournament
-              </h2>
-            </li>
-            <li
-              className={selected === 'manage_t' ? 'selected' : ''}
-              onClick={() => handleClick('manage_t')}
-            >
-              <h2>
-                <img src="/images/share-network.png" alt="Logo" />
-                Manage Tournaments
-              </h2>
-            </li>
+            {isAdmin &&
+              <li
+                className={selected === 'create' ? 'selected' : ''}
+                onClick={() => handleClick('create')}
+              >
+                <h2>
+                  <img src="/images/plus-circle.png" alt="Logo" />
+                  Create Tournament
+                </h2>
+              </li>
+            }
+            {isAdmin && 
+              <li
+                className={selected === 'manage_t' ? 'selected' : ''}
+                onClick={() => handleClick('manage_t')}
+              >
+                <h2>
+                  <img src="/images/share-network.png" alt="Logo" />
+                  Manage Tournaments
+                </h2>
+              </li>
+            }
+            {isAdmin && 
             <li
               className={selected === 'manage_a&e' ? 'selected' : ''}
               onClick={() => handleClick('manage_a&e')}
@@ -72,6 +83,7 @@ export default function App() {
                 Manage Admins and ES
               </h2>
             </li>
+            }
             <li
               className={selected === 'attendance' ? 'selected' : ''}
               onClick={() => handleClick('attendance')}
