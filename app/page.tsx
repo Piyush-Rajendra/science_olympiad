@@ -32,8 +32,8 @@ export default function App() {
       <div className="w-1/2 bg-olympiadGreen flex items-center justify-center">
         <div className="text-center text-white">
           <img
-            src="/images/science-olympiad-logo.png"
-            alt="Science Olympiad Logo"
+            src="/images/Epoch_Scoring_System.png"
+            alt="Epoc Scoring System Logo"
             className="mx-auto mb-6"
             style={{ width: '600px', height: 'auto' }}
           />
