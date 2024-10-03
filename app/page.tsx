@@ -6,6 +6,7 @@ import AttendanceView from './pages/attendanceView';
 import CreateTournament from './pages/create-tournament'
 import Login from './log-in/page';
 import Image from 'next/image';
+import ResourceLibrary from './pages/resource-lib';
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -123,7 +124,7 @@ export default function App() {
               {selected === 'manage_t'}
               {selected === 'manage_a&e'}
               {selected === 'score'}
-              {selected === 'resources'}
+              {selected === 'resources' && <ResourceLibrary/>}
             </div>
           </div>
       </div>
