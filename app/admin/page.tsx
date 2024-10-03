@@ -11,7 +11,6 @@ import CreateTourneyLanding from '../components/create-tourney/create-tourney-la
 import Score from '../components/score/score';
 import ManageUsers from '../pages/manageUsers';
 import ManageTournament from '../components/ManageTournament/ManageTournament';
-import 
 
 export default function App() {
   const router = useRouter();
