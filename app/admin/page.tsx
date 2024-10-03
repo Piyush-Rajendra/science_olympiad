@@ -1,10 +1,9 @@
 "use client";
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import '../styles/header.module.css';
 import AttendanceView from '../pages/attendanceView';
 import CreateTournament from '../pages/create-tournament';
-import Image from 'next/image';
+import Score from '../score/score'
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -122,7 +121,7 @@ export default function App() {
           {selected === 'create' && <CreateTournament />}
           {selected === 'manage_t' && <div>Manage Tournament</div>}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
-          {selected === 'score' && <div>Score</div>}
+          {selected === 'score' && <Score/>}
           {selected === 'resources' && <div>Resource Library</div>}
         </div>
       </div>
