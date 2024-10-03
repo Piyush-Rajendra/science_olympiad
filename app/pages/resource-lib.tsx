@@ -21,7 +21,7 @@ const ResourceLibrary = () => {
           <div
             className={`tabs cursor-pointer py-2 px-4 rounded-lg transition-all duration-300 ${
               activeTab === 1
-                ? 'bg-green-800 text-white font-semibold outline outline-2 outline-black'
+                ? 'bg-green-700 text-white font-semibold outline outline-2 outline-black'
                 : 'bg-gray-200 text-gray-600 hover:bg-green-300'
             }`}
             onClick={() => handleTabClick(1)}
@@ -31,7 +31,7 @@ const ResourceLibrary = () => {
           <div
             className={`tabs cursor-pointer py-2 px-4 rounded-lg transition-all duration-300 ${
               activeTab === 2
-                ? 'bg-green-800 text-white font-semibold outline outline-2 outline-black'
+                ? 'bg-green-700 text-white font-semibold outline outline-2 outline-black'
                 : 'bg-gray-200 text-gray-600 hover:bg-green-300'
             }`}
             onClick={() => handleTabClick(2)}
