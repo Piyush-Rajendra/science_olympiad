@@ -4,6 +4,7 @@ import Link from 'next/link';
 import './styles/header.module.css';
 import AttendanceView from './pages/attendanceView';
 import CreateTournament from './pages/create-tournament'
+import ManageUsers from './pages/manageUsers';
 import Login from './log-in/page';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -120,7 +121,7 @@ export default function App() {
               {selected === 'create' && <CreateTournament />}
               {selected === 'home'}
               {selected === 'manage_t'}
-              {selected === 'manage_a&e'}
+              {selected === 'manage_a&e' && <ManageUsers/>}
               {selected === 'score'}
               {selected === 'resources'}
             </div>
