@@ -3,6 +3,8 @@
 import React, { useState} from 'react';
 import DeleteIcon from '../../../images/delete.png'
 import Image from 'next/image';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+
 
 interface timeBlockContent {
     start: string;
@@ -84,12 +86,14 @@ const AddTimeBlock: React.FC<Props> = ({ isOpen, onAdd, onClose, id }) => {
                         <React.Fragment key={timeblock.id}>
                             <div className="flex items-center justify-between py-2 px-4">
                                 <input
+                                type="time"
                                 className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full"
                                 placeholder="00:00 AM/PM"
                                 onChange={(e) => handleChange(timeblock.id, 'start', e.target.value)}
                                 />
                                 <h2 className="px-4">to</h2>
                                 <input
+                                type="time"
                                 className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full"
                                 placeholder="00:00 AM/PM"
                                 onChange={(e) => handleChange(timeblock.id, 'end', e.target.value)}
@@ -97,7 +101,7 @@ const AddTimeBlock: React.FC<Props> = ({ isOpen, onAdd, onClose, id }) => {
                                 <h2 className="px-4">at</h2>
                                 <input
                                 className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-8"
-                                placeholder="Address"
+                                placeholder="Building"
                                 onChange={(e) => handleChange(timeblock.id, 'address', e.target.value)}
                                 />
                                 <input

@@ -2,6 +2,11 @@
 
 import React, { useState } from 'react';
 const LazyEnd = React.lazy(() => import('./EndTournament'))
+import SearchIcon from '../../images/search.png'
+import DownloadIcon from '../../images/download.png'
+import Image from 'next/image';
+
+
 
 interface TournamentProps {
     isOpen: boolean;
@@ -75,7 +80,7 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                                         End Tournament
                                     </button>
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex space-x-6">
                                     <button onClick={() => editTourn(currentTournament.name, currentTournament.division)} className="rounded-full text-xl px-8 py-3"
                                             style={{backgroundColor:'#B7E394'}}>
                                         Edit Tournament
@@ -87,10 +92,6 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                                     <button className="rounded-full text-xl px-8 py-3"
                                             style={{backgroundColor:'#B7E394'}}>
                                         Manage Admins and Supervisors
-                                    </button>
-                                    <button className="rounded-full text-xl px-8 py-3"
-                                            style={{backgroundColor:'#B7E394'}}>
-                                        View Summary
                                     </button>
                                 </div>
                             </>
@@ -112,12 +113,18 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                 <h2 className="text-3xl font-bold pt-12 pb-2">
                     Past Tournaments
                 </h2>
-                <input className="bg-white px-10 py-4 rounded-full w-full"
+                <div className="relative w-full">
+                    <input
+                        className="bg-white py-4 px-10 rounded-full w-full pl-12"
                         placeholder="Search"
-                        style={{backgroundColor: '#FAFBFC', border:'2px solid #D9D9D9'}}
-                        >
-                    
-                </input>
+                        style={{ backgroundColor: '#FAFBFC', border: '2px solid #D9D9D9' }}
+                    />
+                    <Image 
+                        src={SearchIcon}
+                        alt="Search Icon"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6"
+                    />
+                </div>
                 <div className="pt-8">
                     <table className="w-full text-left table-auto min-w-max">
                         <thead className="border-b border-gray-300">
@@ -131,6 +138,7 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                                 <th className="px-4">
                                     Division
                                 </th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -140,10 +148,17 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                                     <td className="py-2 px-4">{row.end}</td>
                                     <td className="py-2 px-4">{row.division}</td>
                                     <td className="text-right py-2 px-4">
-                                        <button onClick={() => downloadScores(row.id)} className="py-4 rounded-full px-4 bg-white"
-                                                style={{border:'2px solid #006330', color:'#006330'}}>
-                                            Download Score Sheet
-                                        </button>
+                                        <div className="flex justify-end">
+                                            <button onClick={() => downloadScores(row.id)} className="py-4 rounded-full px-4 bg-white flex items-center"
+                                                    style={{border:'2px solid #006330', color:'#006330'}}>
+                                                <Image 
+                                                    src={DownloadIcon}
+                                                    alt="Search Icon"
+                                                    className="h-5 w-5 mr-2"
+                                                />
+                                                Download Score Sheet
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

@@ -132,7 +132,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, isOpen,
                                         {row.score}
                                     </button>
                                 </td>
-                                <td className="px-4 py-2 justify-normal flex">
+                                <td className="px-4 py-2 justify-normal flex space-x-4">
                                     <button className="flex justify-center"
                                         onClick ={() => createEvent(row.id)}>
                                         <Image 

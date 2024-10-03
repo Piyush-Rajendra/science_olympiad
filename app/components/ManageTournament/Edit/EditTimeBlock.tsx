@@ -44,7 +44,7 @@ const EditTimeBlock: React.FC<Props> = ({ isOpen, onEdit, onClose, nextId }) => 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl">
-                <h1 className="text-3xl font-bold px-4 py-4">
+                <h1 className="text-3xl font-extrabold px-4 py-4">
                     Edit Time Block
                 </h1>
                 <div>

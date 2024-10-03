@@ -1,10 +1,13 @@
 "use client"
 
 import React, { useState} from 'react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+
 
 interface SchoolContent {
     name: string;
     teamID: string;
+    flight: string;
     id: number;
 }
 
@@ -21,15 +24,18 @@ const EditSchool: React.FC<Props> = ({ isOpen, onEdit, onClose, nextId }) => {
 
     const [name, setName] = useState("");
     const [teamID, setTeamID] = useState("")
+    const [flight, setFlight] = useState("");
 
     const submit = () => {
         const newSchool: SchoolContent = {
             name: name,
             teamID: teamID,
+            flight: flight,
             id: nextId
         };
         setName("");
         setTeamID("");
+        setFlight("");
         onEdit(newSchool);
         onClose();
         
@@ -53,6 +59,35 @@ const EditSchool: React.FC<Props> = ({ isOpen, onEdit, onClose, nextId }) => {
                         placeholder="Team ID"
                         onChange={(e) => setTeamID(e.target.value)}
                         />
+                        <Menu as="div" className="relative inline-block text-left">
+                            <div>
+                                <Menu.Button className="border border-gray-300 bg-gray-50 rounded-lg p-2.5">
+                                    {flight || 'Select Flight'}
+                                </Menu.Button>
+                            </div>
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <button
+                                            onClick={() => setFlight("A")}
+                                            className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100' : ''}`}
+                                        >
+                                            A
+                                        </button>
+                                    )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                    {({ active }) => (
+                                        <button
+                                            onClick={() => setFlight("B")}
+                                            className={`block px-4 py-2 text-sm ${active ? 'bg-gray-100' : ''}`}
+                                        >
+                                            B
+                                        </button>
+                                    )}
+                                </Menu.Item>
+                            </Menu.Items>
+                        </Menu>
                     </div>
                 </div>
                 <div className="px-4 flex justify-end">

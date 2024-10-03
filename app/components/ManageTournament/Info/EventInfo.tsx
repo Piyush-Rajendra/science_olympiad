@@ -118,7 +118,7 @@ const EventInfo: React.FC<EventProps> = ({ name, description, id }: EventProps) 
                             <tr>
                                 <th className="px-2"></th>
                                 <th className="py-2 px-2">Time Blocks</th>
-                                <th className="py-2 px-8">Address</th>
+                                <th className="py-2 px-8">Building</th>
                                 <th className="py-2 px-8">Room Number</th>
                                 <th className="px-2 py-2">Manage</th>
                             </tr>
@@ -133,7 +133,7 @@ const EventInfo: React.FC<EventProps> = ({ name, description, id }: EventProps) 
                                         <td className="py-6 px-2">{row.start} to {row.end}</td>
                                         <td className="py-6 px-8">{row.address}</td>
                                         <td className="py-2 px-8">{row.roomNumber}</td>
-                                        <td className="px-4 py-2 justify-normal flex">
+                                        <td className="px-4 py-2 justify-normal flex space-x-4">
                                             <button className="flex justify-center"
                                                 onClick = {() => {openEditTimeBlock(row.id)} }>
                                                 <Image 

@@ -35,9 +35,10 @@ const ManageTournament: React.FC = () => {
         setEditTourn(false);
     }
 
-    const openSummary = (name, division) => {
+    const openSummary = (name, division, date) => {
         setName(name);
         setDivision(division);
+        setDate(date)
         setEditEvents(false);
         setSummary(true);
         setEditTourn(false);
@@ -64,18 +65,18 @@ const ManageTournament: React.FC = () => {
             <div>
                 <Suspense fallback={<div>Loading Manage Events</div>}>
                     {<LazyManageEvents name={name} division={division} date = {date} id={5} 
-                        isOpen={editEvent} onClose={() => openSummary(name, division)}/>}
+                        isOpen={editEvent} onClose={() => openSummary(name, division, date)}/>}
                 </Suspense>
 
                 <Suspense fallback={<div>Loading Tournament Summary</div>}>
                     {<LazyTournamentSum name={name} division={division} date={date}
                         isOpen={summary} editTourn={openEditTourn}
-                        editEvent={() => openEditEvent(name, division)}/>}
+                        editEvent={() => openEditEvent(name, division, date)}/>}
                 </Suspense>
 
                 <Suspense fallback={<div>Loading Edit Tournament</div>}>
-                    {<LazyEditTournament name={name} division={division}
-                        isOpen={editTourn} onClose={(name, division) => openSummary(name, division)}/>}
+                    {<LazyEditTournament name={name} division={division} date={date}
+                        isOpen={editTourn} onClose={(name, division) => openSummary(name, division, date)}/>}
                 </Suspense>
 
             </div>

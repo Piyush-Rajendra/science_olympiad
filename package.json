@@ -9,11 +9,13 @@
     "lint": "NODE_ENV=production node server.js"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.8",
     "@next/font": "^14.2.5",
     "express": "^4.19.2",
     "next": "^14.2.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-tailwindcss-datepicker": "^1.7.2"
   },
   "devDependencies": {
     "@types/node": "^20",

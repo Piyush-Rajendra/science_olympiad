@@ -10,14 +10,12 @@ const LazyEditSchool = React.lazy(() => import('../Edit/EditSchool'))
 interface SchoolContent {
     name: string;
     teamID: string;
+    flight: string;
     id: number;
 }
 
 const TimeInfo: React.FC = ()  => {
 
-    const schoolData: {name: string, teamID: string, id:number}[] = [
-        {name: "Classic City High School", teamID: 'C3', id: 1},
-    ];
 
     const [schools, setSchools] = useState<SchoolContent[]>([]);
     const [nextId, setNextId] = useState<number>(1);
@@ -91,6 +89,7 @@ const TimeInfo: React.FC = ()  => {
                         <th className="px-2"></th>
                         <th className="py-2 px-2">School Name</th>
                         <th className="py-2 px-8">Team ID</th>
+                        <th className="py-2 px-8">Flights</th>
                         <th className="px-2 py-2">Manage</th>
                     </tr>
                 </thead>
@@ -98,12 +97,11 @@ const TimeInfo: React.FC = ()  => {
                     {schools.map((row, index) => (
                         <React.Fragment key={index}>
                             <tr className="border-b">
-                                <td className="px-2" onClick={() => {openSchool(index); toggleDropdown(row.id)}}>
-                                    {dropdownIds[row.id] ? '▲' : '▼'}
-                                </td>
+                                <td className="px-2"></td>
                                 <td className="py-2 px-2">{row.name}</td>
                                 <td className="py-2 px-8">{row.teamID}</td>
-                                <td className="px-4 py-2 justify-normal flex">
+                                <td className="py-2 px-8">{row.flight}</td>
+                                <td className="px-4 py-2 justify-normal flex space-x-4">
                                     <button className="flex justify-center"
                                         onClick ={() => openEditSchool(row.id)}>
                                         <Image 
@@ -118,13 +116,6 @@ const TimeInfo: React.FC = ()  => {
                                             alt="d"
                                             className="mx-auto w-10 h-10"/>
                                     </button>
-                                </td>
-                            </tr>
-                            <tr id={`school-${index}`} className="border-b hidden">
-                                <td colSpan={4} className="p-4">
-                                    <Suspense fallback={<div>Loading School Info</div>}>
-                                        <LazySchoolInfo name={row.name}/>
-                                    </Suspense>
                                 </td>
                             </tr>
                         </React.Fragment>
