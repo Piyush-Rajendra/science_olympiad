@@ -42,8 +42,7 @@ const GeneralRules = () => {
             </div>
 
             {/* Sticky Bottom container for buttons */}
-            <div className="h-20 border-b border-gray-300 flex items-center pl-10">
-            <div className="fixed bottom-0 left-[310px] w-[1225px] p-4 flex justify-between items-center bg-white shadow-lg">
+            <div className="fixed bottom-0 left-[310px] w-[1225px] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
               {/* Open File Explorer Button */}
               <label className="cursor-pointer flex items-center text-green-700 rounded-lg p-2">
                 <input
@@ -71,7 +70,6 @@ const GeneralRules = () => {
                 {message}
               </div>
             )}
-          </div>
           </div>
         )}
         
