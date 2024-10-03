@@ -1,11 +1,14 @@
 "use client";
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import '../styles/header.module.css';
-import AttendanceView from '../components/Attendance/attendanceView';
-import CreateTournament from '../components/create-tourney/create-tourney';
-import Score from '../components/score/score'
-import ManageTournament from '../components/ManageTournament/ManageTournament';
+import AttendanceView from '../pages/attendanceView';
+import CreateTournament from '../pages/create-tournament';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import CreateTourney from '../components/create-tourney/create-tourney';
+import CreateTourneyLanding from '../components/create-tourney/create-tourney-landing';
+import Score from '../components/score/score';
 
 export default function App() {
   const router = useRouter();
@@ -119,10 +122,10 @@ export default function App() {
         <div className="content">
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
-          {selected === 'create' && <CreateTournament />}
-          {selected === 'manage_t' && <ManageTournament />}
+          {selected === 'create' && <CreateTourneyLanding />}
+          {selected === 'manage_t' && <div>Manage Tournament</div>}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
-          {selected === 'score' && <Score/>}
+          {selected === 'score' && <Score />}
           {selected === 'resources' && <div>Resource Library</div>}
         </div>
       </div>

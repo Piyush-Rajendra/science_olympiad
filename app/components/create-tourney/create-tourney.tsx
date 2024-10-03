@@ -88,7 +88,7 @@ return (
                 ))}
             </div>
     </div>
-    <div className='pb-12'></div>
+    <div className='pb-48 mb-36'></div>
     {/*
     <div id="rules" className='pb-12'>
         <h2 className='pl-7 pt-4'>Rules</h2>
@@ -107,15 +107,17 @@ return (
     
     </div>
     */}
-    <div id="footer-and-submit" className="bg-white sticky bottom-0 left-0 w-full max-w-screen-xl flex flex-col items-end pb-5">
-        <hr className='w-full border-t-3 border-black mb-2' />
-        <div className="flex space-x-4 mr-5">
-            <h4 className='text-gray-500 pt-2'>Next Step: Create Your Events</h4>
-            <button className="ml-6 mr-6 bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                Next
-            </button>
-        </div>
+    <div id="footer-and-submit" className="bg-white sticky bottom-0 left-0 w-full flex flex-col pb-5">
+    <hr className='w-full border-t-3 border-black mb-2' />
+    <div className="flex w-full justify-end items-center mr-5 pr-5"> 
+        <h4 className='text-gray-500 pt-2 mr-4'>Next Step: Create Your Events</h4>
+        <button className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+            Next
+        </button>
+    </div>
 </div>
+
+
 </div>
 )
 
@@ -125,6 +127,3 @@ return (
 }
 
 export default CreateTourney; 
-
-
-

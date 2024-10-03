@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import EditEventForm from './edit-event-form';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; 
 
 const EventItem = (props) => {
     // State to manage dropdown visibility
@@ -25,7 +26,7 @@ const EventItem = (props) => {
                             onClick={toggleDropdown}
                         >
                             {/* Use an arrow icon (or text) that toggles based on state */}
-                            {isDropdownOpen ? '▲' : '▼'}
+                            {isDropdownOpen ? <FaChevronUp />: <FaChevronDown />}
                         </button>
                         <h3>{props.name}</h3>
                     </div>

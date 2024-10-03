@@ -25,9 +25,9 @@ const Score = () => {
                 <h1 className="text-3xl pl-7 pt-4 pb-5 ">Score - Master Score Sheet</h1>
             </div>
             <hr className='border-t-3 border-black pb-8'></hr>
-            <div id="score-event-list-header" className='pl-7 text-gray-500 flex justify-between items-center'>
+            <div id="score-event-list-header" className='pl-7  text-gray-500 flex justify-between items-center'>
                 <h4 className='px-12 mx-5 flex-shrink-0 w-1/4'>Event Name</h4>
-                <h4 className='px-12 mx-5'>Time Block</h4>
+                <h4 className='px-12  mr-12'>Time Block</h4>
                 <h4 className='pl-12 ml-12'>Status</h4>
                 <h4 className='px-12 mx-5'>Percent Graded</h4>
 

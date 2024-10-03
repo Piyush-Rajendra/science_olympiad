@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import ScoreEventSchool from './score-event-school';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; 
 
 const ScoreEvent = (props) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -38,20 +39,21 @@ const ScoreEvent = (props) => {
                             className="ml-3 text-gray-500 focus:outline-none"
                             onClick={toggleDropdown}
                         >
-                            {isDropdownOpen ? '▲' : '▼'}
+                            {isDropdownOpen ? <FaChevronUp />: <FaChevronDown />}
                         </button>
                         <h3>{props.name}</h3>
                     </div>
                 </div>
 
-                <div id="event-timeblock" className="w-25">
+                <div id="event-timeblock" className="w-25 pl-9">
                     <h3>{props.timeBlock}</h3>
                 </div>
 
                 {/* Adjusted width and margins to move the status and graded sections more to the left */}
+                <div className=''>
                 <div
                     id="event-status"
-                    className={`w-15 ml-2 p-2 border rounded ${
+                    className={`w-24 ml-2 p-2 border rounded text-center ${
                         props.status === 'In Progress'
                         ? 'bg-yellow-200'
                         : props.status === 'Completed'
@@ -62,10 +64,12 @@ const ScoreEvent = (props) => {
                         ? 'bg-blue-200'
                         : 'bg-gray-300' // Default background color
                     }`}
-                    >
+                    style={{ width: '140px' }} // You can adjust this value
+                >
                     <h3 className="text-black">{props.status}</h3>
                 </div>
-                <div id="event-graded" className="w-12 ml-2">
+                </div>
+                <div id="event-graded" className="w-24 pr-7">
                     <h3>{props.progress}%</h3>
                 </div>
             </div>
@@ -74,7 +78,7 @@ const ScoreEvent = (props) => {
                 <div>
                      <div id="score-event-list-header" className='pl-7 pt-6 pr-9 text-gray-500 flex justify-between '>
                         <h4 className='px-12 mx-5 flex-shrink-0 w-1/4'>School Name</h4>
-                        <h4 className='pl-8 '>Section</h4>
+                        <h4 className='pl-8 '>Team ID</h4>
                         <h4 className=' '>Rank</h4>
                         <h4 className='pr-12 '>Tier</h4>
                         <h4 className='px-12 mx-7'>Score</h4>
