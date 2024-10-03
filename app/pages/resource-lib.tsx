@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GeneralRules from '../components/generalRules';
 
 const ResourceLibrary = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -42,10 +43,7 @@ const ResourceLibrary = () => {
         {/* Tab Content */}
         <div className="content-tabs mt-6">
           {activeTab === 1 && (
-            <div className="content active-content">
-              <h2 className="text-xl font-bold mb-4">General Rules</h2>
-              <p className="text-gray-600">This is where the general rules content will go.</p>
-            </div>
+            <GeneralRules/>
           )}
           {activeTab === 2 && (
             <div className="content active-content">
