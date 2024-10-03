@@ -1,101 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Hanuman&display=swap');
-
-.header {
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: black;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidebar-header {
+  background-color: green;
+  color: white;
   padding: 20px;
-  background-color: #024A7A; /* Navy blue background */
-  color: #d0f0c0; /* Lighter green text color */
-}
-
-.titleSection {
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
-  flex-grow: 1;
 }
 
-.title {
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
   margin: 0;
-  font-size: 48px;
-  font-family: 'Hanuman', sans-serif;
 }
 
-.subtitle {
-  margin: 0;
+.sidebar-menu li {
+  padding: 15px 20px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-menu li:hover {
+  background-color: grey;
+}
+
+.sign-out-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
   font-size: 16px;
-  color: #d0f0c0; /* Lighter green text color for subtitle */
-  font-family: 'Hanuman', sans-serif;
+  margin: 20px;
+  transition: background-color 0.3s ease;
 }
 
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.navLink {
-  text-decoration: none;
-  color: #d0f0c0; /* Lighter green text color for links */
-  font-size: 24px;
-  position: relative; /* Ensure dropdown positions relative to navLink */
-  font-family: 'Hanuman', sans-serif;
-}
-
-.separator {
-  width: 3px;
-  height: 50px;
-  background-color: #d0f0c0; /* Lighter green separator */
-}
-
-.dropdown {
-  position: relative; /* Positioning context for dropdownContent */
-  display: inline-block;
-}
-
-.dropdownContent {
-  display: none;
-  position: absolute;
-  background-color: #E3F5E7;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  top: 100%; /* Position below the dropdown trigger */
-  left: 0; /* Align with the left edge */
-  transform: translateX(-15%); /* Center the dropdown by moving it left by half its width */
-  border-radius: 8px;
-  border: .25px solid black;
-  white-space: nowrap;
-  font-size: 18px;
-}
-
-.dropdownContent a {
-  color: #778864;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border: black;
-  font-size: 18px;
-  text-align: center;
-  border: .125px solid #778864; /* Border around each dropdown item */
-  border-top: none; /* Remove top border to avoid double borders between items */
-}
-
-.dropdownContent a:hover {
-  background-color: #d0f0c0;
-  color: black
-}
-
-.dropdownContent a:first-child {
-  border-top-left-radius: 8px; /* Round the top-left corner */
-  border-top-right-radius: 8px; /* Round the top-right corner */
-  border-top: none; /* Remove top border for the first item */
-}
-
-.dropdownContent a:last-child {
-  border-bottom-left-radius: 8px; /* Round the bottom-left corner */
-  border-bottom-right-radius: 8px; /* Round the bottom-right corner */
-}
-
-.dropdown:hover .dropdownContent {
-  display: block;
+.sign-out-button:hover {
+  background-color: darkgreen;
 }
