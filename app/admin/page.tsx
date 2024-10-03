@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import CreateTourney from '../create-tourney/create-tourney';
 import CreateTourneyLanding from '../create-tourney/create-tourney-landing';
+import Score from '../score/score';
 
 export default function App() {
   const router = useRouter();
@@ -124,7 +125,7 @@ export default function App() {
           {selected === 'create' && <CreateTourneyLanding />}
           {selected === 'manage_t' && <div>Manage Tournament</div>}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
-          {selected === 'score' && <div>Score</div>}
+          {selected === 'score' && <Score />}
           {selected === 'resources' && <div>Resource Library</div>}
         </div>
       </div>
