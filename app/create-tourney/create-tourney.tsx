@@ -88,7 +88,7 @@ return (
                 ))}
             </div>
     </div>
-    <div className='pb-12'></div>
+    <div className='pb-48 mb-36'></div>
     {/*
     <div id="rules" className='pb-12'>
         <h2 className='pl-7 pt-4'>Rules</h2>
