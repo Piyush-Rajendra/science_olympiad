@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import '../styles/header.module.css';
 import AttendanceView from '../components/Attendance/attendanceView';
 import CreateTournament from '../components/create-tourney/create-tourney';
-import Score from '../score/score'
+import Score from '../components/score/score'
 import ManageTournament from '../components/ManageTournament/ManageTournament';
 import { useState, useEffect } from 'react';
 
