@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import '../styles/header.module.css';
 import AttendanceView from '../pages/attendanceView';
-import CreateTournament from '../pages/create-tournament';
+import CreateTournament from '../create-tourney/create-tourney';
 import Score from '../score/score'
 import { useState, useEffect } from 'react';
 
