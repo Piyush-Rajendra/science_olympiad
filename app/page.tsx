@@ -1,7 +1,6 @@
-
-"use client";
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+
 
 export default function App() {
   const router = useRouter();
@@ -60,7 +59,6 @@ export default function App() {
                 onChange={(e) => setEmail(e.target.value)} // Handle email input
               />
             </div>
-
             <div className="mb-6">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
