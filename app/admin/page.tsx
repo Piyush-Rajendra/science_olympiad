@@ -6,6 +6,7 @@ import AttendanceView from '../pages/attendanceView';
 import CreateTournament from '../pages/create-tournament';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import CreateTourney from '../create-tourney/create-tourney';
 
 export default function App() {
   const router = useRouter();
@@ -119,7 +120,7 @@ export default function App() {
         <div className="content">
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
-          {selected === 'create' && <CreateTournament />}
+          {selected === 'create' && <CreateTourney />}
           {selected === 'manage_t' && <div>Manage Tournament</div>}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
           {selected === 'score' && <div>Score</div>}

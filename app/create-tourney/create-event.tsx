@@ -32,7 +32,7 @@ const CreateEvent = () => {
 
 
     return (
-        <div id="create-event-page"  className='bg-white min-h-screen'>
+        <div id="create-event-page"  className='bg-white min-h-screen relative'>
             <div id="event-header">
                 <h1 className="text-3xl pl-7 pt-4 pb-5 ">Create Tournament {'>'} Create Events</h1>
             </div>
@@ -78,7 +78,7 @@ const CreateEvent = () => {
 
             </div>
             <div className="pb-6 pt-12"></div>
-            <div id="publish-footer" className=" bg-white fixed bottom-0 left-0 w-full flex flex-col items-end  pb-5">
+            <div id="footer-and-submit" className="bg-white sticky bottom-0 left-0 w-full max-w-screen-xl flex flex-col items-end pb-5">
                 <hr className='w-full border-t-3 border-black mb-2' />
                 <div className="flex space-x-4 mr-5">
                     <h4 className='text-gray-500 pt-2'>Next Step: Add Admins and Event Sponsors</h4>
