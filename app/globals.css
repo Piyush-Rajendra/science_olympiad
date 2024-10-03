@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Hanuman&display=swap');
+
+body {
+    background-color: white;
+    margin: 0;
+    font-family: 'Hanuman', sans-serif;
+  }
+
+  .sidebar {
+    width: 300px;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  .sidebar-header {
+    background: linear-gradient(135deg, #1b9b1b, #006400); /* Gradient from light green to dark green */
+    color: white;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center; /* Horizontally centers the text */
+    align-items: center; /* Vertically centers the text */
+    text-align: center;
+    height: 80px; /* Optional: Adjust the height of the header as needed */
+  }
+  .sidebar-header img {
+    margin-right: 10px; /* Adds some space between the image and text */
+  }
+  
+  .sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    flex-grow: 1;  /* Ensures menu takes available vertical space */
+    width: 100%;   /* Ensures full width of sidebar */
+  }
+
+.sidebar-menu li h2 {
+  display: flex;
+  align-items: center;
+  font-size: 18px;  /* Adjust the font size as needed */
+  font-weight: normal;  /* Keep the default weight of headings */
+  margin: 0;  /* Remove default margin */
+  padding: 15px 20px;  /* Apply padding */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-menu li h2:hover {
+  background-color: grey;
+}
+
+.sidebar-menu li h2 img {
+  margin-right: 10px;  /* Adds space between the image and the text */
+}
+  
+  .sign-out-button {
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+    width: fit-content;
+  }
+  
+  .sign-out-button:hover {
+    background-color: rgb(1, 87, 1);
+  }
+
+  .sidebar-menu li.selected h2 {
+    background-color: grey; /* Color for the selected item */
+  }
+
+  .content {
+    margin-left: 300px; /* Matches the sidebar width */
+  }
