@@ -26,7 +26,7 @@ const CreateTourney = () => {
 
 
 return (
-<div id="create-tourney-page" className='bg-white min-h-screen'>
+<div id="create-tourney-page" className='bg-white min-h-screen relative'>
     <div id="create-tourney-header">
         <h1 className="text-3xl pl-7 pt-4 pb-5 ">Create Tournament</h1>
     </div>
@@ -107,7 +107,7 @@ return (
     
     </div>
     */}
-    <div id="footer-and-submit" className=" bg-white fixed bottom-0 left-0 w-full flex flex-col items-end  pb-5">
+    <div id="footer-and-submit" className="bg-white sticky bottom-0 left-0 w-full max-w-screen-xl flex flex-col items-end pb-5">
         <hr className='w-full border-t-3 border-black mb-2' />
         <div className="flex space-x-4 mr-5">
             <h4 className='text-gray-500 pt-2'>Next Step: Create Your Events</h4>
