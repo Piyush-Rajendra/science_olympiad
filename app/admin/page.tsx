@@ -11,6 +11,7 @@ import CreateTourneyLanding from '../components/create-tourney/create-tourney-la
 import Score from '../components/score/score';
 import ManageUsers from '../pages/manageUsers';
 import ManageTournament from '../components/ManageTournament/ManageTournament';
+import ResourceLibrary from '../components/Resource-Library/resource-lib';
 
 export default function App() {
   const router = useRouter();
@@ -128,7 +129,7 @@ export default function App() {
           {selected === 'manage_t' && <div><ManageTournament/></div>}
           {selected === 'manage_a&e' && <div><ManageUsers/></div>}
           {selected === 'score' && <Score />}
-          {selected === 'resources' && <div>Resource Library</div>}
+          {selected === 'resources' && <div><ResourceLibrary/></div>}
         </div>
       </div>
     </div>
