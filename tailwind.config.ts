@@ -17,7 +17,8 @@ const config: Config = {
         'grass-lime': '#B7E394',
         'ocean-blue': '#1E7BB8',
         'sea-blue': '#BAE2F4',
-        'sky-blue': "#51ABE5"
+        'sky-blue': "#51ABE5",
+        'olympiadGreen': '#2C7A47'
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
