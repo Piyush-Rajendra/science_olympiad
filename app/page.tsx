@@ -1,3 +1,4 @@
+"use client";
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -17,7 +18,7 @@ export default function App() {
     } else if (email === 'es@example.com' && password === 'password123') {
       router.push('/admin?loggedIn=true&role=es');
     } else if (email === 'superadmin@example.com' && password === 'password123') {
-      router.push('/admin?loggedIn=true&role=admin');
+      router.push('/superadmin');
     }
     
     else {
