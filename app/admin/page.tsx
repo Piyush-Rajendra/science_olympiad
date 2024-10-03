@@ -6,9 +6,9 @@ import AttendanceView from '../pages/attendanceView';
 import CreateTournament from '../pages/create-tournament';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import CreateTourney from '../create-tourney/create-tourney';
-import CreateTourneyLanding from '../create-tourney/create-tourney-landing';
-import Score from '../score/score';
+import CreateTourney from '../components/create-tourney/create-tourney';
+import CreateTourneyLanding from '../components/create-tourney/create-tourney-landing';
+import Score from '../components/score/score';
 
 export default function App() {
   const router = useRouter();
