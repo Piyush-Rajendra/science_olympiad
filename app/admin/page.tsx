@@ -1,8 +1,8 @@
 "use client";
 import { useRouter, useSearchParams } from 'next/navigation';
 import '../styles/header.module.css';
-import AttendanceView from '../pages/attendanceView';
-import CreateTournament from '../create-tourney/create-tourney';
+import AttendanceView from '../components/Attendance/attendanceView';
+import CreateTournament from '../components/create-tourney/create-tourney';
 import Score from '../score/score'
 import ManageTournament from '../components/ManageTournament/ManageTournament';
 import { useState, useEffect } from 'react';

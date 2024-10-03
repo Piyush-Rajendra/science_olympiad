@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Hanuman } from "next/font/google";
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import TimeBlock from './TimeBlock';
+import TimeBlock from './timeBlock';
 
 const Event = ({ event, index }) => {
     const [isEventOpen, setIsEventOpen] = useState(false);

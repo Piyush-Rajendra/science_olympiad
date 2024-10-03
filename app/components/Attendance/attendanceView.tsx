@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import EventList from '../components/eventList';
+import EventList from './eventList';
 
 const AttendanceView = () => {
   const events = [
