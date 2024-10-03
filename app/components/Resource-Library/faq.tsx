@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import Image from 'next/image';
 
 const Faq = () => {
   const [message, setMessage] = useState(''); // State for the popup message
@@ -64,54 +65,56 @@ const Faq = () => {
       </div>
 
       <div className="px-10 pt-5">
-        {/* Event Header */}
-        <div className="flex justify-between p-2 border-b border-gray-300">
-          <div className="ml-10">Question</div>
-          <div className="mr-10">Manage</div>
+  {/* Event Header */}
+  <div className="grid grid-cols-[3fr,1fr] p-2 border-b border-gray-300">
+    <div className="ml-10">Question</div>
+    <div className="text-right mr-20">Manage</div>
+  </div>
+</div>
+
+{/* List of Questions */}
+<div className="px-10">
+  {questions.map((item, index) => (
+    <div
+      key={item.id}
+      className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b border-gray-300`}
+    >
+      <div className="grid grid-cols-[3fr,1fr] items-center p-4">
+        {/* Question Header with Dropdown Button */}
+        <div className="flex items-center space-x-4">
+          <button onClick={() => toggleQuestion(item.id)}>
+            {openQuestionId === item.id ? <FaChevronUp /> : <FaChevronDown />}
+          </button>
+          <span className="text-lg">{item.question}</span>
+        </div>
+
+        {/* Manage Column: Icon Buttons for each question */}
+        <div className="flex justify-end space-x-4 pr-3">
+          <button><Image src="/images/note-pencil.png" alt="Edit" width={30} height={30} /></button>
+          <button><Image src="/images/trash.png" alt="Delete" width={30} height={30} /></button>
+          <button><Image src="/images/list.png" alt="Details" width={30} height={30} /></button>
         </div>
       </div>
 
-      {/* List of Questions */}
-      <div className="px-10 pt-4">
-        {questions.map((item, index) => (
-          <div
-            key={item.id}
-            className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b border-gray-300`}
-          >
-            <div className="grid grid-cols-3 items-center p-4">
-              {/* Question Header with Dropdown Button */}
-              <div className="flex items-center space-x-4">
-                <button onClick={() => toggleQuestion(item.id)}>
-                  {openQuestionId === item.id ? <FaChevronUp /> : <FaChevronDown />}
-                </button>
-                <span className="text-lg">{item.question}</span>
-              </div>
-              {/* Manage Column Placeholder */}
-              <div className="col-span-2"></div>
-            </div>
-
-            {/* Dropdown for Answer with Padding */}
-            {openQuestionId === item.id && (
-              <div className="px-10 pt-2 pb-4">
-                <p className="text-gray-700">{item.answer}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* Dropdown for Answer with Padding */}
+      {openQuestionId === item.id && (
+        <div className="px-10 pt-2 pb-4">
+          <p className="text-gray-700">{item.answer}</p>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
 
       {/* Sticky Bottom container for buttons */}
       <div className="fixed bottom-0 left-[300px] w-[calc(100%-300px)] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
-        {/* Open File Explorer Button */}
-        <label className="cursor-pointer flex items-center text-green-700 rounded-lg p-2">
-          {/* Ask a Question Button */}
-          <button
-            onClick={handleOpenQAModal}
-            className="cursor-pointer flex items-center text-green-700 rounded-lg">
-            <span className="text-2xl font-bold mr-2">+</span>
-            <span className="font-medium">Add a Question</span>
-          </button>
-        </label>
+        {/* Ask a Question Button */}
+        <button
+          onClick={handleOpenQAModal}
+          className="cursor-pointer flex items-center text-green-700 rounded-lg">
+          <span className="text-2xl font-bold mr-2">+</span>
+          <span className="font-medium">Add a Question</span>
+        </button>
 
         {/* Save Changes Button */}
         <button
