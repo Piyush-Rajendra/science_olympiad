@@ -4,6 +4,7 @@ import '../styles/header.module.css';
 import AttendanceView from '../pages/attendanceView';
 import CreateTournament from '../create-tourney/create-tourney';
 import Score from '../score/score'
+import ManageTournament from '../components/ManageTournament/ManageTournament';
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -119,7 +120,7 @@ export default function App() {
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTournament />}
-          {selected === 'manage_t' && <div>Manage Tournament</div>}
+          {selected === 'manage_t' && <ManageTournament />}
           {selected === 'manage_a&e' && <div>Manage Admins and ES</div>}
           {selected === 'score' && <Score/>}
           {selected === 'resources' && <div>Resource Library</div>}
