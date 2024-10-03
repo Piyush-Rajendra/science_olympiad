@@ -15,9 +15,7 @@ const GeneralRules = () => {
         {/* Tab Content */}
         <div className="content-tabs mt-6">
           {activeTab === 1 && (
-            <div className="content active-content">
-              <h2 className="text-xl font-bold mb-4">General Rules MLEM</h2>
-              <p className="text-gray-600">This is where the general rules content will go.</p>
+            <div className="content active-content flex items-center justify-center bg-gray-100">
               <DocViewer pdfUrl={pdfUrl} />
             </div>
           )}
