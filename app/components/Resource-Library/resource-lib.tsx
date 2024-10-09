@@ -37,7 +37,7 @@ const ResourceLibrary = () => {
             }`}
             onClick={() => handleTabClick(2)}
           >
-            FAQ
+            Q&A
           </div>
         </div>
         <hr className="border-t-2 border-gray-300 w-full" />

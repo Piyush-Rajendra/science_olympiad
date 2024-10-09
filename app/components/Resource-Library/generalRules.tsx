@@ -74,7 +74,7 @@ const GeneralRules = () => {
         
         {activeTab === 2 && (
           <div className="content active-content">
-            <h2 className="text-xl font-bold mb-4">FAQ</h2>
+            <h2 className="text-xl font-bold mb-4">Q&A</h2>
             <p className="text-gray-600">This is where the FAQ content will go.</p>
           </div>
         )}
