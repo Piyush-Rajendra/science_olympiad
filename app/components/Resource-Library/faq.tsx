@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Image from 'next/image';
+import SearchIcon from "/images/trash.png"
 
 const Faq = () => {
   const [message, setMessage] = useState(''); // State for the popup message
@@ -56,11 +57,18 @@ const Faq = () => {
 
   return (
     <div>
-      <div className="container mx-auto px-0 py-6">
+      <div className="container mx-auto px-0 py-6 relative">
         <input 
           type="text" 
           placeholder="Search..." 
-          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+          className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+        />
+        <Image 
+          src="/images/search.png" 
+          alt="Search"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6"
+          width={30} 
+          height={30}
         />
       </div>
 
