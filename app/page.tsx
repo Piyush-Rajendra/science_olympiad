@@ -6,6 +6,7 @@ export default function App() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [accountType, setAccountType] = useState("Administrator");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +24,12 @@ export default function App() {
     else {
       alert('Invalid email or password'); // Basic error handling
     }
+  };
+
+  const toggleAccountType = () => {
+    setAccountType((prevType) =>
+      prevType === "Administrator" ? "Event Supervisor" : "Administrator"
+    );
   };
 
   return (
@@ -43,6 +50,39 @@ export default function App() {
       <div className="w-1/2 bg-white flex items-center justify-center">
         <div className="w-3/4 max-w-md">
           <h2 className="text-2xl font-semibold mb-6 text-gray-700">Sign In</h2>
+
+          {/* Account Type Toggle */}
+          <div className="flex justify-between mb-6">
+            <div className="w-full bg-white border-2 border-black rounded-full relative p-1">
+              <div
+                className={`absolute top-0 left-0 w-1/2 h-full bg-green-700 rounded-full transition-transform duration-300 ease-in-out ${
+                  accountType === "Event Supervisor" ? "translate-x-full" : ""
+                }`}
+              ></div>
+              <div className="relative z-10 flex justify-between">
+                <button
+                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
+                    accountType === "Administrator"
+                      ? "text-white"
+                      : "text-black"
+                  }`}
+                  onClick={() => setAccountType("Administrator")}
+                >
+                  Administrator
+                </button>
+                <button
+                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
+                    accountType === "Event Supervisor"
+                      ? "text-white"
+                      : "text-black"
+                  }`}
+                  onClick={() => setAccountType("Event Supervisor")}
+                >
+                  Event Supervisor
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Sign In Form */}
           <form onSubmit={handleSubmit}>
@@ -72,6 +112,10 @@ export default function App() {
                 onChange={(e) => setPassword(e.target.value)} // Handle password input
               />
             </div>
+
+            <a href="/forgot-password" className="text-green-700 mb-4 block text-left">
+              Forgot password?
+            </a>
 
             <button
               type="submit"
