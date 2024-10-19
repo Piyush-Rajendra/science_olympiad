@@ -5,18 +5,27 @@ import React, { useState } from 'react';
 interface Props {
     isOpen: boolean
     onAdd: (name: string) => void;
+    onEdit: (name: string) => void;
     onClose: () => void;
+    isEdit: boolean;
 }
 
-const AddGroup: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
+const AddGroup: React.FC<Props> = ({ isOpen, onAdd, onEdit, onClose, isEdit }) => {
     if (!isOpen) return null;
     const [name, setName] = useState("");
 
-    const submit = () => {
-        onAdd(name);
+    
+    const submit = async () => {
+
+        if (isEdit) { 
+            await onEdit(name);
+        } else {
+            await onAdd(name);
+        }
         setName("");
         onClose()
     }
+
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
@@ -29,6 +38,7 @@ const AddGroup: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
                         <input
                         className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-2/3 mr-4"
                         placeholder="School Name"
+                        defaultValue={name}
                         onChange={(e) => setName(e.target.value)}
                         />
                     </div>
