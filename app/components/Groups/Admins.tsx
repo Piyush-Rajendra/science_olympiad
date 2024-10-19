@@ -56,7 +56,7 @@ const Admins: React.FC<Props> = ( {group_id})  => {
                         <tr>
                             <th className="px-4 py-2">Administrator</th>
                             <th className="px-4 py-2">Email</th>
-                            <th className="px-4 py-2">Manage</th>
+                            <th className="px-4 py-4 flex justify-end pr-80">Manage</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,7 +65,7 @@ const Admins: React.FC<Props> = ( {group_id})  => {
                                 <tr className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b`}>
                                     <td className="px-4 py-4">{row.name}</td>
                                     <td className="px-4 py-4">{row.email}</td>
-                                    <td className="px-4 py-4 flex">
+                                    <td className="px-4 py-4 flex justify-end pr-80">
                                         <button className="flex justify-center"
                                             onClick = {() => {toggleAdmin(row.admin_id)} }>
                                             <Image 

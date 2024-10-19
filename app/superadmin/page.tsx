@@ -3,12 +3,14 @@
 import React, { useState, Suspense } from 'react';
 import EditIcon from '../images/edit-246.png';
 import DeleteIcon from '../images/delete.png';
+import AddPersonIcon from '../images/add-person.png';
 // import EditIcon from '../../images/edit-246.png'
 // import DeleteIcon from '../../images/delete.png'
 import Image from 'next/image';
 const LazyAddGroup = React.lazy(() => import('../components/Groups/AddGroup'))
 const LazyAdmins = React.lazy(() => import('../components/Groups/Admins'))
 const LazyDeleteGroup = React.lazy(() => import('../components/Groups/DeleteGroup'))
+const LazyAddUser = React.lazy(() => import('../components/Groups/AddUser'))
 
 
 interface GroupContent {
@@ -29,6 +31,7 @@ const Groups: React.FC = ()  => {
     const [currentId, setCurrentId] = useState(0);
     const [currentName, setCurrentName] = useState("")
     const [isAddGroup, setAddGroup] = useState(false);
+    const [isAddUser, setAddUser] = useState(false);
     const [isDeleteGroup, setDeleteGroup] = useState(false);
 
     const openGroup = (index: number) => {
@@ -64,6 +67,15 @@ const Groups: React.FC = ()  => {
         setAddGroup(false);
     }
 
+    const openAddUser = (id: number) => {
+        setCurrentId(id);
+        setAddUser(true);
+    }
+
+    const closeAddUser= () => {
+        setAddUser(false);
+    }
+
     const openDeleteGroup = (id: number, name: string) => {
         setCurrentId(id);
         setCurrentName(name);
@@ -83,7 +95,7 @@ const Groups: React.FC = ()  => {
     return (
         <div className="font-sans">
             <div className="px-4 py-4">
-                <div className="py-4 border-b border-gray-300">
+                <div className="py-4 border-b border-gray-300 px-2">
                     <h2 className='text-3xl font-bold'>
                         School Groups
                     </h2>
@@ -94,7 +106,7 @@ const Groups: React.FC = ()  => {
                             <tr>
                                 <th className="pl-2"></th>
                                 <th className="pr-20 py-2">School Name</th>
-                                <th className="pl-10 py-2">Manage</th>
+                                <th className="py-4 flex justify-end pr-80">Manage</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,7 +117,14 @@ const Groups: React.FC = ()  => {
                                             {dropdownIds[row.id] ? '▲' : '▼'}
                                         </td>
                                         <td className="pr-20 py-4">{row.school}</td>
-                                        <td className="pl-10 py-4 flex">
+                                        <td className="py-4 flex justify-end space-x-4 pr-60">
+                                            <button className="flex justify-center"
+                                                onClick = {() => {openAddUser(row.id)} }>
+                                                <Image 
+                                                    src={AddPersonIcon} 
+                                                    alt="e"
+                                                    className="mx-auto w-10 h-10"/>
+                                            </button>
                                             <button className="flex justify-center"
                                                 onClick = {() => {openAddGroup(row.id)} }>
                                                 <Image 
@@ -145,7 +164,7 @@ const Groups: React.FC = ()  => {
                 </button>
                 <button className="rounded-full text-1xl px-6 py-3 text-white"
                         style={{backgroundColor:'#006330'}}>
-                    Save Changes
+                    Return
                 </button>
                 </div>
             </div>
@@ -162,6 +181,13 @@ const Groups: React.FC = ()  => {
                     onConfirm={() => deleteGroup(currentId)}
                     onClose={closeDeleteGroup}
                     name={currentName}
+                />
+            </Suspense>
+            <Suspense fallback={<div>Loading Add Group</div>}>
+                <LazyAddUser
+                    isOpen={isAddUser}
+                    onAdd={(name: string) => addGroup(name)}
+                    onClose={closeAddUser}
                 />
             </Suspense>
         </div>
