@@ -6,7 +6,7 @@ import axios from 'axios';
 const Score = () => {
     const [events, setEvents] = useState([]);
     const [noCurrentTournaments, setNoCurrentTournaments] = useState(false); // New state to track if there are no current tournaments
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [isEventSuperVisor, setIsEventSuperVisor] = useState(true);
     const [eventSuperVisorID, setEventSuperVisorID] = useState(1);
     const [groupId, setGroupId] = useState(1);

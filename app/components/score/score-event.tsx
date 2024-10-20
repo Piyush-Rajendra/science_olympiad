@@ -10,6 +10,7 @@ const ScoreEvent = (props) => {
     const [status, setStatus] = useState();
     const [scorePercent, setScorePercent] = useState<number | null>(null);
     const [isFinalized, setIsFinalized] = useState(false);
+    const [rankedTeams, setRankedTeams] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -17,6 +18,9 @@ const ScoreEvent = (props) => {
                 const statusResponse = await axios.get(`http://localhost:3000/get-event-status/${props.id}`);
                 const statusData = statusResponse.data;
                 setStatus(statusData.status);
+                if (statusData.status === 'Completed') {
+                    setIsFinalized(true);
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -35,7 +39,7 @@ const ScoreEvent = (props) => {
             }
         };
         fetchData();
-    }, [props.id]);
+    }, [props.id, scorePercent]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,10 +48,12 @@ const ScoreEvent = (props) => {
                 const eventTeams = eventTeamsResponse.data;
                 const rankedTeams = rankSchools(eventTeams);
                 setTeams(rankedTeams);
+                //setRankedTeams(rankedTeams);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
+        console.log("Called");
         fetchData();
     }, [props.id]);
 
@@ -75,25 +81,49 @@ const ScoreEvent = (props) => {
         return scores.length !== uniqueScores.size; // Check for duplicates
     };
 
-    const handleFinalize = () => {
-        if (hasTies(teams)) {
-            alert("Finalization failed: There is a tie in the scores. Please resolve the tie before finalizing.");
-            return; // Exit the function if there's a tie
-        }
-
+    const handleFinalize = async () => {
         const hasBlankScores = teams.some(team => team.Score === null || team.Score === '');
         if (hasBlankScores) {
-            alert("Finalization failed: One or more teams have blank scores. Please provide a score for all teams.");
+            alert("One or more teams have blank scores. Please provide a score for all teams.");
             return; // Exit the function if there are blank scores
         }
-
+    
+        if (hasTies(teams)) {
+            alert("There is a tie in the scores. Please resolve the tie before finalizing.");
+            return; // Exit the function if there's a tie
+        }
+    
         // Show a confirmation prompt
         const confirmed = window.confirm("Are you sure you want to finalize the scores? This action cannot be undone.");
         if (confirmed) {
-            setIsFinalized(true); // Set finalized state to true
-            // Optionally, you can also add logic here to handle finalization in the database.
+            try {
+                await handleSave();
+                const response = await axios.put(`http://localhost:3000/event/${props.id}/finalize`);
+    
+                if (response.status === 200) {
+                    alert('Scores finalized successfully.');
+                    setIsFinalized(true); 
+                    
+                } else {
+                    alert(`Error finalizing scores: ${response.data.message}`);
+                }
+            } catch (error) {
+                alert(`Error finalizing scores: ${error.response?.data?.message || error.message}`);
+            }
         }
     };
+
+
+    /*const fetchAndRankData = async () => {
+        try {
+            const eventTeamsResponse = await axios.get(`http://localhost:3000/get-team-timeblocks-by-event/${props.id}`);
+            const eventTeams = eventTeamsResponse.data;
+            const rankedTeams = rankSchools(eventTeams);
+            setTeams(rankedTeams);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }; */
 
     // Function to update the database with the new values
     const handleSave = async () => {
@@ -121,7 +151,13 @@ const ScoreEvent = (props) => {
             });
     
             await Promise.all(updates);
+            
+            
             alert('Scores updated successfully!');
+            setRankedTeams(rankSchools(teams));
+            //fetchAndRankData();
+            
+            
     
         } catch (error) {
             console.error("Error updating scores:", error);
