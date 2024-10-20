@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ProtectedSuperAdminRoute from '../adminsecure/ProtectedSuperAdminRoute';
 import { AuthProvider } from '../adminsecure/AuthProvider';
+import { useAuth } from '../adminsecure/AuthProvider'; // Import useAuth hook
 const LazyAddGroup = React.lazy(() => import('../components/Groups/AddGroup'))
 const LazyAdmins = React.lazy(() => import('../components/Groups/Admins'))
 const LazyDeleteGroup = React.lazy(() => import('../components/Groups/DeleteGroup'))
@@ -18,7 +19,7 @@ interface GroupContent {
 }
 
 const Groups: React.FC = ()  => {
-
+    const { logout } = useAuth(); // Now inside AuthProvider context
     /*
     const [groups, setGroups] = useState<GroupContent[]>([
         {id: 0, school: "UGA"},
@@ -161,6 +162,7 @@ const Groups: React.FC = ()  => {
     }
 
     const handleSubmit = () => {
+        logout(); // Call logout to clear auth state
         router.push("/superadminlogin")
     }
 
@@ -239,7 +241,7 @@ const Groups: React.FC = ()  => {
                         <button className="rounded-full text-1xl px-6 py-3 text-white"
                                 style={{backgroundColor:'#006330'}}
                                 onClick={() => handleSubmit()}>
-                            Return
+                            SignOut
                         </button>
                         </div>
                     </div>
@@ -274,4 +276,12 @@ const Groups: React.FC = ()  => {
     )
 }
 
-export default Groups;
+const GroupsPage: React.FC = () => {
+  return (
+    <AuthProvider>
+      <Groups />
+    </AuthProvider>
+  );
+};
+
+export default GroupsPage;
