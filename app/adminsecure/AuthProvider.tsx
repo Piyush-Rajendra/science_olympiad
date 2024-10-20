@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
-  token: string | null;
+  token: string;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -13,9 +13,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
 
   const login = (newToken: string) => {
-    console.log("PRINT + " + newToken);
     setToken(newToken);
-    console.log("PRINT + " + token);
+    console.log("PRINT + " + newToken);
+    console.log("PRINT2 + " + token);
   };
 
   const logout = () => {

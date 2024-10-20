@@ -2,7 +2,7 @@
 import React, { useState, Suspense } from 'react';
 import EditIcon from '../images/edit-246.png';
 import DeleteIcon from '../images/delete.png';
-import ProtectedSuperAdminRoute from '../adminsecure/protectedSuperAdminRoute';
+import ProtectedSuperAdminRoute from '../adminsecure/ProtectedSuperAdminRoute';
 import { AuthProvider } from '../adminsecure/AuthProvider';
 import Image from 'next/image';
 
