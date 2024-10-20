@@ -1,32 +1,26 @@
-"use client"; // Ensure this component is treated as a client component
+"use client";
 
 import { useAuth } from './AuthProvider';
-import { useRouter } from 'next/navigation'; // Use next/navigation for Next.js 13 and later
+import { useRouter } from 'next/navigation'; 
 import { useEffect } from 'react';
 
 const ProtectedSuperAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const {token} = useAuth();
+  const { isAuthenticated } = useAuth(); // Get the auth status
   const router = useRouter();
 
   useEffect(() => {
-    const handleRedirect = () => {
-      console.log('Token: ', token); // Debugging log
-      if (!token) {
-        router.push('/superadminlogin'); // Redirect to login if token is not present
-      }
-    };
+    console.log("Auth status:", isAuthenticated); // Debugging log
+    
+    if (!isAuthenticated) {
+      router.push('/superadminlogin'); // Redirect if not authenticated
+    }
+  }, [isAuthenticated, router]);
 
-    handleRedirect(); // Call the redirect function
-
-    // Optionally, you can add a dependency array to re-check on token changes
-  }, [token, router]);
-
-  // Return children only if token exists
-  if (!token) {
-    return null; // You can also return a loading state or a placeholder if desired
+  if (!isAuthenticated) {
+    return <div>Loading...</div>; // Show loading state while checking auth
   }
 
-  return <>{children}</>; // Render children only if token exists
+  return <>{children}</>; // Render children if authenticated
 };
 
 export default ProtectedSuperAdminRoute;
