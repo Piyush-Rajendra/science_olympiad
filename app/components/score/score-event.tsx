@@ -69,9 +69,24 @@ const ScoreEvent = (props) => {
         });
     };
 
+    const hasTies = (teams) => {
+        const scores = teams.map(team => team.Score);
+        const uniqueScores = new Set(scores);
+        return scores.length !== uniqueScores.size; // Check for duplicates
+    };
+
     const handleFinalize = () => {
-        setIsFinalized(true); // Set finalized state to true
-        // Optionally, you can also add logic here to handle finalization in the database.
+        if (hasTies(teams)) {
+            alert("Finalization failed: There is a tie in the scores. Please resolve the tie before finalizing.");
+            return; // Exit the function if there's a tie
+        }
+
+        // Show a confirmation prompt
+        const confirmed = window.confirm("Are you sure you want to finalize the scores? This action cannot be undone.");
+        if (confirmed) {
+            setIsFinalized(true); // Set finalized state to true
+            // Optionally, you can also add logic here to handle finalization in the database.
+        }
     };
 
     // Function to update the database with the new values
