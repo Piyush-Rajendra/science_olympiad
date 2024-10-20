@@ -23,10 +23,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = (newToken: string) => {
-    console.log("Logging in with token:", newToken); // Debugging log
     setToken(newToken);
     localStorage.setItem('token', newToken); // Store the token in localStorage
-    console.log("THIS WORKIE? " + token);
     setIsAuthenticated(true); // User is authenticated
   };
 

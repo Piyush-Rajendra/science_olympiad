@@ -9,7 +9,6 @@ const ProtectedSuperAdminRoute: React.FC<{ children: React.ReactNode }> = ({ chi
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Auth status:", isAuthenticated); // Debugging log
     
     if (!isAuthenticated) {
       router.push('/superadminlogin'); // Redirect if not authenticated
