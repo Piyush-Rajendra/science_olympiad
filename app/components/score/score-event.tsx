@@ -63,15 +63,27 @@ const ScoreEvent = (props) => {
 
     const rankSchools = (schools) => {
         return [...schools].sort((a, b) => {
+            // Check if either school is absent
+            const aIsAbsent = a.Attend === 0;
+            const bIsAbsent = b.Attend === 0;
+    
+            // If one school is absent, it should be ranked lower (i.e., come last)
+            if (aIsAbsent && !bIsAbsent) return 1; // a is absent, b is not, so b comes first
+            if (!aIsAbsent && bIsAbsent) return -1; // b is absent, a is not, so a comes first
+    
+            // If both are present, compare their tiers
             if (a.Tier !== b.Tier) {
                 return a.Tier - b.Tier;
             }
+    
+            // Compare scores based on the scoring algorithm
             if (props.scoringAlg === "Default") {
                 return b.Score - a.Score;
             } else if (props.scoringAlg === "Flipped") {
                 return a.Score - b.Score;
             }
-            return 0;
+    
+            return 0; // If all comparisons are equal, return 0
         });
     };
 
@@ -82,10 +94,14 @@ const ScoreEvent = (props) => {
     };
 
     const handleFinalize = async () => {
-        const hasBlankScores = teams.some(team => team.Score === null || team.Score === '');
+        // Check if there are blank scores for present teams
+        const hasBlankScores = teams.some(team => 
+            (team.Score === null || team.Score === '') && team.Attend !== 0 // Allow null scores only for absent teams
+        );
+    
         if (hasBlankScores) {
-            alert("One or more teams have blank scores. Please provide a score for all teams.");
-            return; // Exit the function if there are blank scores
+            alert("One or more teams have blank scores. Please provide a score for all present teams.");
+            return; // Exit the function if there are blank scores for present teams
         }
     
         if (hasTies(teams)) {
@@ -102,8 +118,7 @@ const ScoreEvent = (props) => {
     
                 if (response.status === 200) {
                     alert('Scores finalized successfully.');
-                    setIsFinalized(true); 
-                    
+                    setIsFinalized(true);
                 } else {
                     alert(`Error finalizing scores: ${response.data.message}`);
                 }
@@ -112,18 +127,7 @@ const ScoreEvent = (props) => {
             }
         }
     };
-
-
-    /*const fetchAndRankData = async () => {
-        try {
-            const eventTeamsResponse = await axios.get(`http://localhost:3000/get-team-timeblocks-by-event/${props.id}`);
-            const eventTeams = eventTeamsResponse.data;
-            const rankedTeams = rankSchools(eventTeams);
-            setTeams(rankedTeams);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }; */
+    
 
     // Function to update the database with the new values
     const handleSave = async () => {
@@ -155,10 +159,8 @@ const ScoreEvent = (props) => {
             
             alert('Scores updated successfully!');
             setRankedTeams(rankSchools(teams));
-            //fetchAndRankData();
-            
-            
-    
+            window.location.reload;
+
         } catch (error) {
             console.error("Error updating scores:", error);
         }
@@ -234,6 +236,7 @@ const ScoreEvent = (props) => {
                                 rank={index + 1}
                                 tier={school.Tier}
                                 score={school.Score}
+                                attend={school.Attend}
                                 teams={teams}
                                 color={index % 2 === 1 ? "white" : "#F3F4F6"}
                                 onChange={(updatedTeam) => {

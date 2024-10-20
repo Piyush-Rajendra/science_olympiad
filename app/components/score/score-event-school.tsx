@@ -10,6 +10,7 @@ const ScoreEventSchool = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                //console.log(props.attend)
                 const teamResponse = await axios.get(`http://localhost:3000/get-team/${props.teamId}`);
                 const team = teamResponse.data;
                 setName(team.name);
@@ -85,26 +86,34 @@ const ScoreEventSchool = (props) => {
                 <h3>{props.rank}</h3>
             </div>
             <div id="school-tier" className="mr-5">
-                <input
-                    type="text"
-                    value={tier}
-                    onChange={handleTierChange}
-                    className="border border-gray-300 rounded px-0.5 py-2 text-center text-xs"
-                    disabled={props.isFinalized} // Disable input if finalized
-                />
+                {props.attend === 0 ? (
+                    <span className="text-gray-500 ml-24 pr-12">Absent</span> // Show N/A if attend is 0
+                ) : (
+                    <input
+                        type="text"
+                        value={tier}
+                        onChange={handleTierChange}
+                        className="border border-gray-300 rounded px-0.5 py-2 text-center text-xs"
+                        disabled={props.isFinalized} // Disable input if finalized
+                    />
+                )}
             </div>
             <div id="school-score">
-                <input
-                    type="number"
-                    value={score === null ? '' : score}
-                    onChange={handleScoreChange}
-                    step="0.1"
-                    className={`border border-gray-300 rounded px-0.5 py-2 text-center text-xs ${isTie ? 'text-red-500' : ''}`}
-                    disabled={props.isFinalized} // Disable input if finalized
-                    onBlur={(e) => {
-                        // Format score on blur...
-                    }}
-                />
+                {props.attend === 0 ? (
+                    <span className="text-gray-500 mr-24 pl-3">Absent</span> // Show N/A if attend is 0
+                ) : (
+                    <input
+                        type="number"
+                        value={score === null ? '' : score}
+                        onChange={handleScoreChange}
+                        step="0.1"
+                        className={`border border-gray-300 rounded px-0.5 py-2 text-center text-xs ${isTie ? 'text-red-500' : ''}`}
+                        disabled={props.isFinalized} // Disable input if finalized
+                        onBlur={(e) => {
+                            // Format score on blur...
+                        }}
+                    />
+                )}
             </div>
 
             <hr className='border-t-3 border-black' />
