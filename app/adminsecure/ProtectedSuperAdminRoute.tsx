@@ -19,6 +19,10 @@ const ProtectedSuperAdminRoute: React.FC<{ children: React.ReactNode }> = ({ chi
   if (!isAuthenticated) {
     return <div>Loading...</div>; // Show loading state while checking auth
   }
+  
+  if(isAuthenticated) {
+    router.push('/superadmin');
+  }
 
   return <>{children}</>; // Render children if authenticated
 };
