@@ -4,22 +4,23 @@ import React, { useState } from 'react';
 
 interface Props {
     isOpen: boolean
-    onAdd: (name: string) => void;
+    onAdd: (firstName: string, lastName: string, email: string, director: boolean) => void;
     onClose: () => void;
 }
 
 const AddUser: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
     if (!isOpen) return null;
-    const [name, setName] = useState("");
+    const [firstName, setFirst] = useState("");
+    const [lastName, setLast] = useState("");
+    const [email, setEmail] = useState("");
+    const [director, setDirector] = useState(false);
 
     const submit = () => {
-        onAdd(name);
-        setName("");
+        onAdd(firstName, lastName, email, director);
+        setFirst("");
+        setLast("")
+        setEmail("");
         onClose()
-    }
-
-    const setEmail = (fdasf) => {
-
     }
 
     return (
@@ -35,7 +36,7 @@ const AddUser: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
                         </h1>
                         <input
                             className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setFirst(e.target.value)}
                         />
                     </div>
                     <div className = "w-1/2">
@@ -44,7 +45,7 @@ const AddUser: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
                         </h1>
                         <input
                             className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setLast(e.target.value)}
                         />
                     </div>
                 </div>
@@ -61,6 +62,7 @@ const AddUser: React.FC<Props> = ({ isOpen, onAdd, onClose }) => {
                     <input
                         type="checkbox"
                         className="form-checkbox h-7 w-7 border-gray-300 rounded"
+                        onChange={(e) => setDirector(e.target.checked)}
                     />
                     <label className="ml-4">Is Tournament Director?</label>
                 </div>

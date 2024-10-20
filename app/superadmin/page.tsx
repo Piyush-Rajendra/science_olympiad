@@ -93,9 +93,28 @@ const Groups: React.FC = ()  => {
         }
     }
 
-    const openAddGroup = (id: number, edit: boolean) => {
+    const addUser = async (first: string, last: string, email: string, isDirector: boolean) => {
+        try {
+            await fetch('http://localhost:3000/auth/registerAdmin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ school_group_id: currentId, firstName: first, lastName: last, email: email, username: "gdfgd", isTournamentDirector: isDirector})
+            })
+        } catch (error) {
+            console.log('Error occured adding user')
+        }
+    }
+
+    const openAddGroup = (id: number, name: string, edit: boolean) => {
         setCurrentId(id);
-        setEdit(edit)
+        setEdit(edit);
+        if (edit) {
+            setCurrentName(name)
+        } else {
+            setCurrentName("")
+        }
         setAddGroup(true);
     }
 
@@ -124,12 +143,11 @@ const Groups: React.FC = ()  => {
 
     const deleteGroup = async (id: number) => {
         try {
-            await fetch(`http://localhost:3000/delete-schoolgroup/${id}`, {
+            await fetch(`http://localhost:3000/delete-schoolgroup/${currentId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: name})
             })
 
             const newGroups = await fetch('http://localhost:3000/get-schoolgroups-all')
@@ -174,7 +192,7 @@ const Groups: React.FC = ()  => {
                                                     className="mx-auto w-10 h-10"/>
                                             </button>
                                             <button className="flex justify-center"
-                                                onClick = {() => {openAddGroup(row.school_group_id, true)} }>
+                                                onClick = {() => {openAddGroup(row.school_group_id, row.name, true)} }>
                                                 <Image 
                                                     src={EditIcon} 
                                                     alt="e"
@@ -206,7 +224,7 @@ const Groups: React.FC = ()  => {
             </div>
             <div className="absolute bottom-0 left-0 w-full border-t border-gray-300 bg-gray-50 px-12 py-4">
                 <div className="flex justify-between">
-                <button onClick={() => openAddGroup(nextId, false)} className="text-1xl font-bold underline px-4"
+                <button onClick={() => openAddGroup(nextId, currentName, false)} className="text-1xl font-bold underline px-4"
                     style={{color:'#006330'}}>
                     Add a school
                 </button>
@@ -219,6 +237,7 @@ const Groups: React.FC = ()  => {
             <Suspense fallback={<div>Loading Add Group</div>}>
                 <LazyAddGroup
                     isOpen={isAddGroup}
+                    currentName = {currentName}
                     onAdd={(name: string) => addGroup(name)}
                     onEdit={(name: string) => editGroup(name)}
                     onClose={closeAddGroup}
@@ -236,7 +255,7 @@ const Groups: React.FC = ()  => {
             <Suspense fallback={<div>Loading Add Group</div>}>
                 <LazyAddUser
                     isOpen={isAddUser}
-                    onAdd={(name: string) => addGroup(name)}
+                    onAdd={(firstName: string, lastName: string, email: string, director: boolean) => addUser(firstName, lastName, email, director)}
                     onClose={closeAddUser}
                 />
             </Suspense>

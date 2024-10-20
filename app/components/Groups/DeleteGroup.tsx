@@ -33,7 +33,7 @@ const DeleteGroup: React.FC<Props> = ({ isOpen, onConfirm, onClose, name }) => {
                     </button>
                     <button onClick={submit} className="rounded-full text-xl font-bold px-8 py-3 text-white"
                             style={{backgroundColor:'#006330'}}>
-                        End Tournament
+                        Delete Group
                     </button>
                 </div>
             </div>
