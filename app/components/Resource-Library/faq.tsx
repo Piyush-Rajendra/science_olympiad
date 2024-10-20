@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Image from 'next/image';
-import SearchIcon from "/images/trash.png"
 
 const Faq = () => {
   const [message, setMessage] = useState(''); // State for the popup message
