@@ -81,6 +81,12 @@ const ScoreEvent = (props) => {
             return; // Exit the function if there's a tie
         }
 
+        const hasBlankScores = teams.some(team => team.Score === null || team.Score === '');
+        if (hasBlankScores) {
+            alert("Finalization failed: One or more teams have blank scores. Please provide a score for all teams.");
+            return; // Exit the function if there are blank scores
+        }
+
         // Show a confirmation prompt
         const confirmed = window.confirm("Are you sure you want to finalize the scores? This action cannot be undone.");
         if (confirmed) {
