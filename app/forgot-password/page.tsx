@@ -25,7 +25,7 @@ const ForgotPassword: FC = () => {
 
     // Simulate email sending logic here
     alert(`Password reset link sent to ${email}`);
-    router.push('/login'); // Redirect to login or another route
+    router.push('/'); // Redirect to login or another route
   };
 
   const closePopup = () => {
