@@ -1,11 +1,12 @@
 "use client"
-
 import React, { useState, Suspense, useEffect } from 'react';
 import EditIcon from '../images/edit-246.png';
 import DeleteIcon from '../images/delete.png';
 import AddPersonIcon from '../images/add-person.png';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import ProtectedSuperAdminRoute from '../adminsecure/ProtectedSuperAdminRoute';
+import { AuthProvider } from '../adminsecure/AuthProvider';
 const LazyAddGroup = React.lazy(() => import('../components/Groups/AddGroup'))
 const LazyAdmins = React.lazy(() => import('../components/Groups/Admins'))
 const LazyDeleteGroup = React.lazy(() => import('../components/Groups/DeleteGroup'))
@@ -33,9 +34,7 @@ const Groups: React.FC = ()  => {
             .catch((error) => console.error('Could not retrieve groups'))
     }, []);
 
-    
-
-    const [dropdownIds, setDropdownIds] = useState({});
+    const [dropdownIds, setDropdownIds] = useState<{ [key: number]: boolean }>({});
     const [nextId, setNextId] = useState<number>(3);
     const [currentId, setCurrentId] = useState(0);
     const [currentName, setCurrentName] = useState("")
@@ -44,17 +43,19 @@ const Groups: React.FC = ()  => {
     const [isDeleteGroup, setDeleteGroup] = useState(false);
     const [isEdit, setEdit] = useState(false)
 
-
     const openGroup = (index: number) => {
         const groupInfo = document.getElementById(`row-${index}`);
-        groupInfo.classList.toggle('hidden')
-    }
+        if (groupInfo) {
+            groupInfo.classList.toggle('hidden');
+        }
+    };
 
     const toggleDropdown = (index: number) => {
         setDropdownIds(state => ({
-            ...state, [index]: !state[index]
-        }))
-    }
+            ...state,
+            [index]: !state[index],
+        }));
+    };
 
     const addGroup = async (name: string) => {
         try {
@@ -117,11 +118,11 @@ const Groups: React.FC = ()  => {
             setCurrentName("")
         }
         setAddGroup(true);
-    }
+    };
 
     const closeAddGroup = () => {
         setAddGroup(false);
-    }
+    };
 
     const openAddUser = (id: number, edit: boolean) => {
         setCurrentId(id);
@@ -136,11 +137,11 @@ const Groups: React.FC = ()  => {
         setCurrentId(id);
         setCurrentName(name);
         setDeleteGroup(true);
-    }
+    };
 
     const closeDeleteGroup = () => {
         setDeleteGroup(false);
-    }
+    };
 
     const deleteGroup = async (id: number) => {
         try {
@@ -160,7 +161,7 @@ const Groups: React.FC = ()  => {
     }
 
     const handleSubmit = () => {
-        router.push("/")
+        router.push("/superadminlogin")
     }
 
     return (
@@ -269,4 +270,4 @@ const Groups: React.FC = ()  => {
     )
 }
 
-export default Groups
+export default Groups;

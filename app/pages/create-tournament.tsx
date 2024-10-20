@@ -7,7 +7,6 @@ const hanuman = Hanuman({
   weight: "400", // Specify the weight you need, e.g., 400 for normal
 });
 
-
 const CreateTournament = () => {
   const [name, setName] = useState('');
   const [option, setOption] = useState('');
