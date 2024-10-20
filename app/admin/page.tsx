@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import '../styles/header.module.css';
-import AttendanceView from '../pages/attendanceView';
+import AttendanceView from '../components/Attendance/attendanceView';
 import CreateTournament from '../pages/create-tournament';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
