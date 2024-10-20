@@ -24,16 +24,34 @@ const EditAdmins: React.FC<Props> = ({ defaultName, defaultEmail, onEdit, onClos
 
     return (
         <div>
-            <div className="py-4">
-                <input
-                    className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-1/2 mr-4"
-                    defaultValue={defaultName}
-                    onChange={(e) => setName(e.target.value)}
-                />
+            <div className="flex justify-normal space-x-8">
+                <div className = "w-1/4">
+                    <h1 className="text-2xl font-bold py-2">
+                        First Name
+                    </h1>
+                    <input
+                        className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
+                        defaultValue={defaultName}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </div>
+                <div className = "w-1/4">
+                    <h1 className="text-2xl font-bold py-2">
+                        Last Name
+                    </h1>
+                    <input
+                        className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
+                        defaultValue={defaultName}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </div>
             </div>
             <div>
+                <h1 className="text-2xl font-bold py-2">
+                    Email
+                </h1>
                 <input
-                    className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-1/2 mr-4"
+                    className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-3/4 mr-4"
                     defaultValue={defaultEmail}
                     onChange={(e) => setEmail(e.target.value)}
                 />

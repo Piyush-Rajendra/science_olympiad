@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import EditIcon from '../../images/edit-246.png'
 import DeleteIcon from '../../images/delete.png'
 import Image from 'next/image';
@@ -13,25 +13,51 @@ interface AdminContent {
     email: string
 }
 
+interface AdminContent {
+    admin_id: number;
+    school_group_id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+
 interface Props {
     group_id: number;
 }
 
 const Admins: React.FC<Props> = ( {group_id})  => {
 
+    /*
     const [admins, setAdmins] = useState<AdminContent[]>([
         {admin_id: 0, group_id: 0, name: "John Doe", email: "jdoe@gmail.com"},
         {admin_id: 2, group_id: 0, name: "Tim Cook", email: "tcook@gmail.com"},
         {admin_id: 1, group_id: 1, name: "Rebecca Black", email: "rblack@gmail.com"},
-    ])
-    const [nextId, setNextId] = useState<number>(2);
+    ])*/
+
+    const [admins, setAdmins] = useState<AdminContent[]>([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/auth/admin')
+            .then((response) => response.json())
+            .then((data) => {
+                const currentAdmins = data
+                .filter((admin: any) => admin.school_group_id === group_id)
+                .map((admin: any) => ({
+                    admin_id: admin.admin_id,
+                    school_group_id: admin.school_group_id,
+                    firstName: admin.firstName,
+                    lastName: admin.lastName,
+                    email: admin.email
+                }));
+                setAdmins(currentAdmins)
+            })
+            .catch((error) => console.error('Could not retrieve admins'))
+    }, [])
+
 
     const editAdmin = (id: number, name: string, email: string) => {
-        setAdmins((prevAdmins) =>
-            prevAdmins.map((admin) =>
-                admin.admin_id === id ? {...admins, ...{admin_id: id, group_id:group_id, name: name, email: email } } : admin
-            )
-        )
+        
     } 
 
     const toggleAdmin = (index) => {
@@ -40,13 +66,8 @@ const Admins: React.FC<Props> = ( {group_id})  => {
     }
 
     const deleteAdmin = (index) => {
-        setAdmins((prevAdmins) =>
-            prevAdmins.filter((admin) => admin.admin_id !== index)
-        );
+        
     }
-
-    const groupAdmins = admins.filter(admin => admin.group_id === group_id)
-
 
     return (
         <div>
@@ -56,16 +77,16 @@ const Admins: React.FC<Props> = ( {group_id})  => {
                         <tr>
                             <th className="px-4 py-2">Administrator</th>
                             <th className="px-4 py-2">Email</th>
-                            <th className="px-4 py-2">Manage</th>
+                            <th className="px-4 py-4 flex justify-end pr-80">Manage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {groupAdmins.map((row, index) => (
+                        {admins.map((row, index) => (
                             <React.Fragment key={index}>
                                 <tr className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b`}>
-                                    <td className="px-4 py-4">{row.name}</td>
+                                    <td className="px-4 py-4">{`${row.firstName} ${row.lastName}`}</td>
                                     <td className="px-4 py-4">{row.email}</td>
-                                    <td className="px-4 py-4 flex">
+                                    <td className="px-4 py-4 flex justify-end pr-80">
                                         <button className="flex justify-center"
                                             onClick = {() => {toggleAdmin(row.admin_id)} }>
                                             <Image 
