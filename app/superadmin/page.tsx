@@ -5,6 +5,7 @@ import EditIcon from '../images/edit-246.png';
 import DeleteIcon from '../images/delete.png';
 import AddPersonIcon from '../images/add-person.png';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 const LazyAddGroup = React.lazy(() => import('../components/Groups/AddGroup'))
 const LazyAdmins = React.lazy(() => import('../components/Groups/Admins'))
 const LazyDeleteGroup = React.lazy(() => import('../components/Groups/DeleteGroup'))
@@ -23,7 +24,7 @@ const Groups: React.FC = ()  => {
         {id: 1, school: "MGA"},
         {id: 2, school: "GT"},
     ])*/
-
+    const router = useRouter()
     const [groups, setGroups] = useState<GroupContent[]>([]);
     useEffect(() => {
         fetch('http://localhost:3000/get-schoolgroups-all')
@@ -158,6 +159,10 @@ const Groups: React.FC = ()  => {
         }
     }
 
+    const handleSubmit = () => {
+        router.push("/")
+    }
+
     return (
         <div className="font-sans">
             <div className="px-4 py-4">
@@ -229,7 +234,8 @@ const Groups: React.FC = ()  => {
                     Add a school
                 </button>
                 <button className="rounded-full text-1xl px-6 py-3 text-white"
-                        style={{backgroundColor:'#006330'}}>
+                        style={{backgroundColor:'#006330'}}
+                        onClick={() => handleSubmit()}>
                     Return
                 </button>
                 </div>
