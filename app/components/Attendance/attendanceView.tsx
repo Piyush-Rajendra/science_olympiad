@@ -55,6 +55,9 @@ const AttendanceView = () => {
           }
 
           setEvents(er);
+          if (events.length !> 0) {
+            setNoCurrentTournaments(true);
+          }
         } else {
           setNoCurrentTournaments(true);
         }
