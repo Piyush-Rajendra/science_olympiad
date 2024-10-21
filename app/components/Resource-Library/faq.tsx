@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Image from 'next/image';
+import axios from 'axios';
+import { scheduler } from 'timers/promises';
+
 
 const Faq = () => {
   const [message, setMessage] = useState(''); // State for the popup message
@@ -9,6 +12,7 @@ const Faq = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false); // State for Edit modal
   const [question, setQuestion] = useState(''); // State for user question
   const [answer, setAnswer] = useState(''); // State for user-provided answer
+  const [group_id, setGroupID] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState(null); // Track which question is being edited
   const [questions, setQuestions] = useState([ // Dummy list of questions and answers
     { id: 1, question: "Where are the bathrooms?", answer: "The bathrooms are located on each of the floors by the elevators." },
@@ -51,34 +55,71 @@ const Faq = () => {
   };
 
   // Function to submit a new question or edit an existing one
-  const handleSubmitQuestion = () => {
+  const handleSubmitQuestion = async () => {
     if (question.trim()) {
-      if (editingQuestionId) {
-        // Update existing question
-        const updatedQuestions = questions.map(item =>
-          item.id === editingQuestionId
-            ? { ...item, question: question, answer: answer }
-            : item
-        );
-        setQuestions(updatedQuestions);
-        setEditingQuestionId(null);
-      } else {
-        // Add a new question
-        const newQuestion = {
-          id: questions.length + 1, // Assign an id based on length
-          question: question,
-          answer: answer || '', // Set `answer` to an empty string if it's not provided
+        const questionData = {
+            Question: question,
+            schoolGroup_id: localStorage.getItem('group_id') // Calling to current local group
         };
-        setQuestions([...questions, newQuestion]); // Update state with new question
-      }
-      setQuestion(''); // Clear the question input field
-      setAnswer(''); // Clear the answer input field
-      handleCloseQAModal(); // Close the modal
-      handleCloseEditModal(); // Close edit modal
+
+        try {
+            // Make API request to create or update the question
+            const response = editingQuestionId
+                ? await fetch(`http://localhost:3000/questions/${editingQuestionId}`, {
+                      method: 'PUT', // Use PUT for editing
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(questionData),
+                  })
+                : await fetch('http://localhost:3000/questions', {
+                      method: 'POST', // Use POST for creating a new question
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(questionData),
+                  });
+
+            const data = await response.json();
+
+            // Update local state if successful
+            if (response.ok) {
+                const newQuestion = {
+                    id: editingQuestionId || questions.length + 1,
+                    question: question,
+                    answer: answer || '',
+                };
+
+                if (editingQuestionId) {
+                    // Update the existing question
+                    const updatedQuestions = questions.map(item =>
+                        item.id === editingQuestionId ? newQuestion : item
+                    );
+                    setQuestions(updatedQuestions);
+                    setEditingQuestionId(null);
+                } else {
+                    // Add a new question
+                    setQuestions([...questions, newQuestion]);
+                }
+
+                // Clear input fields
+                setQuestion('');
+                setAnswer('');
+                handleCloseQAModal();
+                handleCloseEditModal();
+                setMessage('Question submitted successfully!'); // Show success message
+            } else {
+                setMessage(data.message || 'Failed to submit the question. Please try again.'); // Show error message
+            }
+        } catch (error) {
+            console.error('Error submitting question:', error);
+            setMessage('An error occurred while submitting the question.'); // Show error message
+        }
     } else {
-      alert('Please enter a question.'); // Alert if question is empty
+        alert('Please enter a question.'); // Alert if question is empty
     }
-  };
+};
+
 
   // Function to toggle dropdown for a specific question
   const toggleQuestion = (id) => {
