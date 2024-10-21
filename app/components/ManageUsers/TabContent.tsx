@@ -77,7 +77,7 @@ const TabContent: React.FC<TabContentProps> = ({ activeTab }) => {
         );
         setSupervisorData(updatedSupervisorData);
       }
-      setData(activeTab === 'Admins' ? updatedAdminData : updatedSupervisorData);
+      setData(activeTab === 'Admins' ? adminData : supervisorData);
       setIsEditPopupOpen(false);
       setEditingEntry(null);
     }
