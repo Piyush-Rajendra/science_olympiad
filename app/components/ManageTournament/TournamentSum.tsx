@@ -1,10 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-const LazyEnd = React.lazy(() => import('./EndTournament'))
-import SearchIcon from '../../images/search.png'
-import DownloadIcon from '../../images/download.png'
 import Image from 'next/image';
+const LazyEnd = React.lazy(() => import('./EndTournament'))
 
 
 
@@ -63,53 +61,49 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
     return (
         <div>
             <div className="px-12 py-4">
-                <h2 className="text-3xl font-bold py-4">
+                <h2 className="text-3xl font-bold py-2">
                     Current Tournament
                 </h2>
                 <div className="rounded-2xl px-12 py-6 flex flex-col space-y-4"
-                     style={{backgroundColor: '#FAFBFC', border:'2px solid #D9D9D9'}}>
-
-                        {currentTournament ? (
-                            <>
-                                <div className="flex justify-between">
-                                    <h1 className="text-4xl font-bold py-3">
-                                        {currentTournament.name}  |  Division {currentTournament.division}
-                                    </h1>
-                                    <button onClick={() => setEndTournament(true)} className="rounded-full text-xl font-bold px-8 py-3 text-white"
-                                            style={{backgroundColor:'#006330'}}>
-                                        End Tournament
-                                    </button>
-                                </div>
-                                <div className="flex space-x-6">
-                                    <button onClick={() => editTourn(currentTournament.name, currentTournament.division)} className="rounded-full text-xl px-8 py-3"
-                                            style={{backgroundColor:'#B7E394'}}>
-                                        Edit Tournament
-                                    </button>
-                                    <button onClick={() => editEvent(currentTournament.name, currentTournament.division)} className="rounded-full text-xl px-8 py-3"
-                                            style={{backgroundColor:'#B7E394'}}>
-                                        Edit Events
-                                    </button>
-                                    <button className="rounded-full text-xl px-8 py-3"
-                                            style={{backgroundColor:'#B7E394'}}>
-                                        Manage Admins and Supervisors
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div className="flex justify-between">
-                                <h1 className="text-4xl font-bold py-3">
-                                    No Tournament Active
-                                </h1>
-                                <button onClick={() => addDummyTournament()} className="rounded-full text-xl font-bold px-8 py-3 text-white"
-                                        style={{backgroundColor:'#006330'}}>
-                                    Create New Tournament
-                                </button>
-                                </div>
-                            </>
-                        )}
-                    
+                    style={{ backgroundColor: '#FAFBFC', border: '2px solid #D9D9D9' }}>
+                    <div className="px-12 py-6 flex justify-between items-start">
+                        <div>
+                            <p className="font-bold text-xl">{name}</p>
+                            <p><strong>Division: </strong>{division}</p>
+                            <p><strong>Date: </strong>{date}</p>
+                            <p><strong>Location: </strong>UGA Miller Learning Center</p>
+                            <p>48 Baxter St, Athens, GA 30602</p>
+                        </div>
+                        {/* Vertical buttons and separator */}
+                        <div className="border-l-2 border-gray-300 pl-6 flex flex-col space-y-4">
+                            <button
+                                onClick={() => editTourn(name, division)}
+                                className="py-2 px-4 rounded-full bg-white border-2 border-green-600 text-green-600"
+                            >
+                                Edit tournament
+                            </button>
+                            <button
+                                onClick={() => editEvent(name, division)}
+                                className="py-2 px-4 rounded-full bg-white border-2 border-green-600 text-green-600"
+                            >
+                                Edit events
+                            </button>
+                            <button
+                                onClick={() => {}}
+                                className="py-2 px-4 rounded-full bg-white border-2 border-green-600 text-green-600"
+                            >
+                                Manage admins and event supervisors
+                            </button>
+                            <button
+                                onClick={() => setEndTournament(true)}
+                                className="py-2 px-4 rounded-full bg-green-600 text-white"
+                            >
+                                End Tournament
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
                 <h2 className="text-3xl font-bold pt-12 pb-2">
                     Past Tournaments
                 </h2>
@@ -119,11 +113,8 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                         placeholder="Search"
                         style={{ backgroundColor: '#FAFBFC', border: '2px solid #D9D9D9' }}
                     />
-                    <Image 
-                        src={SearchIcon}
-                        alt="Search Icon"
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6"
-                    />
+                        <img src="images/search.png" alt="Search Icon"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6"  />
                 </div>
                 <div className="pt-8">
                     <table className="w-full text-left table-auto min-w-max">
@@ -151,11 +142,7 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                                         <div className="flex justify-end">
                                             <button onClick={() => downloadScores(row.id)} className="py-4 rounded-full px-4 bg-white flex items-center"
                                                     style={{border:'2px solid #006330', color:'#006330'}}>
-                                                <Image 
-                                                    src={DownloadIcon}
-                                                    alt="Search Icon"
-                                                    className="h-5 w-5 mr-2"
-                                                />
+                                                <img src="images/downloading.png" alt="Download button" className="h-5 w-5 mr-2"/>
                                                 Download Score Sheet
                                             </button>
                                         </div>
@@ -172,11 +159,6 @@ const TournamentSum: React.FC<TournamentProps> = ({isOpen, editTourn, editEvent,
                 onClose={() => setEndTournament(false)}
             />
         </div>
-        
-
-
-
-
     )
 }
 
