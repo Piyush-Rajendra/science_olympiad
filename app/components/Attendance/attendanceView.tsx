@@ -5,12 +5,23 @@ import EventList from './eventList';
 const AttendanceView = () => {
   const [events, setEvents] = useState([]);
   const [groupId, setGroupID] = useState(1);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isES, setIsES] = useState(false);
   const [noCurrentTournaments, setNoCurrentTournaments] = useState(false);
   const [esID, setESID] = useState(1);
 
   useEffect(() => {
+    try {
+      const holder = localStorage.getItem('isAdmin');
+      if (!holder) {
+        throw new Error();
+      }
+      setIsAdmin(true);
+      setIsES(false);
+    } catch {
+      setIsES(true);
+      setIsES(false);
+    }
     const fetchData = async () => {
       try {
         // Fetch the IDs of currently running tournaments

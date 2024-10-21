@@ -8,21 +8,62 @@ export default function App() {
   const [password, setPassword] = useState('');
   const [accountType, setAccountType] = useState("Administrator");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Simulating a successful login - you can replace this with actual login logic
-    if (email === 'admin@example.com' && password === 'password123') {
-      localStorage.setItem('isLoggedIn', 'true');
-      router.push('/admin?loggedIn=true&role=admin'); // Redirect to home or another route after login
-    } else if (email === 'es@example.com' && password === 'password123') {
-      router.push('/admin?loggedIn=true&role=es');
-    } else if (email === 'superadmin@example.com' && password === 'password123') {
-      router.push('/superadmin');
-    }
+    if (accountType === 'Administrator') {
+      try {
+        const response = await fetch('http://localhost:3000/auth/adminlogin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
     
-    else {
-      alert('Invalid email or password'); // Basic error handling
+        if (!response.ok) {
+          alert('Invalid email or password');
+          return;
+        }
+        
+        const data = await response.json();
+        localStorage.setItem('isAdmin', 'admin');
+        localStorage.setItem('token', data.token)
+        router.push('/mainpage');
+        // Handle login success (e.g., store token, redirect)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle login error
+      }
+    } else {
+      try {
+        const response = await fetch('http://localhost:3000/auth/esLogin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+    
+        if (!response.ok) {
+          alert('Invalid email or password');
+          return;
+        }
+        
+        const data = await response.json();
+        localStorage.setItem('isES', 'es');
+        localStorage.setItem('token', data.token)
+        router.push('/mainpage');
+        // Handle login success (e.g., store token, redirect)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle login error
+      }
     }
   };
 

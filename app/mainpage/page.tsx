@@ -16,12 +16,34 @@ import ResourceLibrary from '../components/Resource-Library/resource-lib';
 export default function App() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const loggedIn = searchParams.get('loggedIn');
-  const userType = searchParams.get('role');
+  // const loggedIn = searchParams.get('loggedIn');
+  // const userType = searchParams.get('role');
+  let loggedIn;
+  let userType;
+  try {
+    userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
+    if (!userType) {
+      throw new Error();
+    }
+  } catch {
+    router.push('/');
+  }
+
+  try {
+    loggedIn = localStorage.getItem('token');
+    console.log(loggedIn);
+    if (!loggedIn) {
+      console.log(loggedIn)
+      throw new Error();  // Force the catch block if 'isAdmin' doesn't exist
+    }
+    loggedIn = 'true';
+  } catch {
+    router.push('/');
+  }
 
   // Track login state and set default selected menu item to 'create'
-  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true'); 
-  const [isAdmin, setIsAdmin] = useState(userType ===  'admin');
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true');
+  const [isAdmin, setIsAdmin] = useState(userType === 'admin');
   type MenuItem = 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
   const [selected, setSelected] = useState<MenuItem>(isAdmin ? 'create' : 'resources');
 
@@ -31,6 +53,7 @@ export default function App() {
 
   const handleSignOut = () => {
     setIsLoggedIn(false);
+    localStorage.clear();
     router.push('/');
   };
 
@@ -50,10 +73,10 @@ export default function App() {
         <div className="sidebar">
           <div className="sidebar-header">
             {isAdmin &&
-            <h1>Admin Portal</h1>
+              <h1>Admin Portal</h1>
             }
             {!isAdmin &&
-            <h1>ES Portal</h1>
+              <h1>ES Portal</h1>
             }
           </div>
           <ul className="sidebar-menu">
@@ -68,7 +91,7 @@ export default function App() {
                 </h2>
               </li>
             }
-            {isAdmin && 
+            {isAdmin &&
               <li
                 className={selected === 'manage_t' ? 'selected' : ''}
                 onClick={() => handleClick('manage_t')}
@@ -79,16 +102,16 @@ export default function App() {
                 </h2>
               </li>
             }
-            {isAdmin && 
-            <li
-              className={selected === 'manage_a&e' ? 'selected' : ''}
-              onClick={() => handleClick('manage_a&e')}
-            >
-              <h2>
-                <img src="/images/address-book.png" alt="Logo" />
-                Manage Admins and ES
-              </h2>
-            </li>
+            {isAdmin &&
+              <li
+                className={selected === 'manage_a&e' ? 'selected' : ''}
+                onClick={() => handleClick('manage_a&e')}
+              >
+                <h2>
+                  <img src="/images/address-book.png" alt="Logo" />
+                  Manage Admins and ES
+                </h2>
+              </li>
             }
             <li
               className={selected === 'attendance' ? 'selected' : ''}
@@ -126,10 +149,10 @@ export default function App() {
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTourneyLanding />}
-          {selected === 'manage_t' && <div><ManageTournament/></div>}
-          {selected === 'manage_a&e' && <div><ManageUsers/></div>}
+          {selected === 'manage_t' && <div><ManageTournament /></div>}
+          {selected === 'manage_a&e' && <div><ManageUsers /></div>}
           {selected === 'score' && <Score />}
-          {selected === 'resources' && <div><ResourceLibrary/></div>}
+          {selected === 'resources' && <div><ResourceLibrary /></div>}
         </div>
       </div>
     </div>
