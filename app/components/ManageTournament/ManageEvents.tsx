@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, Suspense } from 'react';
+import { useRouter } from 'next/router'; // Import useRouter
 import EditIcon from '../../images/edit-246.png';
 import DeleteIcon from '../../images/delete.png';
 import Image from 'next/image';
 const LazyEventInfo = React.lazy(() => import('./Info/EventInfo'));
 const LazyAddEvent = React.lazy(() => import('./Add/AddEvent'));
-import CreateTourneyLanding from '../create-tourney/create-tourney-landing';
+import CreateTimeBlocks from '../create-tourney/create-time-blocks';
 
 interface TournamentProps {
     tournament_id: number;
@@ -14,9 +15,9 @@ interface TournamentProps {
     division: string;
     NumOfTimeBlocks: number;
     name: string;
-    date:  Date;
-    location: String;
-    description: String; 
+    date: Date;
+    location: string; // Fixed to lowercase 'string'
+    description: string; // Fixed to lowercase 'string' 
     onClose: () => void;
 }
 
@@ -30,6 +31,16 @@ interface GroupContent {
 const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, location, description, isOpen, onClose }: TournamentProps) => {
     if (!isOpen) return null;
 
+    // State to store tournament details
+    const [tournamentDetails, setTournamentDetails] = useState({
+        name: '',
+        division: '',
+        date: '', // Keep date as a string initially
+        location: '',
+        description: '',
+        id: 1, // Example: starting ID
+    });
+
     const [events, setEvents] = useState<GroupContent[]>([]);
     const [nextId, setNextId] = useState<number>(1);
     const [currentEventId, setCurrentEventId] = useState(0);
@@ -38,7 +49,6 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
     const [showNextStep, setShowNextStep] = useState(false);
 
     const addEvent = (name: string, description: string, score: string) => {
-        // Editing event
         if (events.some(event => event.id === currentEventId)) {
             setEvents((prevEvents) =>
                 prevEvents.map((event) =>
@@ -46,7 +56,6 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                 )
             );
         } else {
-            // Adding event
             setEvents([...events, { name, description, score, id: nextId }]);
             setNextId(nextId + 1);
         }
@@ -86,12 +95,10 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
             alert('Please provide both name and division before publishing the tournament.');
             return;
         }
-    
-        // Generate unique IDs as per your application logic
-        const tournamentId = Math.floor(Math.random() * 10000); // Example ID generation
+
+        const tournamentId = Math.floor(Math.random() * 10000);
         const groupId = 1; // Replace with actual logic for group ID if necessary
-    
-        // Prepare the data to send
+
         const tournamentData = {
             tournament_id: tournamentId,
             group_id: groupId,
@@ -99,13 +106,13 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
             division: division,
             NumOfTimeBlocks: events.length,
             name: name,
-            date: Date, // Format the date as ISO string for better compatibility
-            location: location, // Ensure this is a valid string
-            description: description // Ensure this is a valid string
+            date: date.toISOString(), // Use toISOString for better compatibility
+            location: location,
+            description: description
         };
-    
-        console.log('Publishing Tournament with Data:', JSON.stringify(tournamentData, null, 2)); // Log the data in a readable format
-    
+
+        console.log('Publishing Tournament with Data:', JSON.stringify(tournamentData, null, 2));
+
         try {
             const response = await fetch('http://localhost:3000/add-tournament', {
                 method: 'POST',
@@ -114,23 +121,20 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                 },
                 body: JSON.stringify(tournamentData),
             });
-    
-            console.log('Response Status:', response.status);
-    
+
             if (!response.ok) {
                 const errorMessage = await response.text();
-                console.error('Failed to publish tournament:', errorMessage); // Log error message
+                console.error('Failed to publish tournament:', errorMessage);
                 throw new Error(`Failed to publish tournament: ${errorMessage}`);
             }
-    
+
             alert('Tournament published successfully!');
-            onClose(); // Optionally close the manage events modal
+            onClose();
         } catch (error) {
             console.error('Error:', error);
             alert('Error publishing tournament. Please try again.');
         }
     };
-    
 
     return (
         <div className="px-12 py-6 flex flex-col min-h-screen">
@@ -141,16 +145,14 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                     </button>
                     <div className='flex py-6 space-x-10 border-b border-gray-300'>
                         <h1 className="text-4xl font-bold">{name}</h1>
-                        <h1 className="text-4xl font-bold">{date instanceof Date ? date.toLocaleDateString() : date}</h1> {/* Updated line */}
+                        <h1 className="text-4xl font-bold">{date instanceof Date ? date.toLocaleDateString() : date}</h1>
                         <h1 className="text-4xl font-bold" style={{ color: '#006330' }}>
                             Division {division}
                         </h1>
                     </div>
+
                     <div className='flex justify-between py-6'>
                         <h2 className='text-3xl font-bold'>Events</h2>
-                        <button onClick={() => createEvent(nextId)} className="rounded-full px-6 py-2" style={{ backgroundColor: '#B7E394' }}>
-                            Add Event
-                        </button>
                     </div>
 
                     <table className="w-full table-auto text-left">
@@ -197,6 +199,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                             ))}
                         </tbody>
                     </table>
+
                     <Suspense fallback={<div>Loading Add Event</div>}>
                         <LazyAddEvent
                             isOpen={isOpenEvent}
@@ -205,22 +208,35 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                         />
                     </Suspense>
 
-                    {/* Footer with Next button */}
-                    <div id="footer-and-submit" className="bg-white relative w-full flex flex-col mt-auto pb-5">
-                        <hr className='w-full border-t-3 border-black mb-2' />
-                        <div className="flex w-full justify-end items-center mr-5 pr-5">
+                    {/* Footer with Add Event and Next buttons */}
+                    <div id="footer-and-submit" className="bg-white relative w-full flex items-center justify-between mt-auto pb-5">
+                        <div className="flex items-center ml-5">
+                            <button onClick={() => createEvent(nextId)} className="flex items-center text-lg font-semibold text-green-800 rounded-full px-4 py-2 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                <span className="text-2xl mr-2">+</span>
+                                Add Event
+                            </button>
+                        </div>
+
+                        <div className="flex justify-end mr-5 pr-5">
                             <button
                                 className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                                onClick={publishTournament} // Call the new function
+                                onClick={handleNextStep} // Change to handleNextStep
                             >
-                                Publish Tournament
+                                Next
                             </button>
                         </div>
                     </div>
                 </>
             ) : (
-                // Pass tournament details as props
-                <CreateTourneyLanding />
+                <CreateTimeBlocks
+                name={tournamentDetails.name}
+                division={tournamentDetails.division}
+                date={new Date(tournamentDetails.date)}  // Ensure you're passing a Date object
+                location={tournamentDetails.location}
+                description={tournamentDetails.description}
+                id={tournamentDetails.id}
+                isOpen={showNextStep}
+                onClose={() => setShowNextStep(false)} />
             )}
         </div>
     );
