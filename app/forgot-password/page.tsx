@@ -1,31 +1,63 @@
-// components/ForgotPassword.tsx
 "use client";
-import React, { FC, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { FC, useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation'; // Add useSearchParams to access query params
 import Popup from '../components/Popup'; // Import the Popup component
 
 const ForgotPassword: FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
-  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
+  const [showPopup, setShowPopup] = useState(false);
+  const [accountType, setAccountType] = useState("Administrator"); // Default to Administrator
+
+  // Fetch account type from query parameters on component load
+  useEffect(() => {
+    const type = searchParams.get('accountType');
+    if (type) {
+      setAccountType(type);
+    }
+  }, [searchParams]);
 
   const isValidEmail = (email: string) => {
-    // Basic email validation regex
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate email
+    
     if (!isValidEmail(email)) {
-      setShowPopup(true); // Show the popup if email is invalid
+      setShowPopup(true); // Show popup if email is invalid
       return;
     }
 
-    // Simulate email sending logic here
-    alert(`Password reset link sent to ${email}`);
-    router.push('/'); // Redirect to login or another route
+    try {
+      // Determine the correct API route based on account type
+      const route =
+        accountType === 'Administrator'
+          ? 'http://localhost:3000/auth/forgot-passwordA'
+          : 'http://localhost:3000/auth/forgot-passwordEs';
+
+        console.log("ACCOUNT " + accountType);
+
+      const response = await fetch(route, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send reset link');
+      }
+
+      alert(`Password reset link sent to ${email}`);
+      router.push('/'); // Redirect to login or another route
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error sending reset link. Please try again.');
+    }
   };
 
   const closePopup = () => {
@@ -66,7 +98,7 @@ const ForgotPassword: FC = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-olympiadGreen focus:border-olympiadGreen sm:text-sm"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // Handle email input
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -89,7 +121,7 @@ const ForgotPassword: FC = () => {
 
           {/* Popup for invalid email address */}
           {showPopup && (
-            <Popup message="Please check your spam and inbox! We have sent reset instructions to your email address." onClose={closePopup} />
+            <Popup message="Please enter a valid email address." onClose={closePopup} />
           )}
         </div>
       </div>
