@@ -3,24 +3,28 @@
 import React, { useState } from 'react';
 
 interface Props {
-    defaultName: string
+    defaultFirst: string
+    defaultLast
     defaultEmail: string
-    onEdit: (name: string, email: string) => void;
+    onEdit: (first: string, last: string, email: string) => void;
     onClose: () => void
 }
 
 
-const EditAdmins: React.FC<Props> = ({ defaultName, defaultEmail, onEdit, onClose })  => {
+const EditAdmins: React.FC<Props> = ({ defaultFirst, defaultLast, defaultEmail, onEdit, onClose })  => {
 
-    const [name, setName] = useState(defaultName);
+    const [first, setFirst] = useState(defaultFirst);
+    const [last, setLast] = useState(defaultLast);
     const [email, setEmail] = useState(defaultEmail);
 
     const submit = () => {
-        onEdit(name, email);
-        setName("");
-        setEmail("");
+        onEdit(first, last, email);
+        setFirst(defaultFirst)
+        setLast(defaultLast)
+        setEmail(defaultEmail)
         onClose();
     }
+    
 
     return (
         <div>
@@ -31,8 +35,8 @@ const EditAdmins: React.FC<Props> = ({ defaultName, defaultEmail, onEdit, onClos
                     </h1>
                     <input
                         className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
-                        defaultValue={defaultName}
-                        onChange={(e) => setName(e.target.value)}
+                        defaultValue={defaultFirst}
+                        onChange={(e) => setFirst(e.target.value)}
                     />
                 </div>
                 <div className = "w-1/4">
@@ -41,8 +45,8 @@ const EditAdmins: React.FC<Props> = ({ defaultName, defaultEmail, onEdit, onClos
                     </h1>
                     <input
                         className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full mr-4"
-                        defaultValue={defaultName}
-                        onChange={(e) => setName(e.target.value)}
+                        defaultValue={defaultLast}
+                        onChange={(e) => setLast(e.target.value)}
                     />
                 </div>
             </div>

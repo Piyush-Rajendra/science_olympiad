@@ -31,9 +31,14 @@ const Groups: React.FC = ()  => {
     useEffect(() => {
         fetch('http://localhost:3000/get-schoolgroups-all')
             .then((response) => response.json())
-            .then((data) => setGroups(data))
+            .then((data) => setGroups(sortGroupsByName(data)))
             .catch((error) => console.error('Could not retrieve groups'))
     }, []);
+
+    
+    const sortGroupsByName = (groups: GroupContent[]) => {
+        return groups.sort((a, b) => a.name.localeCompare(b.name));
+    };
 
     const [dropdownIds, setDropdownIds] = useState<{ [key: number]: boolean }>({});
     const [nextId, setNextId] = useState<number>(3);
@@ -70,7 +75,7 @@ const Groups: React.FC = ()  => {
 
             const newGroups = await fetch('http://localhost:3000/get-schoolgroups-all')
             const data = await newGroups.json()
-            setGroups(data)
+            setGroups(sortGroupsByName(data))
                 
             
         } catch (error) {
@@ -90,7 +95,7 @@ const Groups: React.FC = ()  => {
 
             const newGroups = await fetch('http://localhost:3000/get-schoolgroups-all')
             const data = await newGroups.json()
-            setGroups(data)
+            setGroups(sortGroupsByName(data))
         } catch (error) {
             console.log('Error occur editing school group')
         }
@@ -155,7 +160,7 @@ const Groups: React.FC = ()  => {
 
             const newGroups = await fetch('http://localhost:3000/get-schoolgroups-all')
             const data = await newGroups.json()
-            setGroups(data)
+            setGroups(sortGroupsByName(data))
         } catch (error) {
             console.log('Error deleting school group')
         }
@@ -232,7 +237,7 @@ const Groups: React.FC = ()  => {
                             </table>
                         </div>
                     </div>
-                    <div className="absolute bottom-0 left-0 w-full border-t border-gray-300 bg-gray-50 px-12 py-4">
+                    <div className="fixed bottom-0 left-0 w-full border-t border-gray-300 bg-gray-50 px-12 py-4">
                         <div className="flex justify-between">
                         <button onClick={() => openAddGroup(nextId, currentName, false)} className="text-1xl font-bold underline px-4"
                             style={{color:'#006330'}}>

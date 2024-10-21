@@ -8,13 +8,6 @@ const LazyEditAdmins = React.lazy(() => import('./EditAdmins'))
 
 interface AdminContent {
     admin_id: number;
-    group_id: number
-    name: string;
-    email: string
-}
-
-interface AdminContent {
-    admin_id: number;
     school_group_id: number;
     firstName: string;
     lastName: string;
@@ -34,30 +27,82 @@ const Admins: React.FC<Props> = ( {group_id})  => {
         {admin_id: 2, group_id: 0, name: "Tim Cook", email: "tcook@gmail.com"},
         {admin_id: 1, group_id: 1, name: "Rebecca Black", email: "rblack@gmail.com"},
     ])*/
-
+    const token = localStorage.getItem('token');
     const [admins, setAdmins] = useState<AdminContent[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/auth/admin')
-            .then((response) => response.json())
+        
+        fetch('http://localhost:3000/auth/admin', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => {
+                if(!response.ok) {
+                    throw new Error('Failed to get admins');
+                }
+                return response.json()
+            })
             .then((data) => {
                 const currentAdmins = data
-                .filter((admin: any) => admin.school_group_id === group_id)
-                .map((admin: any) => ({
-                    admin_id: admin.admin_id,
-                    school_group_id: admin.school_group_id,
-                    firstName: admin.firstName,
-                    lastName: admin.lastName,
-                    email: admin.email
-                }));
+                    .filter((admin: any) => admin.school_group_id === group_id)
+                    .map((admin: any) => ({
+                        admin_id: admin.admin_id,
+                        school_group_id: admin.school_group_id,
+                        firstName: admin.firstName,
+                        lastName: admin.lastName,
+                        email: admin.email
+                    }))
                 setAdmins(currentAdmins)
             })
-            .catch((error) => console.error('Could not retrieve admins'))
-    }, [])
+    })
 
+    const editAdmin = async (id: number, first: string, last: string, email: string) => {
+        try {
 
-    const editAdmin = (id: number, name: string, email: string) => {
-        
+            const response = await fetch(`http://localhost:3000/auth/AId/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch admin data');
+            }
+
+            const data = await response.json()
+            const user = data.user
+
+            const newResponse = await fetch(`http://localhost:3000/auth/updateadmin`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    "admin_id": id,
+                    "school_group_id": group_id,
+                    "firstName": first,
+                    "lastName": last,
+                    "email": email,
+                    "username": user.username,
+                    "password": user.password,
+                    "isTournamentDirector": user.isTournamentDirector
+                })
+            })
+
+            if (!newResponse.ok) {
+                throw new Error('Failed to update admin data');
+            }
+
+            setAdmins((prevAdmins) => prevAdmins.filter(admin => admin.admin_id !== id));
+        } catch (error) {
+            console.log('Error occur editing admin')
+        }
     } 
 
     const toggleAdmin = (index) => {
@@ -65,9 +110,21 @@ const Admins: React.FC<Props> = ( {group_id})  => {
         groupInfo.classList.toggle('hidden')
     }
 
-    const deleteAdmin = (index) => {
-        
+    const deleteAdmin = async (index) => {
+        try {
+            await fetch(`http://localhost:3000/auth/deleteAdmin/${index}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            setAdmins((prevAdmins) => prevAdmins.filter(admin => admin.admin_id !== index));
+        } catch (error) {
+            console.log('Error deleting admin')
+        }
     }
+
+
 
     return (
         <div>
@@ -108,9 +165,10 @@ const Admins: React.FC<Props> = ( {group_id})  => {
                                     <td colSpan={3} className="p-4">
                                         <Suspense fallback={<div>Loading Edit Admin</div>}>
                                             <LazyEditAdmins
-                                                defaultName={row.name}
+                                                defaultFirst={row.firstName}
+                                                defaultLast={row.lastName}
                                                 defaultEmail={row.email}
-                                                onEdit={(name: string, email: string) => editAdmin(row.admin_id, name, email)}
+                                                onEdit={(first: string, last: string, email: string) => editAdmin(row.admin_id, first, last, email)}
                                                 onClose={() => toggleAdmin(row.admin_id)}
                                             />
                                         </Suspense>
