@@ -9,7 +9,7 @@ const AttendanceView = () => {
   const [isAdmin, setIsAdmin] = useState(null);  // Set to null initially to check later
   const [isES, setIsES] = useState(null);  // Set to null initially to check later
   const [noCurrentTournaments, setNoCurrentTournaments] = useState(false);
-  const [esID, setESID] = useState(1);
+  const [esID, setESID] = useState(null);
 
   useEffect(() => {
     // Check user role from localStorage first
@@ -18,10 +18,12 @@ const AttendanceView = () => {
       if (holder) {
         setIsAdmin(true);
         setIsES(false);
+        setGroupID(localStorage.getItem('group_id'));
       } else {
         setIsAdmin(false);
         setIsES(true);
         setGroupID(localStorage.getItem('group_id'));
+        setESID(localStorage.getItem('es_id'));
       }
     };
 
@@ -48,7 +50,7 @@ const AttendanceView = () => {
             // Event Supervisor route
             console.log(groupId);
             console.log(currentTournamentId);
-            eventsResponse = await fetch(`http://localhost:3000/get-events/supervisor/${groupId}/tournament/${currentTournamentId}`);
+            eventsResponse = await fetch(`http://localhost:3000/get-events/supervisor/${esID}/tournament/${currentTournamentId}`);
             er = await eventsResponse.json();
           }
 

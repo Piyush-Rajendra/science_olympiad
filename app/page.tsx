@@ -22,15 +22,16 @@ export default function App() {
             password: password,
           }),
         });
-    
+
         if (!response.ok) {
           alert('Invalid email or password');
           return;
         }
-        
+
         const data = await response.json();
         localStorage.setItem('isAdmin', 'admin');
         localStorage.setItem('token', data.token)
+        localStorage.setItem('group_id', data.school_group_id);
         router.push('/mainpage');
         // Handle login success (e.g., store token, redirect)
       } catch (error) {
@@ -49,16 +50,17 @@ export default function App() {
             password: password,
           }),
         });
-    
+
         if (!response.ok) {
           alert('Invalid email or password');
           return;
         }
-        
+
         const data = await response.json();
         localStorage.setItem('isES', 'es');
         localStorage.setItem('token', data.token);
         localStorage.setItem('group_id', data.school_group_id);
+        localStorage.setItem('es_id', data.eventSupervisor_id);
         console.log(data.school_group_id);
         router.push('/mainpage');
         // Handle login success (e.g., store token, redirect)
@@ -66,14 +68,8 @@ export default function App() {
         console.error('Error:', error);
         // Handle login error
       }
-
-      const data = await response.json();
-      localStorage.setItem(accountType === 'Administrator' ? 'isAdmin' : 'isES', accountType);
-      localStorage.setItem('token', data.token);
-      router.push('/mainpage');
-    } catch (error) {
-      console.error('Error:', error);
     }
+
   };
 
   return (
@@ -99,21 +95,18 @@ export default function App() {
           <div className="flex justify-between mb-6">
             <div className="w-full bg-white border-2 border-black rounded-full relative p-1">
               <div
-                className={`absolute top-0 left-0 w-1/2 h-full bg-green-700 rounded-full transition-transform duration-300 ease-in-out ${
-                  accountType === "Event Supervisor" ? "translate-x-full" : ""
-                }`}></div>
+                className={`absolute top-0 left-0 w-1/2 h-full bg-green-700 rounded-full transition-transform duration-300 ease-in-out ${accountType === "Event Supervisor" ? "translate-x-full" : ""
+                  }`}></div>
               <div className="relative z-10 flex justify-between">
                 <button
-                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
-                    accountType === "Administrator" ? "text-white" : "text-black"
-                  }`}
+                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${accountType === "Administrator" ? "text-white" : "text-black"
+                    }`}
                   onClick={() => setAccountType("Administrator")}>
                   Administrator
                 </button>
                 <button
-                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
-                    accountType === "Event Supervisor" ? "text-white" : "text-black"
-                  }`}
+                  className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${accountType === "Event Supervisor" ? "text-white" : "text-black"
+                    }`}
                   onClick={() => setAccountType("Event Supervisor")}>
                   Event Supervisor
                 </button>
