@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -10,67 +10,35 @@ export default function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accountType === 'Administrator') {
-      try {
-        const response = await fetch('http://localhost:3000/auth/adminlogin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        });
-    
-        if (!response.ok) {
-          alert('Invalid email or password');
-          return;
-        }
-        
-        const data = await response.json();
-        localStorage.setItem('isAdmin', 'admin');
-        localStorage.setItem('token', data.token)
-        router.push('/mainpage');
-        // Handle login success (e.g., store token, redirect)
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle login error
-      }
-    } else {
-      try {
-        const response = await fetch('http://localhost:3000/auth/esLogin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        });
-    
-        if (!response.ok) {
-          alert('Invalid email or password');
-          return;
-        }
-        
-        const data = await response.json();
-        localStorage.setItem('isES', 'es');
-        localStorage.setItem('token', data.token)
-        router.push('/mainpage');
-        // Handle login success (e.g., store token, redirect)
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle login error
-      }
-    }
-  };
+    const loginRoute =
+      accountType === 'Administrator'
+        ? 'http://localhost:3000/auth/adminlogin'
+        : 'http://localhost:3000/auth/esLogin';
 
-  const toggleAccountType = () => {
-    setAccountType((prevType) =>
-      prevType === "Administrator" ? "Event Supervisor" : "Administrator"
-    );
+    try {
+      const response = await fetch(loginRoute, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        alert('Invalid email or password');
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem(accountType === 'Administrator' ? 'isAdmin' : 'isES', accountType);
+      localStorage.setItem('token', data.token);
+      router.push('/mainpage');
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -98,27 +66,20 @@ export default function App() {
               <div
                 className={`absolute top-0 left-0 w-1/2 h-full bg-green-700 rounded-full transition-transform duration-300 ease-in-out ${
                   accountType === "Event Supervisor" ? "translate-x-full" : ""
-                }`}
-              ></div>
+                }`}></div>
               <div className="relative z-10 flex justify-between">
                 <button
                   className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
-                    accountType === "Administrator"
-                      ? "text-white"
-                      : "text-black"
+                    accountType === "Administrator" ? "text-white" : "text-black"
                   }`}
-                  onClick={() => setAccountType("Administrator")}
-                >
+                  onClick={() => setAccountType("Administrator")}>
                   Administrator
                 </button>
                 <button
                   className={`w-1/2 text-center py-1 font-bold transition-colors duration-300 ease-in-out ${
-                    accountType === "Event Supervisor"
-                      ? "text-white"
-                      : "text-black"
+                    accountType === "Event Supervisor" ? "text-white" : "text-black"
                   }`}
-                  onClick={() => setAccountType("Event Supervisor")}
-                >
+                  onClick={() => setAccountType("Event Supervisor")}>
                   Event Supervisor
                 </button>
               </div>
@@ -137,7 +98,7 @@ export default function App() {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-olympiadGreen focus:border-olympiadGreen sm:text-sm"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // Handle email input
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-6">
@@ -150,18 +111,20 @@ export default function App() {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-olympiadGreen focus:border-olympiadGreen sm:text-sm"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} // Handle password input
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <a href="/forgot-password" className="text-green-700 mb-4 block text-left">
+            {/* Pass accountType in query parameter */}
+            <a
+              href={`/forgot-password?accountType=${accountType}`}
+              className="text-green-700 mb-4 block text-left">
               Forgot password?
             </a>
 
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-olympiadGreen text-white rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-olympiadGreen"
-            >
+              className="w-full py-2 px-4 bg-olympiadGreen text-white rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-olympiadGreen">
               Sign In
             </button>
           </form>
@@ -169,4 +132,4 @@ export default function App() {
       </div>
     </div>
   );
-};
+}
