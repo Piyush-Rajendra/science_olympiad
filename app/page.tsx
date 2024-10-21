@@ -57,7 +57,9 @@ export default function App() {
         
         const data = await response.json();
         localStorage.setItem('isES', 'es');
-        localStorage.setItem('token', data.token)
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('group_id', data.school_group_id);
+        console.log(data.school_group_id);
         router.push('/mainpage');
         // Handle login success (e.g., store token, redirect)
       } catch (error) {
