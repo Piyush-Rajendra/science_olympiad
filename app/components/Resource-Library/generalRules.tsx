@@ -3,20 +3,44 @@ import DocViewer from './docViewer';
 
 const GeneralRules = () => {
   const [activeTab, setActiveTab] = useState(1);
-  const [message, setMessage] = useState(''); // State for the popup message
-  const pdfUrl = '../images/Science_Olympiad_Div_C_Rules_2025.pdf'
+  const [message, setMessage] = useState('');
+  const [file, setFile] = useState(null); 
+  const pdfUrl = '../images/Science_Olympiad_Div_C_Rules_2025.pdf';
 
   // Function to change the active tab
   const handleTabClick = (index) => {
     setActiveTab(index);
-  };
+  }; 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileUrl = URL.createObjectURL(file);
-      // Assuming DocViewer can handle dynamic URLs, update the file
-      console.log(fileUrl); // You could set this in state if you want to show a selected file
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      uploadFile(selectedFile); // Automatically upload the file after selection
+    }
+  };
+
+  // Function to upload the selected PDF to the backend
+  const uploadFile = async (selectedFile) => {
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+    formData.append('schoolGroup_id', '1'); // Replace '1' with the actual schoolGroup_id you want to use
+
+    try {
+      const response = await fetch('http://localhost:3000/resource-library/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload PDF');
+      }
+
+      const result = await response.json();
+      setMessage(result.message); // Show the success message
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setMessage('Error uploading file'); // Show error message
     }
   };
 
@@ -32,7 +56,6 @@ const GeneralRules = () => {
 
   return (
     <div className="container mx-auto pr-4 py-6">
-
       {/* Tab Content */}
       <div className="content-tabs">
         {activeTab === 1 && (
@@ -54,7 +77,6 @@ const GeneralRules = () => {
                 <span className="text-2xl font-bold mr-2">+</span>
                 <span className="font-medium">Upload PDF File</span>
               </label>
-
               {/* Save Changes Button */}
               <button
                 onClick={handleSaveChanges}
