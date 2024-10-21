@@ -31,9 +31,7 @@ export default function App() {
 
   try {
     loggedIn = localStorage.getItem('token');
-    console.log(loggedIn);
     if (!loggedIn) {
-      console.log(loggedIn)
       throw new Error();  // Force the catch block if 'isAdmin' doesn't exist
     }
     loggedIn = 'true';

@@ -10,26 +10,61 @@ export default function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const loginRoute =
-      accountType === 'Administrator'
-        ? 'http://localhost:3000/auth/adminlogin'
-        : 'http://localhost:3000/auth/esLogin';
-
-    try {
-      const response = await fetch(loginRoute, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-
-      if (!response.ok) {
-        alert('Invalid email or password');
-        return;
+    if (accountType === 'Administrator') {
+      try {
+        const response = await fetch('http://localhost:3000/auth/adminlogin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+    
+        if (!response.ok) {
+          alert('Invalid email or password');
+          return;
+        }
+        
+        const data = await response.json();
+        localStorage.setItem('isAdmin', 'admin');
+        localStorage.setItem('token', data.token)
+        router.push('/mainpage');
+        // Handle login success (e.g., store token, redirect)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle login error
+      }
+    } else {
+      try {
+        const response = await fetch('http://localhost:3000/auth/esLogin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+    
+        if (!response.ok) {
+          alert('Invalid email or password');
+          return;
+        }
+        
+        const data = await response.json();
+        localStorage.setItem('isES', 'es');
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('group_id', data.school_group_id);
+        console.log(data.school_group_id);
+        router.push('/mainpage');
+        // Handle login success (e.g., store token, redirect)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle login error
       }
 
       const data = await response.json();
