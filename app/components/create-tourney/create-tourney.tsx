@@ -1,63 +1,95 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ManageEvents from '../ManageTournament/ManageEvents';
+import axios from 'axios';
 
 const CreateTourney = () => {
-    const [addresses, setAddresses] = useState(['']);
     const [showNextStep, setShowNextStep] = useState(false);
+    const [newTournamentId, setNewTournamentId] = useState();
+    const [isAdmin, setIsAdmin] = useState(true);
+    const [isEventSuperVisor, setIsEventSuperVisor] = useState(false);
+    const [eventSuperVisorID, setEventSuperVisorID] = useState(null);
+    const [groupId, setGroupId] = useState(null);
 
     // State to store tournament details
     const [tournamentDetails, setTournamentDetails] = useState({
         name: '',
         division: '',
         date: '', // Keep date as a string initially
-        location: '',
+        location: '', // Single location field
         description: '',
         id: 1, // Example: starting ID
     });
 
-    const addLocation = () => {
-        setAddresses([...addresses, '']);
-    };
-
-    const handleChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-        const newAddresses = [...addresses];
-        newAddresses[index] = event.target.value;
-        setAddresses(newAddresses);
-
-        // Update location whenever an address is changed
-        setTournamentDetails((prev) => ({
-            ...prev,
-            location: newAddresses.join(', '), // Join addresses into a single string
-        }));
-    };
-
-    const handleDelete = (index: number) => {
-        const newAddresses = addresses.filter((_, i) => i !== index);
-        setAddresses(newAddresses);
-
-        // Update location when an address is deleted
-        setTournamentDetails((prev) => ({
-            ...prev,
-            location: newAddresses.join(', '), // Join addresses into a single string
-        }));
-    };
-
-    const handleNextStep = () => {
+    /*const handleNextStep = () => {
+        handleFormSubmit();
         setShowNextStep(true);
-    };
+    }; */
+
+    useEffect(() => {
+        try {
+            const holder = localStorage.getItem('isAdmin');
+            if (holder) {
+                setIsAdmin(true);
+                setIsEventSuperVisor(false);
+                const groupIdFromStorage = localStorage.getItem('group_id');
+                setGroupId(groupIdFromStorage);
+                //alert(groupId)
+            } else {
+                setIsAdmin(false);
+                setEventSuperVisorID(localStorage.getItem('es_id'));
+                const groupIdFromStorage = localStorage.getItem('group_id');
+                setGroupId(groupIdFromStorage);
+                //alert(groupId)
+            }
+        }
+        catch (error) {
+            console.error("Error fetching data:", error);
+        }
+
+
+    }, []);
 
     // Convert date from string to Date object when necessary
-    const handleFormSubmit = () => {
-        const tourneyDate = new Date(tournamentDetails.date); // Convert string to Date object
-        const tournamentData = {
-            ...tournamentDetails,
-            date: tourneyDate, // Ensure you're passing a Date object
-        };
-
-        // Perform the save operation here (e.g., API call or saving to DB)
-        console.log('Tournament Data to Save:', tournamentData);
+    const handleFormSubmit = async () => {
+        // Check if any required field is blank
+        const { name, division, location, description, date } = tournamentDetails;
+    
+        if (!name || !location || !description || !date) {
+            alert("Please fill in all the fields before trying to create a tournament.");
+            return; // Stop execution if any field is blank
+        }
+    
+        try {
+            // Convert the date to a proper format
+            const tourneyDate = new Date(date).toISOString().split('T')[0]; // Convert string to date and format YYYY-MM-DD
+    
+            const tournamentData = {
+                name: name,
+                division: division || 'B',
+                group_id: groupId,                // Keep group id as 1
+                NumOfTimeBlocks: 0,         // Set number of time blocks to 0
+                location: location,
+                description: description,
+                isCurrent: false,           // Set isCurrent to false
+                date: tourneyDate           // Pass formatted date string
+            };
+    
+            // Make the POST request to the API endpoint
+            const response = await axios.post('http://localhost:3000/add-tournament', tournamentData);
+    
+            if (response.data && response.data.id) {
+                // Save the new tournament ID from the response
+                setNewTournamentId(response.data.id);
+            }
+    
+            //alert("Tournament Added!");
+            setShowNextStep(true);
+        } catch (error) {
+            alert("There was an error creating your tournament.");
+        }
     };
+    
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -125,45 +157,26 @@ const CreateTourney = () => {
                     </div>
 
                     <div id="location">
-                        <div id="location-header" className="flex justify-between items-center mb-4 pr-3">
-                            <h2 className="pl-7 pt-4">Location</h2>
-                            <button
-                                onClick={addLocation}
-                                className="bg-green-200 border border-green-400 text-black rounded-full px-5 py-1 hover:bg-green-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 ml-7"
-                            >
-                                Add location
-                            </button>
-                        </div>
-
-                        <div id="addresses" className="flex flex-col pb-12">
-                            {addresses.map((address, index) => (
-                                <div key={index} className="flex items-center mb-2">
-                                    <input
-                                        className="ml-7 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-w-md"
-                                        type="text"
-                                        placeholder="Enter Address"
-                                        value={address}
-                                        onChange={(event) => handleChange(index, event)}
-                                    />
-                                    <button
-                                        onClick={() => handleDelete(index)}
-                                        className="ml-4 bg-red-200 border border-red-400 text-black rounded-full px-3 py-1 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
+                        <h2 className="pl-7 pt-4">Location</h2>
+                        <input
+                            className="ml-7 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline max-w-md"
+                            type="text"
+                            placeholder="Enter Location"
+                            name="location"
+                            value={tournamentDetails.location}
+                            onChange={handleInputChange}
+                        />
                     </div>
+                    <div className='pb-12'></div>
 
                     {/* Footer with Next button */}
-                    <div id="footer-and-submit" className="bg-white w-full flex flex-col pb-5 mt-auto">
+                    <div id="create-tourney-footer" className="bg-white sticky bottom-0 left-0 w-full flex flex-col pb-2">
                         <hr className="w-full border-t-3 border-black mb-2" />
                         <div className="flex w-full justify-end items-center mr-5 pr-5">
                             <h4 className="text-gray-500 pt-2 mr-4">Next Step: Create Your Events</h4>
                             <button
                                 className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                                onClick={handleNextStep}
+                                onClick={handleFormSubmit}
                             >
                                 Next
                             </button>
@@ -172,12 +185,7 @@ const CreateTourney = () => {
                 </>
             ) : (
                 <ManageEvents
-                    name={tournamentDetails.name}
-                    division={tournamentDetails.division}
-                    date={new Date(tournamentDetails.date)}  // Ensure you're passing a Date object
-                    location={tournamentDetails.location}
-                    description={tournamentDetails.description}
-                    id={tournamentDetails.id}
+                    tournament_id={newTournamentId}
                     isOpen={showNextStep}
                     onClose={() => setShowNextStep(false)}
                 />

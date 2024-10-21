@@ -39,7 +39,7 @@ const AddEvent: React.FC<Props> = ({ isOpen, onAdd, onClose, tournamentId }) => 
                 scoreStatus: 0 // Set scoreStatus to 0
             });
     
-            alert("Event added!"); // Show success alert
+            //alert("Event added!"); // Show success alert
             onAdd(name, description, score, tournamentId); // Call onAdd after successful post
             setName(''); // Reset name state
             setDescription(''); // Reset description state

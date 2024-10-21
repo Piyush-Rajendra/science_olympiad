@@ -66,7 +66,7 @@ const EditEvent: React.FC<Props> = ({ isOpen, eventId, onClose, onUpdate }) => {
                 scoreStatus // Set scoreStatus
             });
     
-            alert("Event updated!"); // Notify on success
+            //alert("Event updated!"); // Notify on success
             onUpdate(name, description, score); // Call onUpdate after successful update
             onClose(); // Close the modal
         } catch (error) {
