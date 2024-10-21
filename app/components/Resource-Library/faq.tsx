@@ -122,13 +122,6 @@ const Faq = () => {
           <span className="text-2xl font-bold mr-2">+</span>
           <span className="font-medium">Add a Question</span>
         </button>
-
-        {/* Save Changes Button */}
-        <button
-          onClick={handleSaveChanges}
-          className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-750">
-          Save Changes
-        </button>
       </div>
 
       {/* Popup Message */}
