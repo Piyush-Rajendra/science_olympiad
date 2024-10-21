@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/router'; // Import useRouter
 import EditIcon from '../../images/edit-246.png';
 import DeleteIcon from '../../images/delete.png';
 import Image from 'next/image';
 const LazyEventInfo = React.lazy(() => import('./Info/EventInfo'));
 const LazyAddEvent = React.lazy(() => import('./Add/AddEvent'));
+const LazyEditEvent = React.lazy(() => import('./Edit/EditEvent'));
 import CreateTimeBlocks from '../create-tourney/create-time-blocks';
+import axios from 'axios';
 
 interface TournamentProps {
     tournament_id: number;
@@ -41,24 +43,73 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         id: 1, // Example: starting ID
     });
 
-    const [events, setEvents] = useState<GroupContent[]>([]);
+    const [events, setEvents] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(true);
+    const [isEventSuperVisor, setIsEventSuperVisor] = useState(false);
+    const [eventSuperVisorID, setEventSuperVisorID] = useState(null);
+    const [groupId, setGroupId] = useState(null);
+    const [noCurrentTournaments, setNoCurrentTournaments] = useState(false);
+    const [tourneyId, setTourneyId] = useState();
+    
+
+    useEffect(() => { //fetches events when the page remounts
+        fetchEvents();
+    }, [isAdmin, eventSuperVisorID, groupId, tourneyId]);
+
+    const fetchEvents = async () => {
+        try {
+            const holder = localStorage.getItem('isAdmin');
+                if (holder) {
+                    setIsAdmin(true);
+                    setIsEventSuperVisor(false);
+                    const groupIdFromStorage = localStorage.getItem('group_id');
+                    setGroupId(groupIdFromStorage);
+                    //alert(groupId)
+                } else {
+                    setIsAdmin(false);
+                    setEventSuperVisorID(localStorage.getItem('es_id'));
+                    const groupIdFromStorage = localStorage.getItem('group_id');
+                    setGroupId(groupIdFromStorage);
+                    //alert(groupId)
+                }
+
+                // Make sure groupId is defined before making the API call
+                if (!groupId) return;
+
+                const currentTournamentResponse = await axios.get(`http://localhost:3000/get-current-tournaments/${groupId}`);
+                const currentTournaments = currentTournamentResponse.data;
+
+                if (currentTournaments.length > 0) {
+                    const currentTournamentId = currentTournaments[0].tournament_id;
+                    setTourneyId(currentTournamentId);
+    
+                    let eventsResponse;
+    
+                    if (isAdmin) {
+                        eventsResponse = await axios.get(`http://localhost:3000/get-events-by-tournament/${currentTournamentId}`);
+                    } 
+                    setEvents(eventsResponse.data);
+                } else {
+                    setNoCurrentTournaments(true);
+                }
+
+                //const response = await axios.get('http://localhost:3000/get-events-all');
+                //setEvents(response.data); // Assuming the API returns an array of events
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+        }
+
+
     const [nextId, setNextId] = useState<number>(1);
     const [currentEventId, setCurrentEventId] = useState(0);
     const [isOpenEvent, setIsOpenEvent] = useState(false);
     const [dropdownIds, setDropdownIds] = useState({});
     const [showNextStep, setShowNextStep] = useState(false);
+    const [isOpenEditEvents, setIsOpenEditEvents] = useState(false);
 
-    const addEvent = (name: string, description: string, score: string) => {
-        if (events.some(event => event.id === currentEventId)) {
-            setEvents((prevEvents) =>
-                prevEvents.map((event) =>
-                    event.id === currentEventId ? { ...event, name, description, score } : event
-                )
-            );
-        } else {
-            setEvents([...events, { name, description, score, id: nextId }]);
-            setNextId(nextId + 1);
-        }
+    const addEvent = (name: string, description: string, score: string, tournamentId: number,) => {
+        fetchEvents();
     };
 
     const createEvent = (id: number) => {
@@ -66,8 +117,15 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         setIsOpenEvent(true);
     };
 
+    const EditEvent = (id: number) => { 
+        setCurrentEventId(id);
+        setIsOpenEditEvents(true);
+
+    }
+
     const closeEvent = () => {
         setIsOpenEvent(false);
+        setIsOpenEditEvents(false);
     };
 
     const openEvent = (index: number) => {
@@ -75,8 +133,19 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         eventInfo.classList.toggle('hidden');
     };
 
-    const deleteEvent = (id: number) => {
-        setEvents(events.filter(event => event.id !== id));
+    const deleteEvent = async (id: number) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+        
+        if (!confirmDelete) {
+            return; // If the user clicks "Cancel", don't proceed with deletion
+        }
+    
+        try {
+            await axios.delete(`http://localhost:3000/delete-event/${id}`); // Replace with actual delete endpoint
+            fetchEvents(); // Re-fetch events after deletion
+        } catch (error) {
+            console.error('Error deleting event:', error);
+        }
     };
 
     const toggleDropdown = (index: number) => {
@@ -150,96 +219,115 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                             Division {division}
                         </h1>
                     </div>
-
+    
                     <div className='flex justify-between py-6'>
                         <h2 className='text-3xl font-bold'>Events</h2>
                     </div>
-
-                    <table className="w-full table-auto text-left">
-                        <thead className="border-b border-gray-300">
-                            <tr>
-                                <th className="px-2"></th>
-                                <th className="py-2 px-4">Event Name</th>
-                                <th className="py-2 px-8">Division</th>
-                                <th className="py-2 px-8">Scoring Algorithm</th>
-                                <th className="px-4 py-2">Manage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {events.map((row, index) => (
-                                <React.Fragment key={row.id}>
-                                    <tr className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b`}>
-                                        <td className="px-2" onClick={() => { openEvent(index); toggleDropdown(row.id) }}>
-                                            {dropdownIds[row.id] ? '▲' : '▼'}
-                                        </td>
-                                        <td className="py-2 px-4">{row.name}</td>
-                                        <td className="py-2 px-8">{division}</td>
-                                        <td className="py-2 px-8">
-                                            <button className="rounded-md px-2 py-2" style={{ backgroundColor: '#B7E394' }}>
-                                                {row.score}
-                                            </button>
-                                        </td>
-                                        <td className="px-4 py-2 justify-normal flex space-x-4">
-                                            <button className="flex justify-center" onClick={() => createEvent(row.id)}>
-                                                <Image src={EditIcon} alt="Edit" className="mx-auto w-10 h-10" />
-                                            </button>
-                                            <button className="flex justify-center" onClick={() => deleteEvent(row.id)}>
-                                                <Image src={DeleteIcon} alt="Delete" className="mx-auto w-10 h-10" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr id={`row-${index}`} className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b hidden`}>
-                                        <td colSpan={5} className="p-4">
-                                            <Suspense fallback={<div>Loading Events</div>}>
-                                                <LazyEventInfo name={row.name} description={row.description} id={row.id} />
-                                            </Suspense>
-                                        </td>
-                                    </tr>
-                                </React.Fragment>
-                            ))}
-                        </tbody>
-                    </table>
-
+    
+                    {noCurrentTournaments ? (
+                        <div className="text-center text-lg font-semibold text-gray-500">
+                            There are no current tournaments.
+                        </div>
+                    ) : (
+                        <table className="w-full table-auto text-left">
+                            <thead className="border-b border-gray-300">
+                                <tr>
+                                    <th className="px-2"></th>
+                                    <th className="py-2 px-4">Event Name</th>
+                                    <th className="py-2 px-8">Division</th>
+                                    <th className="py-2 px-8">Scoring Algorithm</th>
+                                    <th className="px-4 py-2">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {events.map((row, index) => (
+                                    <React.Fragment key={row.event_id}>
+                                        <tr className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b`}>
+                                            <td className="px-2" onClick={() => { openEvent(index); toggleDropdown(row.event_id) }}>
+                                                {dropdownIds[row.id] ? '▲' : '▼'}
+                                            </td>
+                                            <td className="py-2 px-4">{row.name}</td>
+                                            <td className="py-2 px-8">{division}</td>
+                                            <td className="py-2 px-8">
+                                                <button className="rounded-md px-2 py-2" style={{ backgroundColor: '#B7E394' }}>
+                                                    {row.scoringAlg}
+                                                </button>
+                                            </td>
+                                            <td className="px-4 py-2 justify-normal flex space-x-4">
+                                                <button className="flex justify-center" onClick={() => EditEvent(row.event_id)}>
+                                                    <Image src={EditIcon} alt="Edit" className="mx-auto w-10 h-10" />
+                                                </button>
+                                                <button className="flex justify-center" onClick={() => deleteEvent(row.event_id)}>
+                                                    <Image src={DeleteIcon} alt="Delete" className="mx-auto w-10 h-10" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr id={`row-${index}`} className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b hidden`}>
+                                            <td colSpan={5} className="p-4">
+                                                <Suspense fallback={<div>Loading Events</div>}>
+                                                    <LazyEventInfo name={row.name} description={row.description} id={row.id} />
+                                                </Suspense>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+    
                     <Suspense fallback={<div>Loading Add Event</div>}>
                         <LazyAddEvent
                             isOpen={isOpenEvent}
-                            onAdd={(name: string, description: string, score: string) => addEvent(name, description, score)}
+                            onAdd={(name: string, description: string, score: string, tourneyId: number,) => addEvent(name, description, score, tourneyId)}
+                            onClose={closeEvent}
+                            tournamentId={tourneyId}
+                        />
+                    </Suspense>
+    
+                    <Suspense fallback={<div>Loading Edit Event</div>}>
+                        <LazyEditEvent
+                            isOpen={isOpenEditEvents}
+                            eventId={currentEventId}
+                            onUpdate={(name: string, description: string, score: string) => addEvent(name, description, score, tourneyId)}
                             onClose={closeEvent}
                         />
                     </Suspense>
-
+    
                     {/* Footer with Add Event and Next buttons */}
-                    <div id="footer-and-submit" className="bg-white relative w-full flex items-center justify-between mt-auto pb-5">
-                        <div className="flex items-center ml-5">
-                            <button onClick={() => createEvent(nextId)} className="flex items-center text-lg font-semibold text-green-800 rounded-full px-4 py-2 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                                <span className="text-2xl mr-2">+</span>
-                                Add Event
-                            </button>
+                    {!noCurrentTournaments && (
+                        <div id="footer-and-submit" className="bg-white relative w-full flex items-center justify-between mt-auto pb-5">
+                            <div className="flex items-center ml-5">
+                                <button onClick={() => createEvent(nextId)} className="flex items-center text-lg font-semibold text-green-800 rounded-full px-4 py-2 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                    <span className="text-2xl mr-2">+</span>
+                                    Add Event
+                                </button>
+                            </div>
+    
+                            <div className="flex justify-end mr-5 pr-5">
+                                <button
+                                    className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                                    onClick={handleNextStep} // Change to handleNextStep
+                                >
+                                    Next
+                                </button>
+                            </div>
                         </div>
-
-                        <div className="flex justify-end mr-5 pr-5">
-                            <button
-                                className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                                onClick={handleNextStep} // Change to handleNextStep
-                            >
-                                Next
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </>
             ) : (
                 <CreateTimeBlocks
-                name={tournamentDetails.name}
-                division={tournamentDetails.division}
-                date={new Date(tournamentDetails.date)}  // Ensure you're passing a Date object
-                location={tournamentDetails.location}
-                description={tournamentDetails.description}
-                id={tournamentDetails.id}
-                isOpen={showNextStep}
-                onClose={() => setShowNextStep(false)} />
+                    name={tournamentDetails.name}
+                    division={tournamentDetails.division}
+                    date={new Date(tournamentDetails.date)}  // Ensure you're passing a Date object
+                    location={tournamentDetails.location}
+                    description={tournamentDetails.description}
+                    id={tournamentDetails.id}
+                    isOpen={showNextStep}
+                    onClose={() => setShowNextStep(false)} />
             )}
         </div>
     );
+    
 }
 
 export default ManageEvents;
