@@ -8,35 +8,50 @@ const Score = () => {
     const [noCurrentTournaments, setNoCurrentTournaments] = useState(false); // New state to track if there are no current tournaments
     const [isAdmin, setIsAdmin] = useState(true);
     const [isEventSuperVisor, setIsEventSuperVisor] = useState(false);
-    const [eventSuperVisorID, setEventSuperVisorID] = useState(1);
-    const [groupId, setGroupId] = useState(1);
+    const [eventSuperVisorID, setEventSuperVisorID] = useState(null);
+    const [groupId, setGroupId] = useState(null);
+
+    
 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const holder = localStorage.getItem('isAdmin');
+                if (holder) {
+                    setIsAdmin(true);
+                    setIsEventSuperVisor(false);
+                    const groupIdFromStorage = localStorage.getItem('group_id');
+                    setGroupId(groupIdFromStorage);
+                    //alert(groupId)
+                } else {
+                    setIsAdmin(false);
+                    setEventSuperVisorID(localStorage.getItem('es_id'));
+                    const groupIdFromStorage = localStorage.getItem('group_id');
+                    setGroupId(groupIdFromStorage);
+                    //alert(groupId)
+                }
+    
+                // Make sure groupId is defined before making the API call
+                if (!groupId) return;
+    
                 // Fetch the IDs of currently running tournaments
                 const currentTournamentResponse = await axios.get(`http://localhost:3000/get-current-tournaments/${groupId}`);
                 const currentTournaments = currentTournamentResponse.data;
     
                 if (currentTournaments.length > 0) {
-                    // Get the first tournament's ID
                     const currentTournamentId = currentTournaments[0].tournament_id;
     
                     let eventsResponse;
     
                     if (isAdmin) {
-                        // Admin route: Fetch events for the current tournament
                         eventsResponse = await axios.get(`http://localhost:3000/get-events-by-tournament/${currentTournamentId}`);
-                    } else if (isEventSuperVisor) {
-                        // Event supervisor route: Fetch events for the current tournament by supervisor
+                    } else if (eventSuperVisorID) {
                         eventsResponse = await axios.get(`http://localhost:3000/get-events/supervisor/${eventSuperVisorID}/tournament/${currentTournamentId}`);
                     }
     
-                    // Set the events data
                     setEvents(eventsResponse.data);
                 } else {
-                    // If no current tournaments, set the flag
                     setNoCurrentTournaments(true);
                 }
             } catch (error) {
@@ -45,7 +60,8 @@ const Score = () => {
         };
     
         fetchData();
-    }, [isAdmin, isEventSuperVisor, events])
+    }, [isAdmin, eventSuperVisorID, groupId]); // Simplified dependencies
+    
 
     return (
         <div id="score-page">
