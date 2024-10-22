@@ -23,7 +23,7 @@ const ManageUsers = () => {
             </div>
 
             <div className="flex-grow pt-3 pb-20 max-w-full">
-                <TabContainer setActiveTab={setActiveTab} />
+                <TabContainer aData={adminData} sData={supervisorData} setActiveTab={setActiveTab} />
             </div>
 
             <div className="bg-white border-t border-[#D9D9D9] z-10 w-full">
