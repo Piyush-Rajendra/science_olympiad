@@ -61,6 +61,14 @@ const ScoreEvent = (props) => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    
+
+    const hasTies = (teams) => {
+        const scores = teams.map(team => team.Score);
+        const uniqueScores = new Set(scores);
+        return scores.length !== uniqueScores.size; // Check for duplicates
+    };
+    
     const rankSchools = (schools) => {
         return [...schools].sort((a, b) => {
             // Check if either school is absent
@@ -85,12 +93,6 @@ const ScoreEvent = (props) => {
     
             return 0; // If all comparisons are equal, return 0
         });
-    };
-
-    const hasTies = (teams) => {
-        const scores = teams.map(team => team.Score);
-        const uniqueScores = new Set(scores);
-        return scores.length !== uniqueScores.size; // Check for duplicates
     };
 
     const handleFinalize = async () => {

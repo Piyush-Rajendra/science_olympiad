@@ -88,80 +88,21 @@ const EventInfo: React.FC<EventProps> = ({ name, description, id }: EventProps) 
 
     return (
         <div>
-            <div className="px-4 py-4">
+            <div className="px-4 py-2">
                 <div className="py-4">
-                    <h2 className='text-3xl font-bold'>
-                        Name
+                    <h2 className='text-2xl font-bold'>
+                        Name:
                     </h2>
-                    <div className="py-2">{name}</div>
+                    <div className="text-1xl py-2">{name}</div>
                 </div>
                 
                 <div className="py-4">
-                    <h2 className='text-3xl font-bold'>
-                        Description
+                    <h2 className='text-2xl font-bold'>
+                        Description:
                     </h2>
-                    <div className="py-2">{description}</div>
+                    <div className="text-1xl py-2">{description}</div>
                 </div>
 
-                <div className="py-4">
-                    <div className="flex justify-between">
-                        <h2 className='text-3xl font-bold'>
-                            Time Blocks
-                        </h2>
-                        <button onClick={createTimeBlock} className="rounded-full px-6 py-2"
-                                style={{backgroundColor:'#B7E394'}}>
-                            Add Time Block
-                        </button>
-                    </div>
-                    <table className="w-full table-auto text-left">
-                        <thead className="border-b border-gray-300">
-                            <tr>
-                                <th className="px-2"></th>
-                                <th className="py-2 px-2">Time Blocks</th>
-                                <th className="py-2 px-8">Building</th>
-                                <th className="py-2 px-8">Room Number</th>
-                                <th className="px-2 py-2">Manage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {timeBlocks.map((row, index) => (
-                                <React.Fragment key={index}>
-                                    <tr className="border-b">
-                                        <td className="px-2" onClick={() => {openTimeBlock(index); toggleDropdown(row.id)}}>
-                                            {dropdownIds[row.id] ? '▲' : '▼'}
-                                        </td>
-                                        <td className="py-6 px-2">{row.start} to {row.end}</td>
-                                        <td className="py-6 px-8">{row.address}</td>
-                                        <td className="py-2 px-8">{row.roomNumber}</td>
-                                        <td className="px-4 py-2 justify-normal flex space-x-4">
-                                            <button className="flex justify-center"
-                                                onClick = {() => {openEditTimeBlock(row.id)} }>
-                                                <Image 
-                                                    src={EditIcon} 
-                                                    alt="e"
-                                                    className="mx-auto w-10 h-10"/>
-                                            </button>
-                                            <button className="flex justify-center"
-                                                onClick ={() => {deleteTimeBlock(row.id)} }>
-                                                <Image 
-                                                    src={DeleteIcon} 
-                                                    alt="d"
-                                                    className="mx-auto w-10 h-10"/>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr id={`time-${index}`} className="border-b hidden">
-                                        <td colSpan={5} className="p-4">
-                                            <Suspense fallback={<div>Loading Time Info</div>}>
-                                                <LazyTimeInfo/>
-                                            </Suspense>
-                                        </td>
-                                    </tr>
-                                </React.Fragment>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
             </div>
             <Suspense fallback={<div>Loading Add Time Block</div>}>
                 <LazyAddTimeBlock
