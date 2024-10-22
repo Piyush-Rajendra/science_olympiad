@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Tab from './Tab';
 import TabContent from './TabContent';
 
-export default function TabContainer({ setActiveTab }) { // Accept setActiveTab as a prop
+export default function TabContainer({ setActiveTab, aData, sData }) { // Accept setActiveTab as a prop
   const [activeTab, setLocalActiveTab] = useState<'Admins' | 'Event Supervisors'>('Admins');
 
   const handleTabClick = (tab) => {
@@ -26,7 +26,7 @@ export default function TabContainer({ setActiveTab }) { // Accept setActiveTab 
         />
       </div>
       <div className="w-full border-b border-gray-300 ml-2" />
-      <TabContent activeTab={activeTab} />
+      <TabContent adData={aData} esData={sData} activeTab={activeTab} />
     </div>
   );
 }
