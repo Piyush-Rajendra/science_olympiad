@@ -58,13 +58,15 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
       };
 
       // Send POST request to create the supervisor
+      const currentTournamentResponse = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
+      const currentTournaments = await currentTournamentResponse.json();
       const supervisorResponse = await fetch('http://localhost:3000/auth/registerES', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`, // Include your token here
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ school_group_id: groupId, email: supervisorEmail, username: supervisorEmail, firstName: supervisorFirstName, lastName: supervisorLastName }),
+        body: JSON.stringify({ school_group_id: groupId, email: supervisorEmail, username: supervisorEmail, firstName: supervisorFirstName, lastName: supervisorLastName, tournament_id: currentTournaments[0].tournament_id}),
       });
 
       if (!supervisorResponse.ok) {
@@ -81,7 +83,6 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
         throw new Error('Failed to get event supervisor id');
       }
       const createdSupervisor = await supervisorID.json(); // Assuming the response contains the supervisor's ID
-      console.log(createdSupervisor)
 
       // Step 2: Assign selected events to the newly created supervisor
       const assignEventsPromises = selectedEvents.map((event_id) => {
@@ -109,7 +110,7 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
 
       closePopup(); // Close the popup after saving
     } catch (error) {
-      console.error('Error saving event supervisor:', error);
+      alert(error);
     }
   };
 
@@ -128,8 +129,8 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
       if (!response.ok) {
         throw new Error(`Error updating entry: ${response.statusText}`);
       }
-    } catch {
-      console.error('Not working');
+    } catch (error) {
+      alert(error);
     }
     const newAdmin = {
       id: Date.now(), // Simple ID generation using timestamp

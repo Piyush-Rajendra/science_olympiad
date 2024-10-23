@@ -93,8 +93,8 @@ export default function TabContainer ({ activeTab, adData, esData }) {
       if (!response.ok) {
         throw new Error(`Error deleting entry: ${response.statusText}`);
       }
-    } catch {
-      console.error('An error was thrown for ')
+    } catch (error) {
+      alert(error)
     }
     if (activeTab === 'Admins') {
       const updatedAdminData = adminData.filter(entry => entry.admin_id !== a_id);
