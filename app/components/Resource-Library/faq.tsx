@@ -96,9 +96,14 @@ const Faq = () => {
     try {
       handleCloseQAModal();
   
-      // Prepare the request body
-      const body = answer ? { Question: question, Answer: answer, schoolGroup_id: schoolGroupID } : { Question: question, schoolGroup_id: schoolGroupID };
-      console.log("What is a question?c1 " + question + " answer is: " + answer + " schoolGroupID " + schoolGroupID);
+      // Create the body object with the correct structure
+      let body = {
+        Question: question,
+        Answer: answer, // Assign the answer directly to the body
+        schoolGroup_id: schoolGroupID, // Include the school group ID
+      };
+  
+      console.log("Request body:", JSON.stringify(body));
   
       const response = await fetch('http://localhost:3000/questions', {
         method: 'POST',
@@ -112,21 +117,30 @@ const Faq = () => {
         throw new Error('Failed to submit question');
       }
   
-      console.log("What is a question?c2 " + question + " answer is: " + answer + " schoolGroupID " + schoolGroupID);
-      
+      console.log("Question submitted successfully:", question, "Answer:", answer);
+  
       setMessage('Question submitted successfully!');
-      //Re-fetch Questions after new one is added
+  
+      // Re-fetch Questions after new one is added
       fetchQuestionsBySchoolGroup();
-
+  
       // Clear the message after 3 seconds
       setTimeout(() => {
         setMessage('');
-      }, 3000); // Change the duration as needed
-      
+      }, 3000);
+  
+      // Clear question and answer after successful submission
+      setQuestion('');
+      setAnswer('');
+  
     } catch (error) {
       console.error('Error submitting question:', error);
     }
   };
+  
+  
+  
+  
 
   // Function to delete a question
   const handleDeleteQuestion = async (QandA_id) => {
