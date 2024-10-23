@@ -20,7 +20,10 @@ const TournamentHistory: React.FC = () => {
                 try {
                     const response = await fetch(`http://localhost:3000/get-tournament-history/${groupId}`);
                     const data: TournamentHistoryContent[] = await response.json();
-                    setTournamentHistory(data);
+                    
+                    // Sort by most recent date
+                    const sortedData = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                    setTournamentHistory(sortedData);
                 } catch (error) {
                     console.error('Error fetching tournament history:', error);
                 }

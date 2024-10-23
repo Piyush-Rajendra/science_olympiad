@@ -68,26 +68,26 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
               <p className="font-bold text-4xl mb-6">{tournament.name}</p> {/* Reduced font size and margin */}
               <div className="space-y-2.5"> {/* Reduced space between items */}
                 <div className="flex">
-                  <strong className="text-[#666666] w-1/5 text-sm">Division:</strong> {/* Reduced font size */}
+                  <strong className="text-[#666666] w-1/5 text-lg">Division:</strong> {/* Reduced font size */}
                   <span className="text-sm">{tournament.division}</span> {/* Reduced font size */}
                 </div>
                 <div className="flex">
-                  <strong className="text-[#666666] w-1/5 text-sm">Date:</strong> {/* Reduced font size */}
+                  <strong className="text-[#666666] w-1/5 text-lg">Date:</strong> {/* Reduced font size */}
                   <span className="text-sm">{new Date(tournament.date).toLocaleDateString()}</span> {/* Reduced font size */}
                 </div>
                 <div className="flex">
-                  <strong className="text-[#666666] w-1/5 text-sm">Location:</strong> {/* Reduced font size */}
+                  <strong className="text-[#666666] w-1/5 text-lg">Location:</strong> {/* Reduced font size */}
                   <span className="text-sm">{tournament.location}</span> {/* Reduced font size */}
                 </div>
                 <div className="flex">
-                  <strong className="text-[#666666] w-1/5 text-sm">Description:</strong> {/* Reduced font size */}
+                  <strong className="text-[#666666] w-1/5 text-lg">Description:</strong> {/* Reduced font size */}
                   <span className="w-2/4 text-sm">{tournament.description}</span> {/* Reduced font size */}
                 </div>
               </div>
             </div>
 
             {/* Right Section - Buttons */}
-            <div className="w-1/4 pl-4 border-l-2 border-gray-300 flex flex-col space-y-4"> {/* Reduced width and space */}
+            <div className="w-1/4 pl-4 border-l-2 border-gray-300 flex flex-col space-y-5"> {/* Reduced width and space */}
               <button
                 onClick={() => editTourn(tournament.name, tournament.division)}
                 className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"> {/* Reduced padding and font size */}
@@ -96,12 +96,12 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
               <button
                 onClick={() => editEvent(tournament.name, tournament.division)}
                 className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"> {/* Reduced padding and font size */}
-                Manage events
+                Manage Events
               </button>
               <button
                 onClick={() => {}}
                 className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"> {/* Reduced padding and font size */}
-                Manage admins and event supervisors
+                Manage Users
               </button>
               <button
                 onClick={() => setEndTournament(true)}
