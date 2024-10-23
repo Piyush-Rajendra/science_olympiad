@@ -122,6 +122,25 @@ const Faq = () => {
     }
   };
 
+  // Function to delete a question
+  const handleDeleteQuestion = async (QandA_id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/questions/${QandA_id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete question');
+      }
+
+      // Optionally, re-fetch questions here or remove the deleted question from the state
+      setQuestions((prevQuestions) => prevQuestions.filter((q) => q.QandA_id !== QandA_id));
+      console.log('Question deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting question:', error);
+    }
+  };
+
   return (
     <div>
       {/* Search Input */}
@@ -146,6 +165,7 @@ const Faq = () => {
         openQuestionId={openQuestionId}
         toggleQuestion={toggleQuestion}
         handleOpenEditModal={handleOpenEditModal}
+        handleDeleteQuestion={handleDeleteQuestion} // Pass the delete handler
       />
 
       {/* Footer Add Question Button */}
