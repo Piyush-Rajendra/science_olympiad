@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/router'; // Import useRouter
-import EditIcon from '../../images/edit-246.png';
-import DeleteIcon from '../../images/delete.png';
 import Image from 'next/image';
 const LazyEventInfo = React.lazy(() => import('./Info/EventInfo'));
 const LazyAddEvent = React.lazy(() => import('./Add/AddEvent'));
@@ -284,10 +282,10 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                                             </td>
                                             <td className="px-4 py-2 justify-normal flex space-x-4">
                                                 <button className="flex justify-center" onClick={() => EditEvent(row.event_id)}>
-                                                    <Image src={EditIcon} alt="Edit" className="mx-auto w-10 h-10" />
+                                                    <Image src={'../../images/edit-246.png'} alt="Edit" className="mx-auto w-10 h-10" />
                                                 </button>
                                                 <button className="flex justify-center" onClick={() => deleteEvent(row.event_id)}>
-                                                    <Image src={DeleteIcon} alt="Delete" className="mx-auto w-10 h-10" />
+                                                    <Image src={'../../images/delete.png'} alt="Delete" className="mx-auto w-10 h-10" />
                                                 </button>
                                             </td>
                                         </tr>
