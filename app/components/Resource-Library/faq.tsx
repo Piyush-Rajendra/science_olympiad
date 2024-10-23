@@ -67,9 +67,57 @@ const Faq = () => {
   }, [schoolGroupID]); // Add schoolGroupID to dependencies
   
 
-  const toggleQuestion = (id) => {
-    setOpenQuestionId((prevId) => (prevId === id ? null : id));
-  };
+  const toggleQuestion = async (QandA_id) => {
+    if (openQuestionId === QandA_id) {
+        // If the question is already open, close it
+        setOpenQuestionId(null);
+        setAnswer(''); // Clear answer when closing
+    } else {
+        setOpenQuestionId(QandA_id); // Open the selected question
+
+        try {
+            const response = await fetch(`http://localhost:3000/questions/${QandA_id}`);
+            console.log("Response is: " + response);
+            if (response.ok) {
+                const data = await response.json();
+                setAnswer(data.Answer); // Set the fetched answer
+                console.log("Response is: " + response);
+            } else {
+                console.error('Failed to fetch answer:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching answer:', error);
+        }
+    }
+};
+
+  // const toggleQuestion = async () => {
+  //   if (openQuestionId === schoolGroupID) {
+  //     // If the question is already open, close it
+  //     setOpenQuestionId(null);
+  //     setAnswer(''); // Clear answer when closing
+  //   } else {
+  //     setOpenQuestionId(localStorage.getItem('QandA_id')); // Open the selected question
+
+  //     try {
+  //       console.log("QuestionID is: " + openQuestionId);
+  //       const response = await fetch(`http://localhost:3000/questions/${openQuestionId}/answer`);
+  //       console.log("What are you, response? " + response);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setAnswer(data.answer); // Set the fetched answer
+  //         console.log("What are you, data? " + data);
+  //         console.log("What are you, data.ans? " + data.answer);
+  //         console.log("What are you? " + answer);
+  //       } else {
+  //         console.error('Failed to fetch answer:', response.statusText);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching answer:', error);
+  //     }
+  //   }
+  // };
+
 
   const handleOpenQAModal = () => {
     setIsQAModalOpen(true);
@@ -184,8 +232,9 @@ const Faq = () => {
         questions={questions}
         openQuestionId={openQuestionId}
         toggleQuestion={toggleQuestion}
+        answer={answer} // Pass the answer state
         handleOpenEditModal={handleOpenEditModal}
-        handleDeleteQuestion={handleDeleteQuestion} // Pass the delete handler
+        handleDeleteQuestion={handleDeleteQuestion}
       />
 
       {/* Footer Add Question Button */}

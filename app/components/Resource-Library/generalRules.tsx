@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DocViewer from './docViewer';
 
 const GeneralRules = () => {
@@ -6,6 +6,15 @@ const GeneralRules = () => {
   const [message, setMessage] = useState('');
   const [file, setFile] = useState(null); 
   const pdfUrl = '../images/Science_Olympiad_Div_C_Rules_2025.pdf';
+  const [schoolGroupID, setSchoolGroupID] = useState('');
+
+  useEffect(() => {
+    const getInfo = () => {
+      setSchoolGroupID(localStorage.getItem('group_id'));
+    };
+    getInfo();
+  }, []);
+
 
   // Function to change the active tab
   const handleTabClick = (index) => {
@@ -18,18 +27,24 @@ const GeneralRules = () => {
       setFile(selectedFile);
       uploadFile(selectedFile); // Automatically upload the file after selection
     }
+    console.log("What is the file? " + selectedFile);
   };
 
   // Function to upload the selected PDF to the backend
   const uploadFile = async (selectedFile) => {
-    const formData = new FormData();
-    formData.append('pdf', selectedFile);
-    formData.append('schoolGroup_id', '1'); // Replace '1' with the actual schoolGroup_id you want to use
+    // const formData = new FormData();
+    // formData.append('pdf', selectedFile);
+    // formData.append('schoolGroup_id', schoolGroupID); // Replace '1' with the actual schoolGroup_id you want to use
 
+    let body = {
+      Question: selectedFile,
+      schoolGroup_id: schoolGroupID, // Include the school group ID
+    };    
+    console.log("What is the file? " + selectedFile);
     try {
       const response = await fetch('http://localhost:3000/resource-library/upload', {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
