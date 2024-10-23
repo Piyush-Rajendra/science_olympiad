@@ -6,13 +6,6 @@ import DeleteIcon from '../../images/delete.png'
 import Image from 'next/image';
 const LazyEditAdmins = React.lazy(() => import('./EditAdmins'))
 
-interface AdminContent {
-    admin_id: number;
-    school_group_id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-}
 
 
 interface Props {
@@ -28,12 +21,17 @@ const Admins: React.FC<Props> = ( {group_id})  => {
         {admin_id: 1, group_id: 1, name: "Rebecca Black", email: "rblack@gmail.com"},
     ])*/
     const token = localStorage.getItem('token');
-    const [admins, setAdmins] = useState<AdminContent[]>([]);
+    const [admins, setAdmins] = useState([]);
 
     useEffect(() => {
         
-        fetch('http://localhost:3000/auth/admin', {
-            method: 'GET',
+        fetchAdmins()
+    })
+
+    const fetchAdmins = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/auth/admin', {
+                method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -48,16 +46,13 @@ const Admins: React.FC<Props> = ( {group_id})  => {
             .then((data) => {
                 const currentAdmins = data
                     .filter((admin: any) => admin.school_group_id === group_id)
-                    .map((admin: any) => ({
-                        admin_id: admin.admin_id,
-                        school_group_id: admin.school_group_id,
-                        firstName: admin.firstName,
-                        lastName: admin.lastName,
-                        email: admin.email
-                    }))
                 setAdmins(currentAdmins)
             })
-    })
+        } catch (error) {
+            console.error("Error retrieving admins", error.message)
+        }
+    }
+
 
     const editAdmin = async (id: number, first: string, last: string, email: string) => {
         try {
