@@ -94,27 +94,33 @@ const Faq = () => {
 
   const handleSubmitQuestion = async () => {
     try {
-        handleCloseQAModal();
-        const response = await fetch('http://localhost:3000/questions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ question, answer, schoolGroupID }), // Add this line to send data
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to submit question');
-        }
-
-        setMessage('Question submitted successfully!');
-        // Optionally, re-fetch questions here
-        fetchQuestionsBySchoolGroup(); // Uncomment to fetch updated questions
+      handleCloseQAModal();
+  
+      // Prepare the request body
+      const body = answer ? { Question: question, Answer: answer, schoolGroup_id: schoolGroupID } : { Question: question, schoolGroup_id: schoolGroupID };
+      console.log("What is a question?c1 " + question + " answer is: " + answer + " schoolGroupID " + schoolGroupID);
+  
+      const response = await fetch('http://localhost:3000/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit question');
+      }
+  
+      console.log("What is a question?c2 " + question + " answer is: " + answer + " schoolGroupID " + schoolGroupID);
+      
+      setMessage('Question submitted successfully!');
+      // Optionally, re-fetch questions here
+      fetchQuestionsBySchoolGroup();
     } catch (error) {
-        console.error('Error submitting question:', error);
+      console.error('Error submitting question:', error);
     }
-};
-
+  };
 
   return (
     <div>
