@@ -52,12 +52,14 @@ const EditTimeBlock: React.FC<Props> = ({ isOpen, onEdit, onClose, nextId }) => 
                         <input
                         className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full"
                         placeholder="00:00 AM/PM"
+                        type="time"
                         onChange={(e) => setStart(e.target.value)}
                         />
                         <h2 className="px-4">to</h2>
                         <input
                         className="border border-gray-300 bg-gray-50 rounded-lg p-2.5 w-full"
                         placeholder="00:00 AM/PM"
+                        type="time"
                         onChange={(e) => setEnd(e.target.value)}
                         />
                         <h2 className="px-4">at</h2>
