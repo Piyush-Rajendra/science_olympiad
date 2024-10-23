@@ -3,6 +3,7 @@ import React, { useState, Suspense, useEffect } from 'react';
 const LazyTimeInfo = React.lazy(() => import('./timeblock-info'));
 import axios from 'axios';
 import { Menu } from '@headlessui/react';
+import CreateTeams from './create-teams';
 
 interface TournamentProps {
     name: string;
@@ -102,6 +103,11 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         setCurrentEventId(id)
         const selectedEvent = events.find(event => event.event_id === id);
         setCurrentEventName(selectedEvent.name)
+    }
+
+
+    const handleNextStep = () => {
+        const [showNextStep, setShowNextStep] = useState(false);
     }
 
     return (
