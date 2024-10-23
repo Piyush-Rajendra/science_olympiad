@@ -115,8 +115,14 @@ const Faq = () => {
       console.log("What is a question?c2 " + question + " answer is: " + answer + " schoolGroupID " + schoolGroupID);
       
       setMessage('Question submitted successfully!');
-      // Optionally, re-fetch questions here
+      //Re-fetch Questions after new one is added
       fetchQuestionsBySchoolGroup();
+
+      // Clear the message after 3 seconds
+      setTimeout(() => {
+        setMessage('');
+      }, 3000); // Change the duration as needed
+      
     } catch (error) {
       console.error('Error submitting question:', error);
     }
