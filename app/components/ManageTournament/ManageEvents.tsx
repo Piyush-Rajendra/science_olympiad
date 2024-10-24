@@ -358,7 +358,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                                     className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                                     onClick={handleNextStep}
                                 >
-                                    Next
+                                    {"Next >"}
                                 </button>
                             </div>
                         </div>
