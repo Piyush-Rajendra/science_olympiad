@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import ManageEvents from '../ManageTournament/ManageEvents';
 import axios from 'axios';
+import TournamentSum from '../ManageTournament/TournamentSum';
 
-const CreateTourney = () => {
+const EditTourney = (props) => {
     const [showNextStep, setShowNextStep] = useState(false);
     const [newTournamentId, setNewTournamentId] = useState();
     const [isAdmin, setIsAdmin] = useState(true);
@@ -21,27 +22,13 @@ const CreateTourney = () => {
         id: 1, // Example: starting ID
     });
 
-    /*const handleNextStep = () => {
-        handleFormSubmit();
-        setShowNextStep(true);
-    }; */
-
     useEffect(() => {
         try {
             const holder = localStorage.getItem('isAdmin');
             if (holder) {
-                setIsAdmin(true);
-                setIsEventSuperVisor(false);
                 const groupIdFromStorage = localStorage.getItem('group_id');
                 setGroupId(groupIdFromStorage);
-                //alert(groupId)
-            } else {
-                setIsAdmin(false);
-                setEventSuperVisorID(localStorage.getItem('es_id'));
-                const groupIdFromStorage = localStorage.getItem('group_id');
-                setGroupId(groupIdFromStorage);
-                //alert(groupId)
-            }
+            } 
         }
         catch (error) {
             console.error("Error fetching data:", error);
@@ -50,48 +37,68 @@ const CreateTourney = () => {
 
     }, []);
 
+    // Fetch the tournament details when the component mounts
+    useEffect(() => {
+        const fetchTournamentDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/get-tournament/${props.id}`);
+                if (response.data) {
+                    const formattedDate = new Date(response.data.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+                    setTournamentDetails({
+                        name: response.data.name || '',
+                        division: response.data.division || 'B',
+                        date: formattedDate || '', // Set the converted date
+                        location: response.data.location || '',
+                        description: response.data.description || '',
+                        id: response.data.id || 1,
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching tournament details:', error);
+            }
+        };
+    
+        fetchTournamentDetails();
+    }, [props.id]);
+
     // Convert date from string to Date object when necessary
     const handleFormSubmit = async () => {
-        // Check if any required field is blank
         const { name, division, location, description, date } = tournamentDetails;
     
         if (!name || !location || !description || !date) {
-            alert("Please fill in all the fields before trying to create a tournament.");
-            return; // Stop execution if any field is blank
+            alert("Please fill in all the fields before submitting.");
+            return;
         }
     
         try {
-            // Convert the date to a proper format
-            const tourneyDate = new Date(date).toISOString().split('T')[0]; // Convert string to date and format YYYY-MM-DD
+            // Convert the date to ISO string format (if necessary)
+            const tourneyDate = new Date(date).toISOString().split('T')[0]; // Only take the date part (YYYY-MM-DD)
     
             const tournamentData = {
-                name: name,
+                name,
                 division: division || 'B',
-                group_id: groupId,                // Keep group id as 1
-                NumOfTimeBlocks: 0,         // Set number of time blocks to 0
-                location: location,
-                description: description,
-                isCurrent: false,           // Set isCurrent to false
-                date: tourneyDate           // Pass formatted date string
+                group_id: groupId,
+                NumOfTimeBlocks: 0,
+                location,
+                description,
+                isCurrent: true,
+                date: tourneyDate, // Use the formatted date
             };
     
-            // Make the POST request to the API endpoint
-            const response = await axios.post('http://localhost:3000/add-tournament', tournamentData);
+            const response = await axios.put(`http://localhost:3000/edit-tournament/${props.id}`, tournamentData);
     
             if (response.data && response.data.id) {
-                // Save the new tournament ID from the response
                 setNewTournamentId(response.data.id);
             }
     
-            //alert("Tournament Added!");
             setShowNextStep(true);
         } catch (error) {
-            alert("There was an error creating your tournament.");
+            console.error("There was an error editing the tournament:", error);
+            alert("There was an error editing the tournament.");
         }
     };
-    
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleInputChange = (event) => {
         const { name, value } = event.target;
         setTournamentDetails((prev) => ({
             ...prev,
@@ -100,14 +107,15 @@ const CreateTourney = () => {
     };
 
     return (
-        <div id="create-tourney-page" className="bg-white min-h-screen relative">
-            <div id="create-tourney-header">
-                <h1 className="text-3xl pl-7 pt-4 pb-5">Create Tournament</h1>
+        <div id="edit-tourney-page" className="bg-white min-h-screen relative">
+            {!showNextStep ? (
+                <>
+            <div id="edit-tourney-header">
+                <h1 className="text-3xl pl-7 pt-4 pb-5">Edit Tournament</h1>
             </div>
             <hr className="border-t-3 border-black" />
 
-            {!showNextStep ? (
-                <>
+            
                     <div id="name-and-division" className="flex space-x-4">
                         <div id="name">
                             <h2 className="pl-7 pt-3">Name</h2>
@@ -145,7 +153,7 @@ const CreateTourney = () => {
                         ></textarea>
                     </div>
 
-                    <div id="create-tourney-date">
+                    <div id="edit-tourney-date">
                         <h2 className="pl-7 pt-4">Date</h2>
                         <input
                             type="date"
@@ -169,11 +177,10 @@ const CreateTourney = () => {
                     </div>
                     <div className='pb-12'></div>
 
-                    {/* Footer with Next button */}
-                    <div id="create-tourney-footer" className="bg-white sticky bottom-0 left-0 w-full flex flex-col pb-2">
+                    <div id="edit-tourney-footer" className="bg-white sticky bottom-0 left-0 w-full flex flex-col pb-2">
                         <hr className="w-full border-t-3 border-black mb-2" />
                         <div className="flex w-full justify-end items-center mr-5 pr-5">
-                            <h4 className="text-gray-500 pt-2 mr-4">Next Step: Create Your Events</h4>
+                            <h4 className="text-gray-500 pt-2 mr-4">Next Step: Edit Your Events</h4>
                             <button
                                 className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                                 onClick={handleFormSubmit}
@@ -184,15 +191,10 @@ const CreateTourney = () => {
                     </div>
                 </>
             ) : (
-                <ManageEvents
-                    tournament_id={newTournamentId}
-                    isOpen={showNextStep}
-                    onClose={() => setShowNextStep(false)}
-                    isFromCreateTournament={true}
-                />
+                <TournamentSum isOpen={true} editTourn={() => {}} editEvent={() => {}} onCreateTournament={() => {}}/>
             )}
         </div>
     );
 };
 
-export default CreateTourney;
+export default EditTourney;

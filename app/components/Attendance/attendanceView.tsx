@@ -25,7 +25,9 @@ const AttendanceView = () => {
         setGroupID(localStorage.getItem('group_id'));
         setESID(localStorage.getItem('es_id'));
       }
+      
     };
+    
 
     checkUserType();
   }, []);

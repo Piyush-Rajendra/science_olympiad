@@ -44,7 +44,7 @@ export default function TabContainer ({ activeTab, adData, esData }) {
 
   const getAdminESData = async () => {
     if (activeTab === 'Admins') {
-      const response = await fetch('http://localhost:3000/auth/admin', {
+      const response = await fetch(`http://localhost:3000/auth/get-admins-by-groupId/${groupId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -60,7 +60,7 @@ export default function TabContainer ({ activeTab, adData, esData }) {
       setAdminData(result);
       setData(result);
     } else {
-      const response = await fetch('http://localhost:3000/auth/eventsupervisor', {
+      const response = await fetch(`http://localhost:3000/auth/eventsupervisor-by-groupId/${groupId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
