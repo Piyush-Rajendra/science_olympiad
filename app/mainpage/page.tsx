@@ -21,19 +21,11 @@ export default function App() {
     if (!userType) {
       throw new Error();
     }
-  } catch {
-    router.push('/');
-  }
-
-  try {
     loggedIn = localStorage.getItem('token');
     if (!loggedIn) {
       throw new Error();
     }
-    loggedIn = 'true';
-  } catch {
-    router.push('/');
-  }
+  }, []);
 
   const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true');
   const [isAdmin, setIsAdmin] = useState(userType === 'admin');
@@ -96,6 +88,7 @@ export default function App() {
       <div>
         <div className="sidebar">
           <div className="sidebar-header">
+
             {isAdmin ? <h1>Admin Portal</h1> : <h1>ES Portal</h1>}
           </div>
           <ul className="sidebar-menu">
@@ -174,10 +167,10 @@ export default function App() {
           {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTourneyLanding />}
-          {selected === 'manage_t' && <div><ManageTournament /></div>}
-          {selected === 'manage_a&e' && <div><ManageUsers /></div>}
+          {selected === 'manage_t' && <ManageTournament />}
+          {selected === 'manage_a&e' && <ManageUsers />}
           {selected === 'score' && <Score />}
-          {selected === 'resources' && <div><ResourceLibrary /></div>}
+          {selected === 'resources' && <ResourceLibrary />}
         </div>
       </div>
     </div>
