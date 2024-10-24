@@ -65,8 +65,8 @@ const Score = () => {
 
     return (
         <div id="score-page">
-            <div id="score-header">
-                <h1 className="text-3xl pl-7 pt-4 pb-5">Score - Master Score Sheet</h1>
+            <div id="score-header" className="h-20 border-b border-gray-300 flex items-center pl-10">
+                <h1 className="font-bold text-2xl">Score - Master Score Sheet</h1>
             </div>
             <hr className='border-t-3 border-black pb-8'></hr>
             <div id="score-event-list-header" className='pl-7  text-gray-500 flex justify-between items-center'>
