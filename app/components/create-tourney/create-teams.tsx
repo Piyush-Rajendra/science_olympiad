@@ -2,10 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import TeamList from './team-list'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import AddTeamTimeBlocks from '../ManageTournament/Add/AddTeamTimeBlock';
+import CreateTimeBlocks from '../create-tourney/create-time-blocks';
+import axios from 'axios';
 
 const EditSchoolModal = ({ isOpen, onTheClose, school, handleUpdateSchool }) => {
     const [name, setName] = useState(school.name);
     const [flight, setFlight] = useState(school.flight);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -224,7 +228,7 @@ const AddTeamModal = ({ id, isOpen, onTheClose, schoolID }) => {
             const allOk = responses.every(response => response.ok);
 
             if (!allOk) {
-                alert('Failed to add one or more schools');
+                alert('Failed to add one or more teams.');
                 onTheClose();
                 return; // Return early to avoid further execution if any request failed
             }
@@ -297,8 +301,42 @@ const CreateTeams = ({ name, division, date, onClose, id }) => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isAddTeamModalOpen, setAddTeamModalOpen] = useState(false);
     const [ID, setID] = useState(null);
-
+    const [showAddTeamTime, setShowAddTeamTime] = useState(false);
+    const [showTimeblock, setShowTimeBlock] = useState(false);
+    
     const [expandedSchoolIndex, setExpandedSchoolIndex] = useState(null); // State to track which school is expanded
+    const [tournamentDetails, setTournamentDetails] = useState({
+        name: '',
+        division: '',
+        date: '', // Keep date as a string initially
+        location: '', // Single location field
+        description: '',
+        id: 1, // Example: starting ID
+    });
+
+    useEffect(() => {
+        const fetchTournamentDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/get-tournament/${ID}`);
+                if (response.data) {
+                    const formattedDate = new Date(response.data.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+                    setTournamentDetails({
+                        name: response.data.name || '',
+                        division: response.data.division || 'B',
+                        date: formattedDate || '', // Set the converted date
+                        location: response.data.location || '',
+                        description: response.data.description || '',
+                        id: response.data.id || 1,
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching tournament details:', error);
+            }
+        };
+        
+        fetchTournamentDetails();
+    }, [ID]);
+
 
     const toggleSchoolTeams = (index) => {
         setExpandedSchoolIndex(expandedSchoolIndex === index ? null : index); // Toggle the expanded index
@@ -321,9 +359,24 @@ const CreateTeams = ({ name, division, date, onClose, id }) => {
         fetchSchools();
     }, [schools, isAddTeamModalOpen]); // Empty dependency array to run once on mount
 
-    const handleNextStep = async (id) => {
-        return;
+    const handleNextStep = () => {
+        setShowAddTeamTime(true); // Show the AddTeamTime component
     };
+
+    if (showAddTeamTime) {
+        return <AddTeamTimeBlocks id={id} />; // Render AddTeamTime component here
+    }
+
+    const handleBackStep = () => {
+        setShowTimeBlock(true); // Show the AddTeamTime component
+    };
+
+    if (showTimeblock) {
+        
+        return <CreateTimeBlocks name={name} division={division} id={id} date={date} isOpen={true} onClose={() => {}} />
+    }
+
+
 
     const handleEditSchool = async (school) => {
         setSelectedSchool(school);
@@ -374,7 +427,13 @@ const CreateTeams = ({ name, division, date, onClose, id }) => {
             <div className="px-12 py-6">
                 <div className="flex space-x-10 border-b border-gray-300">
                     <h1 className="text-4xl font-bold">{name}</h1>
-                    <h1 className="text-4xl font-bold">{date instanceof Date ? date.toLocaleDateString() : date}</h1>
+                    <h1 className="text-4xl font-bold">
+                    {new Date(date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    })}
+                    </h1>
                     <h1 className="text-4xl font-bold" style={{ color: '#006330' }}>
                         Division {division}
                     </h1>
@@ -483,11 +542,12 @@ const CreateTeams = ({ name, division, date, onClose, id }) => {
                     <h4 className="text-gray-500 pt-2">Next Step: Add Schools</h4>
                     <button
                         className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                        onClick={onClose}
+                        onClick={handleBackStep}
                     >
                         Back
                     </button>
                     <button
+                        onClick={handleNextStep}
                         className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                     >
                         Next

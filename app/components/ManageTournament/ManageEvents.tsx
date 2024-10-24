@@ -366,7 +366,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                     )}
                 </>
             ) : (
-                <AddTeamTimeBlocks />
+                <CreateTimeBlocks name={tournamentDetails.name} division={tournamentDetails.division} id={tID} date={tournamentDetails.date} isOpen={true} onClose={() => {}} />
             )}
         </div>
     );
