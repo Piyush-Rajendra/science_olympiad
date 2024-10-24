@@ -55,8 +55,8 @@ const Faq = () => {
         setQuestions([]);
       }
     };
-    console.log('Current schoolGroupID:', schoolGroupID);
-    console.log('Current questions:', questions);
+    //console.log('Current schoolGroupID:', schoolGroupID);
+    //console.log('Current questions:', questions);
 
     // Only fetch data if schoolGroupID is not empty
     if (schoolGroupID) {
@@ -147,13 +147,13 @@ const Faq = () => {
         Answer: answer,
       };
 
-      console.log("Editing Question:", editingQuestionId);
-      console.log("Request body for edit:", JSON.stringify(body));
+      //console.log("Editing Question:", editingQuestionId);
+      //console.log("Request body for edit:", JSON.stringify(body));
 
       // Make a PUT request to update the question
       await axios.put(`http://localhost:3000/questions/edit-questions/${editingQuestionId}`, body);
 
-      console.log('Question updated successfully!');
+      //console.log('Question updated successfully!');
       setMessage('Question updated successfully!');
 
       // Re-fetch Questions after edit
@@ -286,7 +286,7 @@ const Faq = () => {
               <button onClick={handleCloseEditModal} className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800">
+              <button onClick={handleSubmitEdit} className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800">
                 Save
               </button>
             </div>
