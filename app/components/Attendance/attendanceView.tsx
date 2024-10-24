@@ -25,7 +25,9 @@ const AttendanceView = () => {
         setGroupID(localStorage.getItem('group_id'));
         setESID(localStorage.getItem('es_id'));
       }
+      
     };
+    
 
     checkUserType();
   }, []);
@@ -52,7 +54,7 @@ const AttendanceView = () => {
           }
 
           setEvents(er);
-          if (events.length < 1) {
+          if (er.length < 1) {
             setNoCurrentTournaments(true);
           }
         } else {
