@@ -14,8 +14,7 @@ export default function App() {
   const searchParams = useSearchParams();
   let loggedIn;
   let userType;
-  
-  
+
   try {
     userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
     if (!userType) {
@@ -40,7 +39,7 @@ export default function App() {
   const [isCurrent, setIsCurrent] = useState<number | null>(null); // State for current tournament
   const [isTournamentDirector, setIsTournamentDirector] = useState<boolean>(false); // State for tournament director
   type MenuItem = 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
-  const [selected, setSelected] = useState<MenuItem>(isAdmin ? 'create' : 'resources');
+  const [selected, setSelected] = useState<MenuItem>('manage_t'); // Default to 'manage_t'
 
   useEffect(() => {
     const fetchCurrentTournament = async () => {
@@ -51,7 +50,7 @@ export default function App() {
           const data = await response.json();
           if (data.length > 0) {
             setIsCurrent(data[0].isCurrent); // Store isCurrent value
-            // If current tournament exists, set the default tab to "Manage Tournament"
+            // If a current tournament exists and the user is an admin, default to "Manage Tournament"
             if (data[0].isCurrent === 1 && isAdmin) {
               setSelected('manage_t');
             }
@@ -68,8 +67,15 @@ export default function App() {
     const tournamentDirectorValue = localStorage.getItem('isTournamentDirector');
     setIsTournamentDirector(tournamentDirectorValue === '1'); // Convert to boolean
 
+    // Auto-navigate to "Create Tournament" if no current tournament and the user is a tournament director
+    if (tournamentDirectorValue === '1' && isCurrent === 0 && isAdmin) {
+      setSelected('create');
+    } else if (tournamentDirectorValue === '0' && isAdmin) {
+      setSelected('manage_t');
+    }
+
     fetchCurrentTournament();
-  }, [isAdmin]);
+  }, [isAdmin, isCurrent]);
 
   const handleClick = (item: MenuItem) => {
     setSelected(item);
@@ -96,11 +102,10 @@ export default function App() {
       <div>
         <div className="sidebar">
           <div className="sidebar-header">
-
             {isAdmin ? <h1>Admin Portal</h1> : <h1>ES Portal</h1>}
           </div>
           <ul className="sidebar-menu">
-            {isAdmin && isTournamentDirector && ( // Only show if admin and tournament director
+            {isAdmin && isTournamentDirector && ( // Only show "Create Tournament" if admin and tournament director
               <li
                 className={selected === 'create' ? 'selected' : ''}
                 onClick={() => isCurrent === 0 && handleClick('create')} // Only clickable if no current tournament

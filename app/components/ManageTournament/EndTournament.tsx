@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 
 interface Props {
     isOpen: boolean;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
+    const [groupId, setGroupID] = useState(localStorage.getItem('group_id'));
     if (!isOpen) return null;
 
     const submit = () => {
