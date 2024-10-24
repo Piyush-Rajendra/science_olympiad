@@ -32,6 +32,7 @@ export default function App() {
         localStorage.setItem('isAdmin', 'admin');
         localStorage.setItem('token', data.token)
         localStorage.setItem('group_id', data.school_group_id);
+        localStorage.setItem('isTournamentDirector', data.isTournamentDirector);
         router.push('/mainpage');
         // Handle login success (e.g., store token, redirect)
       } catch (error) {
