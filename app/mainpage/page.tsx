@@ -12,35 +12,35 @@ import '../styles/header.module.css';
 export default function App() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  let loggedIn;
-  let userType;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isCurrent, setIsCurrent] = useState<number | null>(null);
+  const [isTournamentDirector, setIsTournamentDirector] = useState<boolean>(false);
+  const [selected, setSelected] = useState<'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e'>('manage_t');
 
-  try {
-    userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
-    if (!userType) {
-      throw new Error();
+  // Effect for checking login status
+  useEffect(() => {
+    const userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
+    const token = localStorage.getItem('token');
+
+    if (userType) {
+      setIsAdmin(userType === 'admin');
     }
-  } catch {
-    router.push('/');
-  }
 
-  try {
-    loggedIn = localStorage.getItem('token');
-    if (!loggedIn) {
-      throw new Error();
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      router.push('/');
     }
-    loggedIn = 'true';
-  } catch {
-    router.push('/');
-  }
 
-  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true');
-  const [isAdmin, setIsAdmin] = useState(userType === 'admin');
-  const [isCurrent, setIsCurrent] = useState<number | null>(null); // State for current tournament
-  const [isTournamentDirector, setIsTournamentDirector] = useState<boolean>(false); // State for tournament director
-  type MenuItem = 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
-  const [selected, setSelected] = useState<MenuItem>('manage_t'); // Default to 'manage_t'
+    const tournamentDirectorValue = localStorage.getItem('isTournamentDirector');
+    setIsTournamentDirector(tournamentDirectorValue === '1');
+  }, [router]);
 
+ 
+  
+
+  // Fetch current tournament based on group ID
   useEffect(() => {
     const fetchCurrentTournament = async () => {
       const groupId = localStorage.getItem('group_id');
@@ -49,13 +49,12 @@ export default function App() {
           const response = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
           const data = await response.json();
           if (data.length > 0) {
-            setIsCurrent(data[0].isCurrent); // Store isCurrent value
-            // If a current tournament exists and the user is an admin, default to "Manage Tournament"
+            setIsCurrent(data[0].isCurrent);
             if (data[0].isCurrent === 1 && isAdmin) {
               setSelected('manage_t');
             }
           } else {
-            setIsCurrent(0); // No active tournament found
+            setIsCurrent(0);
           }
         } catch (error) {
           console.error('Error fetching current tournament:', error);
@@ -63,21 +62,22 @@ export default function App() {
       }
     };
 
-    // Check isTournamentDirector value
-    const tournamentDirectorValue = localStorage.getItem('isTournamentDirector');
-    setIsTournamentDirector(tournamentDirectorValue === '1'); // Convert to boolean
+    // Fetch current tournament only if logged in
+    if (isLoggedIn) {
+      fetchCurrentTournament();
+    }
+  }, [isAdmin, isLoggedIn]);
 
-    // Auto-navigate to "Create Tournament" if no current tournament and the user is a tournament director
-    if (tournamentDirectorValue === '1' && isCurrent === 0 && isAdmin) {
+  // Set selected view based on conditions
+  useEffect(() => {
+    if (isTournamentDirector && isCurrent === 0 && isAdmin) {
       setSelected('create');
-    } else if (tournamentDirectorValue === '0' && isAdmin) {
+    } else if (!isTournamentDirector && isAdmin) {
       setSelected('manage_t');
     }
+  }, [isCurrent, isTournamentDirector, isAdmin]);
 
-    fetchCurrentTournament();
-  }, [isAdmin, isCurrent]);
-
-  const handleClick = (item: MenuItem) => {
+  const handleClick = (item: 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e') => {
     setSelected(item);
   };
 
@@ -87,14 +87,8 @@ export default function App() {
     router.push('/');
   };
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/');
-    }
-  }, [isLoggedIn]);
-
   if (!isLoggedIn) {
-    return null;
+    return <div>Loading...</div>; // Loading state while checking login
   }
 
   return (
@@ -105,15 +99,15 @@ export default function App() {
             {isAdmin ? <h1>Admin Portal</h1> : <h1>ES Portal</h1>}
           </div>
           <ul className="sidebar-menu">
-            {isAdmin && isTournamentDirector && ( // Only show "Create Tournament" if admin and tournament director
+            {isAdmin && isTournamentDirector && (
               <li
                 className={selected === 'create' ? 'selected' : ''}
-                onClick={() => isCurrent === 0 && handleClick('create')} // Only clickable if no current tournament
+                onClick={() => isCurrent === 0 && handleClick('create')}
                 style={{
                   cursor: isCurrent === 1 ? 'not-allowed' : 'pointer',
-                  color: isCurrent === 1 ? '#999' : 'inherit', // Grey out when current tournament exists
-                  opacity: isCurrent === 1 ? 0.6 : 1, // Reduce opacity
-                  pointerEvents: isCurrent === 1 ? 'none' : 'auto', // Disable hover and clicks
+                  color: isCurrent === 1 ? '#999' : 'inherit',
+                  opacity: isCurrent === 1 ? 0.6 : 1,
+                  pointerEvents: isCurrent === 1 ? 'none' : 'auto',
                 }}
               >
                 <h2>
@@ -123,10 +117,7 @@ export default function App() {
               </li>
             )}
             {isAdmin && (
-              <li
-                className={selected === 'manage_t' ? 'selected' : ''}
-                onClick={() => handleClick('manage_t')}
-              >
+              <li className={selected === 'manage_t' ? 'selected' : ''} onClick={() => handleClick('manage_t')}>
                 <h2>
                   <img src="/images/share-network.png" alt="Logo" />
                   Manage Tournaments
@@ -134,38 +125,26 @@ export default function App() {
               </li>
             )}
             {isAdmin && (
-              <li
-                className={selected === 'manage_a&e' ? 'selected' : ''}
-                onClick={() => handleClick('manage_a&e')}
-              >
+              <li className={selected === 'manage_a&e' ? 'selected' : ''} onClick={() => handleClick('manage_a&e')}>
                 <h2>
                   <img src="/images/address-book.png" alt="Logo" />
                   Manage Admins and ES
                 </h2>
               </li>
             )}
-            <li
-              className={selected === 'attendance' ? 'selected' : ''}
-              onClick={() => handleClick('attendance')}
-            >
+            <li className={selected === 'attendance' ? 'selected' : ''} onClick={() => handleClick('attendance')}>
               <h2>
                 <img src="/images/user-list.png" alt="Logo" />
                 Attendance
               </h2>
             </li>
-            <li
-              className={selected === 'score' ? 'selected' : ''}
-              onClick={() => handleClick('score')}
-            >
+            <li className={selected === 'score' ? 'selected' : ''} onClick={() => handleClick('score')}>
               <h2>
                 <img src="/images/chart-bar.png" alt="Logo" />
                 Score
               </h2>
             </li>
-            <li
-              className={selected === 'resources' ? 'selected' : ''}
-              onClick={() => handleClick('resources')}
-            >
+            <li className={selected === 'resources' ? 'selected' : ''} onClick={() => handleClick('resources')}>
               <h2>
                 <img src="/images/book-bookmark.png" alt="Logo" />
                 Resource Library
@@ -177,7 +156,6 @@ export default function App() {
           </button>
         </div>
         <div className="content">
-          {/* Display content based on selection */}
           {selected === 'attendance' && <AttendanceView />}
           {selected === 'create' && <CreateTourneyLanding />}
           {selected === 'manage_t' && <ManageTournament />}
