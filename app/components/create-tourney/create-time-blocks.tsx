@@ -4,19 +4,18 @@ const LazyTimeInfo = React.lazy(() => import('./timeblock-info'));
 import axios from 'axios';
 import { Menu } from '@headlessui/react';
 import CreateTeams from './create-teams';
+import ManageEvents from '../ManageTournament/ManageEvents';
 
 interface TournamentProps {
     name: string;
     division: string;
     date: any;
-    location: string;
-    description: string;
     id: number;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, location, description, id, isOpen, onClose }: TournamentProps) => {
+const CreateTimeBlocks: React.FC<TournamentProps> = ({ name, division, date, id, isOpen, onClose }: TournamentProps) => {
     if (!isOpen) return null;
 
     const [events, setEvents] = useState([]);
@@ -108,6 +107,23 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         setCurrentEventId(id)
         const selectedEvent = events.find(event => event.event_id === id);
         setCurrentEventName(selectedEvent.name)
+    }
+
+    const [showManageEvents, setShowManageEvents] = useState(false);
+
+    const handleBack = () => {
+        setShowManageEvents(true);
+    }
+
+    if (showManageEvents) {
+        return <ManageEvents
+                    tournament_id={id}
+                    isOpen={true}
+                    onClose={() => setShowNextStep(false)}
+                    isFromCreateTournament={false}
+                />
+        
+    
     }
 
 
@@ -282,7 +298,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                 <h4 className="text-gray-500 pt-2 mr-4">Next Step: Add Schools</h4>
                 <button
                     className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                    onClick={onClose}
+                    onClick={handleBack}
                     >
                     Back
                 </button>
@@ -301,4 +317,4 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
     );
 }
 
-export default ManageEvents;
+export default CreateTimeBlocks;

@@ -4,17 +4,20 @@ import AddTeamTimeBlockForm from "./AddTeamTimeBlockForm";
 import AddTeamTimeBlockEvents from "./AddTeamTimeBlockEvents";
 import ManageEvents from "../ManageEvents"; // Import the ManageEvents component
 import axios from "axios";
+import CreateTeams from "../../create-tourney/create-teams";
+import TournamentSum from "../TournamentSum";
 
 const AddTeamTimeBlocks = (props) => {
-  const [tournamentId, setTournamentId] = useState(1);
+  const [tournamentId, setTournamentId] = useState(null);
   const [showManageTournament, setShowManageTournament] = useState(false); // State to track ManageEvents
   const [showReview, setShowReview] = useState(false); // State to track Review component
   const [tournament, setTournament] = useState(null);
+  const [showTournamentView, setShowTournamentView] = useState(false);
 
   useEffect(() => {
     const fetchTournament = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/get-tournament/${tournamentId}`);
+        const response = await axios.get(`http://localhost:3000/get-tournament/${props.id}`);
         setTournament(response.data);
       } catch (error) {
         console.error('Error fetching tournament:', error);
@@ -30,18 +33,41 @@ const AddTeamTimeBlocks = (props) => {
   };
 
   // Handle the Review button click to show Review
-  const handleReviewClick = () => {
-    setShowReview(true); // Switch to the Review component
+  const handleReviewClick = async () => {
+    try {
+      const response = await axios.put(`http://localhost:3000/setTournamentToCurrent/${props.id}`);
+
+      if (response.status === 200) {
+         alert("Tournament Saved!")
+         setShowTournamentView(true);
+      } else {
+          // Handle errors (e.g., notify the user)
+          console.error("There was an error trying to save the tournament.");
+      }
+      
+  } catch (error) {
+      console.error('Error setting tournament to current:', error);
+  }
+
   };
+
+  if (showTournamentView) {
+    return <TournamentSum isOpen={true} editTourn={() => {}} editEvent={() => {}} onCreateTournament={() => {}}/>
+  }
 
   if (showManageTournament) {
     return (
-      <ManageEvents
-        tournament_id={tournamentId}
-        isOpen={showManageTournament}
-        onClose={() => setShowManageTournament(false)}
-        isFromCreateTournament={false}
-      />
+      <CreateTeams 
+        onClose={() => {}} 
+        name={tournament.name} 
+        division={tournament.division} 
+        date={new Date(tournament.date).toLocaleDateString('en-US', {
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit'
+        })} 
+        id={props.id}>
+      </CreateTeams>
     );
   }
 
@@ -75,10 +101,10 @@ const AddTeamTimeBlocks = (props) => {
       <div id="add-team-time-blocks-page" className="px-6 pb-5">
         <div id="add-team-time-main" className="flex">
           <div id="add-team-form" className="flex-1 px-3">
-            <AddTeamTimeBlockForm id={tournamentId} />
+            <AddTeamTimeBlockForm id={props.id} />
           </div>
           <div id="add-team-events" className="flex-1 px-3">
-            <AddTeamTimeBlockEvents id={tournamentId} />
+            <AddTeamTimeBlockEvents id={props.id} />
           </div>
         </div>
       </div>
@@ -97,7 +123,7 @@ const AddTeamTimeBlocks = (props) => {
               className="bg-white border border-green-800 text-green-800 rounded-full px-6 py-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
               onClick={handleReviewClick} // Set up the onClick handler for the Review button
             >
-              Review
+              Save
             </button>
           </div>
         </div>

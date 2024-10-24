@@ -31,7 +31,7 @@ const AddTeamTimeBlockForm = (props) => {
     useEffect(() => {
         const fetchTeams = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/get-teams-by-tournament/1');
+                const response = await axios.get(`http://localhost:3000/get-teams-by-tournament/${props.id}`);
                 setTeams(response.data);
             } catch (error) {
                 console.error('Error fetching teams:', error);
