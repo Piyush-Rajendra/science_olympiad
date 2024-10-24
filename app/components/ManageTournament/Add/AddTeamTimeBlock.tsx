@@ -40,6 +40,7 @@ const AddTeamTimeBlocks = (props) => {
         tournament_id={tournamentId}
         isOpen={showManageTournament}
         onClose={() => setShowManageTournament(false)}
+        isFromCreateTournament={false}
       />
     );
   }
