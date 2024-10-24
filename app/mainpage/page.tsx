@@ -21,11 +21,19 @@ export default function App() {
     if (!userType) {
       throw new Error();
     }
+  } catch {
+    router.push('/');
+  }
+
+  try {
     loggedIn = localStorage.getItem('token');
     if (!loggedIn) {
       throw new Error();
     }
-  }, []);
+    loggedIn = 'true';
+  } catch {
+    router.push('/');
+  }
 
   const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true');
   const [isAdmin, setIsAdmin] = useState(userType === 'admin');
