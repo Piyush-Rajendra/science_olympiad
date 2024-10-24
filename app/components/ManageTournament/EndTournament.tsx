@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 
 interface Props {
     isOpen: boolean;
@@ -8,7 +7,7 @@ interface Props {
 }
 
 const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
-    if (!isOpen!) return null;
+    if (!isOpen) return null;
 
     const submit = () => {
         onConfirm();
@@ -42,4 +41,3 @@ const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
 }
 
 export default EndTournament;
-

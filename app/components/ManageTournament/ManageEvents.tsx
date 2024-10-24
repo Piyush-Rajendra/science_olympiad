@@ -7,6 +7,9 @@ const LazyAddEvent = React.lazy(() => import('./Add/AddEvent'));
 const LazyEditEvent = React.lazy(() => import('./Edit/EditEvent'));
 import CreateTimeBlocks from '../create-tourney/create-time-blocks';
 import axios from 'axios';
+import AddTeamTimeBlockForm from './Add/AddTeamTimeBlockForm';
+import AddTeamTimeBlockEvents from './Add/AddTeamTimeBlockEvents';
+import AddTeamTimeBlocks from './Add/AddTeamTimeBlock';
 
 interface TournamentProps {
     tournament_id: number;
@@ -170,13 +173,13 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
     };
 
     const handleRemove = async () => {
-        try {
+        /*try {
             await axios.delete(`http://localhost:3000/delete-tournament/${tID}`); // Replace with actual delete endpoint
         } catch (error) {
             console.error('Error deleting event:', error);
-        }
+        }*/
 
-    }
+    } 
 
     const handleBackButton = async () => {
         onClose();
@@ -346,15 +349,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                     )}
                 </>
             ) : (
-                <CreateTimeBlocks
-                    name={tournamentDetails.name}
-                    division={tournamentDetails.division}
-                    date={new Date(tournamentDetails.date)}  // Ensure you're passing a Date object
-                    location={tournamentDetails.location}
-                    description={tournamentDetails.description}
-                    id={tournamentDetails.id}
-                    isOpen={showNextStep}
-                    onClose={() => setShowNextStep(false)} />
+                <AddTeamTimeBlocks />
             )}
         </div>
     );

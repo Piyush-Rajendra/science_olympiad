@@ -52,7 +52,8 @@ export default function TabContainer ({ activeTab, adData, esData }) {
         },
       });
       if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+        alert(`${response.statusText}`);
+        return;
       }
 
       const result = await response.json();
@@ -67,7 +68,7 @@ export default function TabContainer ({ activeTab, adData, esData }) {
         },
       });
       if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+        alert(`${response.statusText}`);
       }
 
       const result = await response.json();
@@ -91,10 +92,12 @@ export default function TabContainer ({ activeTab, adData, esData }) {
         },
       });
       if (!response.ok) {
-        throw new Error(`Error deleting entry: ${response.statusText}`);
+        alert(`Was not able to delete User`);
+        return
       }
-    } catch {
-      console.error('An error was thrown for ')
+    } catch (error) {
+      alert(error)
+      return;
     }
     if (activeTab === 'Admins') {
       const updatedAdminData = adminData.filter(entry => entry.admin_id !== a_id);
@@ -118,7 +121,8 @@ export default function TabContainer ({ activeTab, adData, esData }) {
       });
 
       if (!response.ok) {
-        throw new Error(`Error fetching events: ${response.statusText}`);
+        alert(`Was not able to fetch events`);
+        return
       }
 
       const result = await response.json();
@@ -162,7 +166,8 @@ export default function TabContainer ({ activeTab, adData, esData }) {
 
 
           if (!response.ok) {
-            throw new Error(`Error updating entry: ${response.statusText}`);
+            alert(`Error updating entry`);
+            return;
           }
         } else {
           const response = await fetch(endpoint, {
@@ -174,7 +179,8 @@ export default function TabContainer ({ activeTab, adData, esData }) {
             body: JSON.stringify({ eventSupervisor_id: editingEntry.eventSupervisor_id, school_group_id: editingEntry.school_group_id, firstName: editingEntry.firstName, lastName: editingEntry.lastName, email: editingEntry.email, username: editingEntry.username, password: editingEntry.password }), // Send the updated entry
           });
           if (!response.ok) {
-            throw new Error(`Error updating entry: ${response.statusText}`);
+            alert(`Error updating entry`);
+            return;
           }
 
           const deleteEventsPromises = originalEvents
@@ -228,7 +234,7 @@ export default function TabContainer ({ activeTab, adData, esData }) {
         setIsEditPopupOpen(false);
         setEditingEntry(null);
       } catch (error) {
-        console.error('An error occurred while saving the edit:', error);
+        alert(error);
         // Handle the error appropriately (e.g., show a message to the user)
       }
     }

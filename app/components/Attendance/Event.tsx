@@ -53,18 +53,16 @@ const Event = ({ event, index, isAdmin }) => {
       });
   
       if (!response.ok) {
-        throw new Error(`Failed to update event status: ${response.statusText}`);
+        return;
       }
   
       const data = await response.json();
-      console.log('Event status updated successfully:', data);
   
       // Directly update the event status from the response
       setEventStatus(data.newEventStatus);
-      console.log(data.newEventStatus);
   
     } catch (error) {
-      console.error('Error updating event status:', error);
+      return;
     }
   };
 

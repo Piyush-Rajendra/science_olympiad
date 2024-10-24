@@ -56,9 +56,9 @@ const ManageTournament: React.FC = () => {
 
 
     return (
-        <div className="font-sans">
-            <div className="bg-white border-b border-gray-300 px-12 py-10">
-                <h1 className="text-4xl font-bold">
+        <div>
+            <div className="h-20 border-b border-gray-300 flex items-center pl-10">
+                <h1 className="font-bold text-2xl">
                     Manage Tournament - {header()}
                 </h1>
             </div> 

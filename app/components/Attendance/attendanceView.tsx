@@ -36,7 +36,6 @@ const AttendanceView = () => {
         // Fetch the IDs of currently running tournaments
         const currentTournamentResponse = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
         const currentTournaments = await currentTournamentResponse.json();
-        console.log(groupId)
         if (currentTournaments.length > 0) {
           const currentTournamentId = currentTournaments[0].tournament_id;
           let eventsResponse;
@@ -48,8 +47,6 @@ const AttendanceView = () => {
             er = await eventsResponse.json();
           } else if (isES) {
             // Event Supervisor route
-            console.log(groupId);
-            console.log(currentTournamentId);
             eventsResponse = await fetch(`http://localhost:3000/get-events/supervisor/${esID}/tournament/${currentTournamentId}`);
             er = await eventsResponse.json();
           }
@@ -62,7 +59,7 @@ const AttendanceView = () => {
           setNoCurrentTournaments(true);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        alert(error);
       }
     };
 

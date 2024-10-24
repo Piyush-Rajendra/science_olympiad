@@ -51,14 +51,14 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
     }
   }
 
-  const getSchoolName = async (id) => {
+  const getTeamName = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/team-timeblocks-get-school-name/${id}`);
+      const response = await fetch(`http://localhost:3000/get-team-timeblocks-by-timeblock-detailed/${id}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      return data;
+      return data[0];
     } catch (error) {
       console.error('Error fetching unique id: ' + error)
     }
@@ -87,7 +87,7 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
           setIsStarted(true);
         }
       } catch (error) {
-        console.log('Error for getting TimeBlock status: ' + error);
+        return;
       }
     };
 
@@ -95,26 +95,26 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
       try {
         const response = await fetch(`http://localhost:3000/get-team-timeblocks-by-timeblock/${timeBlock.TimeBlock_ID}`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          return;
         }
         const data = await response.json();
 
         // Loop through teams and fetch unique_id and school name for each team
         const teamsWithDetails = await Promise.all(data.map(async (team) => {
           const uniqueIDData = await getUniqueID(team.TeamTimeBlock_ID); // Fetch unique_id
-          const schoolNameData = await getSchoolName(team.TeamTimeBlock_ID);
+          const schoolTeamData = await getTeamName(team.TeamTimeBlock_ID);
           const commentData = await getComment(team.TeamTimeBlock_ID);
           return {
             ...team,
             unique_id: uniqueIDData?.unique_id || null, // Add unique_id to each team object
-            schoolName: schoolNameData?.schoolName || null, // Add school name to each team object
+            teamName: schoolTeamData?.team_name || null, // Add school name to each team object
             comment: commentData?.comment || null
           };
         }));
 
         setTeams(teamsWithDetails); // Update state with teams that have unique IDs and school names
       } catch (error) {
-        console.error('Error fetching team time blocks:', error);
+        return;
       }
     };
 
@@ -302,7 +302,7 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
         <div className="ml-6 mt-2 pb-2">
           {/* Team List Headers */}
           <div className="grid grid-cols-4 pl-2 pr-2 pt-2 pb-2 border-b border-gray-300 bg-white" style={{ gridTemplateColumns: "200fr 150fr 315fr 315fr" }}>
-            <span>School Name</span>
+            <span>Team Name</span>
             <span>Team ID</span>
             <span>Comments</span>
             <span>Attended</span>
@@ -316,7 +316,7 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
               className={`${teamIndex % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-300`}
             >
               <div className="grid grid-cols-4 items-center pr-4 pt-4 pb-4 pl-2" style={{ gridTemplateColumns: "200fr 150fr 315fr 315fr" }}>
-                <span>{team.schoolName}</span>
+                <span>{team.teamName}</span>
                 <span className="ml-1">{team.unique_id}</span>
 
                 {/* Comment Input */}
@@ -386,7 +386,7 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
         <div className="ml-6 mt-2 pb-2">
           {/* Team List Headers */}
           <div className="grid grid-cols-3 pl-2 pr-2 pt-2 pb-2 border-b border-gray-300 bg-white">
-            <span>School Name</span>
+            <span>Team Name</span>
             <span>Team ID</span>
             <span>Attended</span>
           </div>
@@ -399,7 +399,7 @@ const TimeBlock = ({ timeBlock, index, onAttendanceUpdate, onEventStatusUpdate, 
               className={`${teamIndex % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-300`}
             >
               <div className="grid grid-cols-3 items-center pr-4 pt-4 pb-4 pl-2">
-                <span>{team.schoolName}</span>
+                <span>{team.teamName}</span>
                 <span className="ml-2">{team.unique_id}</span>
                 {isStarted && (!isFinished || isAdmin) &&
                   <div className="ml-2 flex">
