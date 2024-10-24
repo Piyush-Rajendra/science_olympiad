@@ -1,45 +1,69 @@
 "use client";
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import '../styles/header.module.css';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import AttendanceView from '../components/Attendance/attendanceView';
-import CreateTournament from '../pages/create-tournament';
 import CreateTourneyLanding from '../components/create-tourney/create-tourney-landing';
 import Score from '../components/score/score';
 import ManageUsers from '../pages/manageUsers';
 import ManageTournament from '../components/ManageTournament/ManageTournament';
 import ResourceLibrary from '../components/Resource-Library/resource-lib';
-import { useState, useEffect } from 'react';
+import '../styles/header.module.css';
 
 export default function App() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [selected, setSelected] = useState<'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e'>('resources');
-
-  useEffect(() => {
-    const userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
-    const token = localStorage.getItem('token');
-
-    if (userType) {
-      setIsAdmin(userType === 'admin');
-    } else {
-      router.push('/');
-      return; // Exit early to prevent further execution
+  const searchParams = useSearchParams();
+  let loggedIn;
+  let userType;
+  
+  
+  try {
+    userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
+    if (!userType) {
+      throw new Error();
     }
-
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      router.push('/');
+    loggedIn = localStorage.getItem('token');
+    if (!loggedIn) {
+      throw new Error();
     }
   }, []);
 
-  if (!isLoggedIn) {
-    return <div>Loading...</div>; // Loading state while checking login
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn === 'true');
+  const [isAdmin, setIsAdmin] = useState(userType === 'admin');
+  const [isCurrent, setIsCurrent] = useState<number | null>(null); // State for current tournament
+  const [isTournamentDirector, setIsTournamentDirector] = useState<boolean>(false); // State for tournament director
+  type MenuItem = 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e';
+  const [selected, setSelected] = useState<MenuItem>(isAdmin ? 'create' : 'resources');
 
-  const handleClick = (item: 'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e') => {
+  useEffect(() => {
+    const fetchCurrentTournament = async () => {
+      const groupId = localStorage.getItem('group_id');
+      if (groupId) {
+        try {
+          const response = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
+          const data = await response.json();
+          if (data.length > 0) {
+            setIsCurrent(data[0].isCurrent); // Store isCurrent value
+            // If current tournament exists, set the default tab to "Manage Tournament"
+            if (data[0].isCurrent === 1 && isAdmin) {
+              setSelected('manage_t');
+            }
+          } else {
+            setIsCurrent(0); // No active tournament found
+          }
+        } catch (error) {
+          console.error('Error fetching current tournament:', error);
+        }
+      }
+    };
+
+    // Check isTournamentDirector value
+    const tournamentDirectorValue = localStorage.getItem('isTournamentDirector');
+    setIsTournamentDirector(tournamentDirectorValue === '1'); // Convert to boolean
+
+    fetchCurrentTournament();
+  }, [isAdmin]);
+
+  const handleClick = (item: MenuItem) => {
     setSelected(item);
   };
 
@@ -49,45 +73,63 @@ export default function App() {
     router.push('/');
   };
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/');
+    }
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return null;
+  }
+
   return (
     <div>
       <div>
         <div className="sidebar">
           <div className="sidebar-header">
-            {isAdmin && <h1>Admin Portal</h1>}
-            {!isAdmin && <h1>ES Portal</h1>}
+
+            {isAdmin ? <h1>Admin Portal</h1> : <h1>ES Portal</h1>}
           </div>
           <ul className="sidebar-menu">
+            {isAdmin && isTournamentDirector && ( // Only show if admin and tournament director
+              <li
+                className={selected === 'create' ? 'selected' : ''}
+                onClick={() => isCurrent === 0 && handleClick('create')} // Only clickable if no current tournament
+                style={{
+                  cursor: isCurrent === 1 ? 'not-allowed' : 'pointer',
+                  color: isCurrent === 1 ? '#999' : 'inherit', // Grey out when current tournament exists
+                  opacity: isCurrent === 1 ? 0.6 : 1, // Reduce opacity
+                  pointerEvents: isCurrent === 1 ? 'none' : 'auto', // Disable hover and clicks
+                }}
+              >
+                <h2>
+                  <img src="/images/plus-circle.png" alt="Logo" />
+                  Create Tournament
+                </h2>
+              </li>
+            )}
             {isAdmin && (
-              <>
-                <li
-                  className={selected === 'create' ? 'selected' : ''}
-                  onClick={() => handleClick('create')}
-                >
-                  <h2>
-                    <img src="/images/plus-circle.png" alt="Logo" />
-                    Create Tournament
-                  </h2>
-                </li>
-                <li
-                  className={selected === 'manage_t' ? 'selected' : ''}
-                  onClick={() => handleClick('manage_t')}
-                >
-                  <h2>
-                    <img src="/images/share-network.png" alt="Logo" />
-                    Manage Tournaments
-                  </h2>
-                </li>
-                <li
-                  className={selected === 'manage_a&e' ? 'selected' : ''}
-                  onClick={() => handleClick('manage_a&e')}
-                >
-                  <h2>
-                    <img src="/images/address-book.png" alt="Logo" />
-                    Manage Admins and ES
-                  </h2>
-                </li>
-              </>
+              <li
+                className={selected === 'manage_t' ? 'selected' : ''}
+                onClick={() => handleClick('manage_t')}
+              >
+                <h2>
+                  <img src="/images/share-network.png" alt="Logo" />
+                  Manage Tournaments
+                </h2>
+              </li>
+            )}
+            {isAdmin && (
+              <li
+                className={selected === 'manage_a&e' ? 'selected' : ''}
+                onClick={() => handleClick('manage_a&e')}
+              >
+                <h2>
+                  <img src="/images/address-book.png" alt="Logo" />
+                  Manage Admins and ES
+                </h2>
+              </li>
             )}
             <li
               className={selected === 'attendance' ? 'selected' : ''}

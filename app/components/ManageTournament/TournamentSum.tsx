@@ -21,8 +21,16 @@ interface TournamentContent {
   location: string;
   description: string;
 }
+interface TournamentHistoryContent {
+    tournament_history_id: number;
+    school_group_id: number;
+    date: string;
+    name: string;
+    division: string;
+}
 
 const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent }: TournamentProps) => {
+  const [tournamentHistory, setTournamentHistory] = useState<TournamentHistoryContent[]>([]);
   const [tournament, setTournament] = useState<TournamentContent | null>(null);
   const [isEndTournament, setEndTournament] = useState(false);
 
@@ -56,6 +64,32 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
     console.log("Tournament ended."); // Replace with actual logic
     setTournament(null); // Clear tournament state
   };
+
+  useEffect(() => {
+        const fetchTournamentHistory = async () => {
+            const groupId = localStorage.getItem('group_id');
+            if (groupId) {
+                try {
+                    const response = await fetch(`http://localhost:3000/get-tournament-history/${groupId}`);
+                    const data: TournamentHistoryContent[] = await response.json();
+                    
+                    // Sort by most recent date
+                    const sortedData = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                    setTournamentHistory(sortedData);
+                } catch (error) {
+                    console.error('Error fetching tournament history:', error);
+                }
+            }
+        };
+
+        fetchTournamentHistory();
+    }, []);
+
+    const handleDownload = (tournamentId: number) => {
+        const url = `http://localhost:3000/tournament-history/${tournamentId}/download`;
+        window.open(url, '_blank');
+    };
+
   return (
     <div>
       <div className="px-12 py-4">
@@ -102,6 +136,11 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
                 onClick={() => {}}
                 className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"> {/* Reduced padding and font size */}
                 Manage Users
+              </button>
+              <button
+                onClick={() => {handleDownload}}
+                className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"> {/* Reduced padding and font size */}
+                Download Current Score Sheet
               </button>
               <button
                 onClick={() => setEndTournament(true)}
