@@ -61,11 +61,11 @@ export default function App() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('group_id', data.school_group_id);
         localStorage.setItem('es_id', data.eventSupervisor_id);
-        console.log(data.school_group_id);
         router.push('/mainpage');
         // Handle login success (e.g., store token, redirect)
       } catch (error) {
-        console.error('Error:', error);
+        alert('Login failed');
+        return;
         // Handle login error
       }
     }
