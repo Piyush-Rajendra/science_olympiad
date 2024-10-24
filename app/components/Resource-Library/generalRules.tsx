@@ -110,7 +110,7 @@ const GeneralRules = () => {
             </div>
 
             {/* Sticky Bottom container for buttons */}
-            <div className="fixed bottom-0 left-[300px] w-[calc(100%-300px)] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
+            <div className="fixed bottom-0 left-[300px] w-[calc(100%-300px)] p-2 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
               {/* Open File Explorer Button */}
               <label className="cursor-pointer flex items-center text-green-700 rounded-lg p-2">
                 <input
@@ -119,12 +119,14 @@ const GeneralRules = () => {
                   className="hidden"
                   onChange={handleFileChange}
                 />
-                <span className="text-2xl font-bold mr-2">+</span>
-                <span className="font-medium">Upload PDF File</span>
+                <div className='hover:underline'>
+                  <span className="text-2xl font-bold mr-2">+</span>
+                  <span className="font-medium">Upload PDF File</span>
+                </div>
               </label>
               <span className="ml-2">{fileName}</span> {/* Display selected file name */}
               <button 
-                className="bg-green-500 text-white p-2 rounded-lg" 
+                className=" cursor-pointer bg-green-700 text-white p-2 rounded-lg hover:bg-green-800" 
                 onClick={handleUploadClick} 
                 disabled={isLoading || !file} // Disable button if loading or no file selected
               >

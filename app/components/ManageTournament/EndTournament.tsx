@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 
 interface Props {
@@ -11,8 +9,9 @@ interface Props {
 const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
     const [groupId, setGroupID] = useState(localStorage.getItem('group_id'));
     const [tourneyId, setTourneyId] = useState<number | null>(null);
+    const [tournamentData, setTournamentData] = useState<any | null>(null); // Store the tournament data
 
-    // Fetch the tournament ID when the component mounts
+    // Fetch the tournament data when the component mounts
     useEffect(() => {
         const fetchCurrentTournament = async () => {
             if (groupId) {
@@ -21,7 +20,8 @@ const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
                     const data = await response.json();
                     if (data.length > 0) {
                         setTourneyId(data[0].tournament_id);  // Get tournament ID
-                    }
+                        setTournamentData(data[0]);  // Store the tournament data
+                    }                    
                 } catch (error) {
                     console.error('Error fetching tournament data:', error);
                 }
@@ -34,26 +34,49 @@ const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
 
     // When the user confirms ending the tournament
     const submit = async () => {
-        if (tourneyId) {
+        if (tourneyId && tournamentData) {
             onConfirm();  // Perform any confirmation logic
             onClose();    // Close the modal
 
             try {
+                // Post the tournament data to add-history
+                const response = await fetch(`http://localhost:3000/tournaments/${tourneyId}/add-history/${groupId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: tournamentData.name,   // Tournament name
+                        date: tournamentData.date,   // Tournament date
+                        division: tournamentData.division // Tournament division
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to add tournament history');
+                }
+            } catch (error) {
+                alert('Error: Unable to save the tournament history');
+                return;
+            }
+
+            try {
+                // After saving the tournament history, delete the tournament
                 const response = await fetch(`http://localhost:3000/delete-tournament/${tourneyId}`, {
                     method: 'DELETE',
                 });
 
-                if (response.ok) {
+                if (response.ok) {                    
                     window.location.reload();  // Reload the parent component
                 } else {
                     alert('Error: Unable to end the tournament');
                 }
             } catch (error) {
-                console.error('Error ending the tournament:', error);
                 alert('Error: Unable to end the tournament');
             }
+            
         } else {
-            alert('Tournament ID not found');
+            alert('Tournament ID or data not found');
         }
     };
 
