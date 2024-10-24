@@ -39,7 +39,7 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
       const groupId = localStorage.getItem('group_id');
       if (groupId) {
         try {
-          const response = await fetch(`h//localhost:3000/get-current-tournaments/${groupId}`);
+          const response = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
           const data: TournamentContent[] = await response.json();
           if (data.length > 0) {
             setTournament(data[0]); // Assuming you're only fetching one current tournament
