@@ -1,5 +1,7 @@
 import React, {useEffect, useState, Suspense } from 'react'
 import Image from 'next/image';
+import EditIcon from '../../images/edit-246.png'
+import DeleteIcon from '../../images/delete.png'
 import axios from 'axios';
 
 const LazyEditTimeBlock = React.lazy(() => import('../ManageTournament/Edit/EditTimeBlock'));
@@ -112,10 +114,10 @@ const TimeblockTable = ({id, trigger}) => {
                                     <td className="px-6 py-2">{row.RoomNumber}</td>
                                     <td className="px-2 py-2 justify-normal flex space-x-2">
                                         <button className="flex justify-center" onClick={() => openEditTimeBlock(row.TimeBlock_ID)}>
-                                            <Image src={'../../images/edit-246.png'} alt="Edit" className="mx-auto w-10 h-10"/>
+                                            <Image src={EditIcon} alt="Edit" className="mx-auto w-10 h-10"/>
                                         </button>
                                         <button className="flex justify-center" onClick={() => deleteTimeBlock(row.TimeBlock_ID)}>
-                                            <Image src={'../../images/delete.png'} alt="Delete" className="mx-auto w-10 h-10"/>
+                                            <Image src={DeleteIcon} alt="Delete" className="mx-auto w-10 h-10"/>
                                         </button>
                                     </td>
                                 </tr>

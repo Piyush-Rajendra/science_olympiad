@@ -2,6 +2,8 @@
 import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/router'; // Import useRouter
 import Image from 'next/image';
+import EditIcon from '../../images/edit-246.png'
+import DeleteIcon from '../../images/delete.png'
 const LazyEventInfo = React.lazy(() => import('./Info/EventInfo'));
 const LazyAddEvent = React.lazy(() => import('./Add/AddEvent'));
 const LazyEditEvent = React.lazy(() => import('./Edit/EditEvent'));
@@ -285,10 +287,22 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                                             </td>
                                             <td className="px-4 py-2 justify-normal flex space-x-4">
                                                 <button className="flex justify-center" onClick={() => EditEvent(row.event_id)}>
-                                                    <Image src={'../../images/edit-246.png'} alt="Edit" className="mx-auto w-10 h-10" />
+                                                    <Image 
+                                                        src={EditIcon} 
+                                                        alt="Edit" 
+                                                        width={40}
+                                                        height={40} 
+                                                        className="mx-auto" 
+                                                    />
                                                 </button>
                                                 <button className="flex justify-center" onClick={() => deleteEvent(row.event_id)}>
-                                                    <Image src={'../../images/delete.png'} alt="Delete" className="mx-auto w-10 h-10" />
+                                                    <Image 
+                                                        src={DeleteIcon} 
+                                                        alt="Delete" 
+                                                        width={40}   // Provide the width here
+                                                        height={40}  // Provide the height here
+                                                        className="mx-auto" 
+                                                    />
                                                 </button>
                                             </td>
                                         </tr>
