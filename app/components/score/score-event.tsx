@@ -53,7 +53,6 @@ const ScoreEvent = (props) => {
                 console.error("Error fetching data:", error);
             }
         };
-        console.log("Called");
         fetchData();
     }, [props.id]);
 

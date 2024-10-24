@@ -7,6 +7,7 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [groupId, setGroupID] = useState(localStorage.getItem('group_id'));
   const [events, setEvents] = useState([]);
+  const [isEmailValid, setIsEmailValid] = useState(false);
 
   const [adminFirstName, setAdminFirstName] = useState('');
   const [adminLastName, setAdminLastName] = useState('');
@@ -21,6 +22,40 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
   const [supervisorLastName, setSupervisorLastName] = useState('');
   const [supervisorEmail, setSupervisorEmail] = useState('');
   const [selectedEvents, setSelectedEvents] = useState([]); // State to store selected event IDs
+  const [emailError, setEmailError] = useState('');
+
+  const validateEmail = (email) => {
+    // Simple regex for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleAdminEmailChange = (e) => {
+    const email = e.target.value;
+    setAdminEmail(email);
+
+    // Check if email is valid
+    if (validateEmail(email)) {
+      setIsEmailValid(true);
+      setEmailError(''); // Clear error if valid
+    } else {
+      setIsEmailValid(false);
+      setEmailError('Please enter a valid email.');
+    }
+  };
+  const handleSupervisorEmailChange = (e) => {
+    const email = e.target.value;
+    setSupervisorEmail(email);
+
+    // Check if email is valid
+    if (validateEmail(email)) {
+      setIsEmailValid(true);
+      setEmailError(''); // Clear error if valid
+    } else {
+      setIsEmailValid(false);
+      setEmailError('Please enter a valid email.');
+    }
+  };
 
   const buttonText = activeTab === 'Admins' ? 'Add Admin' : 'Add Event Supervisor';
 
@@ -66,12 +101,24 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
           'Authorization': `Bearer ${token}`, // Include your token here
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ school_group_id: groupId, email: supervisorEmail, username: supervisorEmail, firstName: supervisorFirstName, lastName: supervisorLastName, tournament_id: currentTournaments[0].tournament_id}),
+        body: JSON.stringify({ school_group_id: groupId, email: supervisorEmail, username: supervisorEmail, firstName: supervisorFirstName, lastName: supervisorLastName, tournament_id: currentTournaments[0].tournament_id }),
       });
 
       if (!supervisorResponse.ok) {
-        throw new Error('Failed to create event supervisor');
+        if (supervisorResponse.status === 409) {
+          alert('Email already in use');
+          return;
+        } else {
+          alert(`${currentTournamentResponse.statusText}`);
+          return;
+        }
       }
+
+      // if (!supervisorResponse.ok) {
+      //   console.log(supervisorResponse);
+      //   alert(supervisorResponse);
+      //   return;
+      // }
 
       const supervisorID = await fetch(`http://localhost:3000/get-eventSupervisor-id?email=${supervisorEmail}`, {
         method: 'GET',
@@ -80,7 +127,8 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
         },
       });
       if (!supervisorID.ok) {
-        throw new Error('Failed to get event supervisor id');
+        alert('Failed to get event supervisor id');
+        return;
       }
       const createdSupervisor = await supervisorID.json(); // Assuming the response contains the supervisor's ID
 
@@ -111,6 +159,8 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
       closePopup(); // Close the popup after saving
     } catch (error) {
       alert(error);
+      console.log(error);
+      return;
     }
   };
 
@@ -127,10 +177,17 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
       });
 
       if (!response.ok) {
-        throw new Error(`Error updating entry: ${response.statusText}`);
+        if (response.status === 409) {
+          alert('Email already in use');
+          return;
+        } else {
+          alert(`Error updating entry: ${response.statusText}`);
+          return;
+        }
       }
     } catch (error) {
       alert(error);
+      return;
     }
     const newAdmin = {
       id: Date.now(), // Simple ID generation using timestamp
@@ -204,9 +261,10 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
                   type="email"
                   placeholder="Email"
                   value={supervisorEmail}
-                  onChange={(e) => setSupervisorEmail(e.target.value)}
+                  onChange={handleSupervisorEmailChange}
                   className="w-full p-2 border border-[#D9D9D9] rounded-md mb-2"
                 />
+                {emailError && <p className="text-red-500">{emailError}</p>}
                 <div className="flex items-center border border-[#D9D9D9] rounded-full mb-2">
                   <AiOutlineSearch className="text-gray-400 ml-2 text-lg" />
                   <input
@@ -237,7 +295,7 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
                   <p>No events available</p>
                 )}
               </>
-            )} 
+            )}
             {!isEventSupervisorPopup && (
               <>
                 <input
@@ -258,15 +316,17 @@ export default function ActionButtons({ activeTab, addAdmin, addEventSupervisor 
                   type="email"
                   placeholder="Email"
                   value={adminEmail}
-                  onChange={(e) => setAdminEmail(e.target.value)} // Update adminEmail state
+                  onChange={handleAdminEmailChange} // Update adminEmail state
                   className="w-full p-2 border border-[#D9D9D9] rounded-md mb-2"
                 />
+                {emailError && <p className="text-red-500">{emailError}</p>}
               </>
             )}
             <div className="flex justify-end">
               <button className="mr-2 p-2 border border-gray-400 rounded-md" onClick={closePopup}>Cancel</button>
               <button
                 className="bg-[#006330] text-white py-2 px-4 rounded-md"
+                disabled={!isEmailValid}
                 onClick={isEventSupervisorPopup ? handleSupervisorSave : handleAdminSave}
               >
                 Save
