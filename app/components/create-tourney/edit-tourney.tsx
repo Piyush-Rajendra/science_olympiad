@@ -108,13 +108,14 @@ const EditTourney = (props) => {
 
     return (
         <div id="edit-tourney-page" className="bg-white min-h-screen relative">
+            {!showNextStep ? (
+                <>
             <div id="edit-tourney-header">
                 <h1 className="text-3xl pl-7 pt-4 pb-5">Edit Tournament</h1>
             </div>
             <hr className="border-t-3 border-black" />
 
-            {!showNextStep ? (
-                <>
+            
                     <div id="name-and-division" className="flex space-x-4">
                         <div id="name">
                             <h2 className="pl-7 pt-3">Name</h2>
@@ -190,7 +191,7 @@ const EditTourney = (props) => {
                     </div>
                 </>
             ) : (
-                <TournamentSum isOpen={true} editTourn={() => {}} editEvent={() => {}}/>
+                <TournamentSum isOpen={true} editTourn={() => {}} editEvent={() => {}} onCreateTournament={() => {}}/>
             )}
         </div>
     );
