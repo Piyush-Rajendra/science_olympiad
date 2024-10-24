@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import TournamentHistory from './TournamentHistory';
+import ManageEvents from './ManageEvents'; // Import the new component
+import ManageUsers from '../../pages/manageUsers';
+import EditTournament from './Edit/EditTournament';
+import EditTourney from '../create-tourney/edit-tourney';
 const LazyEnd = React.lazy(() => import('./EndTournament'));
 import CreateTourneyLanding from '../create-tourney/create-tourney-landing'; // Not needed here anymore
 
@@ -24,18 +28,20 @@ interface TournamentContent {
 }
 
 interface TournamentHistoryContent {
-    tournament_history_id: number;
-    school_group_id: number;
-    date: string;
-    name: string;
-    division: string;
+  tournament_history_id: number;
+  school_group_id: number;
+  date: string;
+  name: string;
+  division: string;
 }
 
 const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent, onCreateTournament }) => {
     const [tournamentHistory, setTournamentHistory] = useState<TournamentHistoryContent[]>([]);
     const [tournament, setTournament] = useState<TournamentContent | null>(null);
     const [isEndTournament, setEndTournament] = useState(false);
+    const [tourneyId, setTourneyId] = useState<number | null>(null);
     const [groupId, setGroupID] = useState(localStorage.getItem('group_id'));
+    const [view, setView] = useState<'summary' | 'manageTournament' | 'manageEvents' | 'manageUsers'>('summary'); // New state to handle views
     const [isTournamentDirector, setIsTournamentDirector] = useState(localStorage.getItem('isTournamentDirector'));
 
     useEffect(() => {
@@ -46,6 +52,7 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
                     const data: TournamentContent[] = await response.json();
                     if (data.length > 0) {
                         setTournament(data[0]); // Assuming you're only fetching one current tournament
+                        setTourneyId(data[0].tournament_id);
                     }
                 } catch (error) {
                     console.error('Error fetching current tournament:', error);
@@ -84,6 +91,19 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
 
         fetchTournamentHistory();
     }, []);
+          
+    if (view === 'manageEvents') {
+    return <ManageEvents tournament_id={tourneyId} isFromCreateTournament={false} isOpen={true}
+    onClose={() => {}} />;
+  }
+
+  if (view === 'manageUsers') {
+    return <ManageUsers />;
+  }
+
+  if (view === 'manageTournament') {
+    return <EditTourney id={tourneyId} />;
+  }
 
     const handleDownload = (tournamentId: number) => {
         const url = `http://localhost:3000/export-scores/${tournamentId}`;
@@ -121,19 +141,19 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
 
                             <div className="w-1/4 pl-4 border-l-2 border-gray-300 flex flex-col space-y-5">
                                 <button
-                                    onClick={() => editTourn(tournament.name, tournament.division)}
+                                    onClick={() => setView('manageTournament')}
                                     className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"
                                 >
                                     Manage Tournaments
                                 </button>
                                 <button
-                                    onClick={() => editEvent(tournament.name, tournament.division)}
+                                    onClick={() => setView('manageEvents')}
                                     className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"
                                 >
                                     Manage Events
                                 </button>
                                 <button
-                                    onClick={() => {}}
+                                    onClick={() => setView('manageUsers')}
                                     className="py-2 px-3 rounded-full bg-white border-2 border-[#006330] text-[#006330] hover:bg-[#F1F1F1] text-sm"
                                 >
                                     Manage Users

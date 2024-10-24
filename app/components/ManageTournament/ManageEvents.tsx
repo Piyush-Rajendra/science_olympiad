@@ -17,6 +17,7 @@ interface TournamentProps {
     tournament_id: number;
     onClose: () => void;
     isOpen: boolean; 
+    isFromCreateTournament: boolean;
 }
 
 interface GroupContent {
@@ -26,7 +27,7 @@ interface GroupContent {
     id: number;
 }
 
-const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClose }: TournamentProps) => {
+const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClose, isFromCreateTournament }: TournamentProps) => {
     if (!isOpen) return null;
 
     // State to store tournament details
@@ -175,11 +176,11 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
     };
 
     const handleRemove = async () => {
-        /*try {
+        try {
             await axios.delete(`http://localhost:3000/delete-tournament/${tID}`); // Replace with actual delete endpoint
         } catch (error) {
             console.error('Error deleting event:', error);
-        }*/
+        }
 
     } 
 
@@ -348,12 +349,14 @@ const ManageEvents: React.FC<TournamentProps> = ({ tournament_id, isOpen, onClos
                             </button>
                             
                             <div className="flex space-x-2"> {/* Wrapper for Next and Back buttons */}
-                                <button onClick={handleBackButton} className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                                    {"< Back"}
-                                </button>
+                                {isFromCreateTournament && ( // Conditionally render the back button
+                                    <button onClick={handleBackButton} className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                        {"< Back"}
+                                    </button>
+                                )}
                                 <button
                                     className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                                    onClick={handleNextStep} // Change to handleNextStep
+                                    onClick={handleNextStep}
                                 >
                                     Next
                                 </button>
