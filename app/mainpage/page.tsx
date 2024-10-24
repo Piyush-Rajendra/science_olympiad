@@ -18,10 +18,16 @@ export default function App() {
   const [isTournamentDirector, setIsTournamentDirector] = useState<boolean>(false);
   const [selected, setSelected] = useState<'create' | 'manage_t' | 'attendance' | 'score' | 'resources' | 'manage_a&e'>('manage_t');
 
-  // Effect for checking login status
+  // Effect for checking login status and isES
   useEffect(() => {
     const userType = localStorage.getItem('isAdmin') || localStorage.getItem('isES');
     const token = localStorage.getItem('token');
+    
+    // Check for 'isES' and navigate to attendance if it exists
+    const isES = localStorage.getItem('isES');
+    if (isES) {
+      setSelected('attendance');
+    }
 
     if (userType) {
       setIsAdmin(userType === 'admin');
@@ -36,9 +42,6 @@ export default function App() {
     const tournamentDirectorValue = localStorage.getItem('isTournamentDirector');
     setIsTournamentDirector(tournamentDirectorValue === '1');
   }, [router]);
-
- 
-  
 
   // Fetch current tournament based on group ID
   useEffect(() => {

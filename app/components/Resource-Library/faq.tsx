@@ -220,8 +220,10 @@ const Faq = () => {
       {/* Footer Add Question Button */}
       <div className="fixed bottom-0 left-[300px] w-[calc(100%-300px)] p-4 flex justify-between items-center bg-white shadow-lg border-t border-gray-300">
         <button onClick={handleOpenQAModal} className="cursor-pointer flex items-center text-green-700 rounded-lg">
-          <span className="text-2xl font-bold mr-2">+</span>
-          <span className="font-medium">Add a Question</span>
+          <div className='hover:underline'> 
+            <span className="text-2xl font-bold mr-2">+</span>
+            <span className="font-medium">Add a Question</span>
+          </div>
         </button>
       </div>
 
