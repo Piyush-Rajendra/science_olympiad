@@ -52,11 +52,11 @@ const AttendanceView = () => {
           }
 
           setEvents(er);
-          if (events.length < 1) {
+          if (er.message) {
             setNoCurrentTournaments(true);
           }
         } else {
-          setNoCurrentTournaments(true);
+          setNoCurrentTournaments(false);
         }
       } catch (error) {
         alert(error);

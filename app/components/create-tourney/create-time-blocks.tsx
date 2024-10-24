@@ -295,7 +295,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
             </div>
             </>
             ) : (
-                <CreateTeams onClose={returnBack} name={name} division={division} date={date}></CreateTeams>
+                <CreateTeams onClose={returnBack} name={name} division={division} date={date} id={id}></CreateTeams>
             )}
         </div>
     );
