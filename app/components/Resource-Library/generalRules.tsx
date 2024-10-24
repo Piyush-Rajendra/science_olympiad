@@ -1,38 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DocViewer from './docViewer';
 
 const GeneralRules = () => {
   const [activeTab, setActiveTab] = useState(1);
-  const [message, setMessage] = useState(''); // State for the popup message
-  const pdfUrl = '../images/Science_Olympiad_Div_C_Rules_2025.pdf'
+  const [message, setMessage] = useState('');
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(''); // State to hold the file name
+  const [pdfUrl, setPdfUrl] = useState(''); // State to hold the PDF Blob URL
+  const [schoolGroupID, setSchoolGroupID] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  // Function to change the active tab
+  useEffect(() => {
+    const getInfo = () => {
+      const groupId = localStorage.getItem('group_id');
+      if (groupId) {
+        setSchoolGroupID(groupId);
+      } else {
+        setMessage('School group ID is not set.'); // Handle missing ID
+      }
+    };
+    getInfo();
+  }, []);
+
+  // Function to fetch the PDF from the server
+  const fetchPdf = async () => {
+    if (schoolGroupID) {
+      try {
+        const response = await fetch(`http://localhost:3000/get-pdf/${schoolGroupID}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch PDF');
+        }
+        const blob = await response.blob(); // Get the PDF as a Blob
+        const url = URL.createObjectURL(blob); // Create a URL for the Blob
+        setPdfUrl(url); // Set the URL to display in the DocViewer
+      } catch (error) {
+        console.error('Error fetching PDF:', error);
+        setMessage('Error fetching PDF');
+      }
+    }
+  };
+
+  // Fetch PDF when schoolGroupID is set
+  useEffect(() => {
+    fetchPdf(); // Call fetchPdf on component mount and when schoolGroupID changes
+  }, [schoolGroupID]);
+
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileUrl = URL.createObjectURL(file);
-      // Assuming DocViewer can handle dynamic URLs, update the file
-      console.log(fileUrl); // You could set this in state if you want to show a selected file
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFileName(selectedFile.name); // Set the file name
     }
   };
 
-  // Function to show save message
-  const handleSaveChanges = () => {
-    setMessage('Changes have been saved!');
-    
-    // Hide the message after 3 seconds
-    setTimeout(() => {
-      setMessage('');
-    }, 3000);
+  const uploadFile = async () => {
+    if (!file) {
+      setMessage('Please select a file to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('pdf', file); // Append the PDF file
+    formData.append('schoolGroup_id', schoolGroupID); // Include the school group ID
+
+    setIsLoading(true); // Start loading
+
+    try {
+      const response = await fetch('http://localhost:3000/upload-pdf', {
+        method: 'POST',
+        body: formData, // Use FormData for file upload
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload PDF');
+      }
+
+      const result = await response.json();
+      setMessage(`Success: ${result.message}`); // Show success message with details
+
+      // Fetch the updated PDF after successful upload
+      await fetchPdf(); // Call fetchPdf to reload the PDF
+
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setMessage('Error uploading file'); // Show error message
+    } finally {
+      setIsLoading(false); // Stop loading
+      setFile(null); // Reset file input
+      setFileName(''); // Reset file name
+    }
+  };
+
+  const handleUploadClick = () => {
+    uploadFile(); // Trigger upload on button click
   };
 
   return (
     <div className="container mx-auto pr-4 py-6">
-
       {/* Tab Content */}
       <div className="content-tabs">
         {activeTab === 1 && (
@@ -54,12 +122,13 @@ const GeneralRules = () => {
                 <span className="text-2xl font-bold mr-2">+</span>
                 <span className="font-medium">Upload PDF File</span>
               </label>
-
-              {/* Save Changes Button */}
-              <button
-                onClick={handleSaveChanges}
-                className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-750">
-                Save Changes
+              <span className="ml-2">{fileName}</span> {/* Display selected file name */}
+              <button 
+                className="bg-green-500 text-white p-2 rounded-lg" 
+                onClick={handleUploadClick} 
+                disabled={isLoading || !file} // Disable button if loading or no file selected
+              >
+                {isLoading ? 'Uploading...' : 'Confirm Upload'}
               </button>
             </div>
 
@@ -71,7 +140,7 @@ const GeneralRules = () => {
             )}
           </div>
         )}
-        
+
         {activeTab === 2 && (
           <div className="content active-content">
             <h2 className="text-xl font-bold mb-4">Q&A</h2>
