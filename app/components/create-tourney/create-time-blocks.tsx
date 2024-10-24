@@ -47,6 +47,7 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
     const [everyMinutes, setEveryMinutes] = useState('');
     const [maxSpots, setMaxSpots] = useState('');
     const [roomNumber, setRoomNumber] = useState('');
+    const [showTeamsCreation, setShowTeamsCreation] = useState(false);
 
     const openEvent = (index: number) => {
         const eventInfo = document.getElementById(`row-${index}`);
@@ -60,6 +61,10 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
             [id]: !prevState[id]
         }));
     };
+
+    const handleClose = () => {
+        setShowTeamsCreation(true);
+    }
 
 
     const addTimeblocks = async () => {
@@ -110,8 +115,14 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
         const [showNextStep, setShowNextStep] = useState(false);
     }
 
+    const returnBack = () => {
+        setShowTeamsCreation(false);
+    }
+
     return (
         <div className="flex flex-col min-h-screen">
+            {!showTeamsCreation ? (
+                <>
             <div className="px-12 py-6">
                 <div className='flex space-x-10 border-b border-gray-300'>
                     <h1 className="text-4xl font-bold">{name}</h1>
@@ -277,10 +288,15 @@ const ManageEvents: React.FC<TournamentProps> = ({ name, division, date, locatio
                 </button>
                 <button
                     className="bg-green-800 text-white rounded-full px-6 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                    onClick={handleClose}
                 >
                     Next
                 </button>
             </div>
+            </>
+            ) : (
+                <CreateTeams onClose={returnBack} name={name} division={division} date={date}></CreateTeams>
+            )}
         </div>
     );
 }
