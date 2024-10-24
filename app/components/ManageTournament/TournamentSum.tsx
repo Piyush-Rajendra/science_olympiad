@@ -166,8 +166,13 @@ const TournamentSum: React.FC<TournamentProps> = ({ isOpen, editTourn, editEvent
                                 </button>
                                 <button
                                     onClick={handleEndCurrentTournament}
-                                    className="py-2 px-3 rounded-full bg-[#006330] text-white hover:bg-[#00401E] text-sm"
-                                >
+                                    className={`py-2 px-3 rounded-full ${
+                                        isTournamentDirector === '1' 
+                                        ? 'bg-[#006330] text-white hover:bg-[#00401E]'  // Enabled state
+                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed' // Disabled state (greyed out)
+                                    } text-sm`}
+                                    disabled={isTournamentDirector !== '1'}  // Disable if not tournament director
+                                    >
                                     End Tournament
                                 </button>
                             </div>

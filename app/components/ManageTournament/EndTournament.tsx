@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 
 interface Props {
     isOpen: boolean;
@@ -9,12 +10,52 @@ interface Props {
 
 const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
     const [groupId, setGroupID] = useState(localStorage.getItem('group_id'));
+    const [tourneyId, setTourneyId] = useState<number | null>(null);
+
+    // Fetch the tournament ID when the component mounts
+    useEffect(() => {
+        const fetchCurrentTournament = async () => {
+            if (groupId) {
+                try {
+                    const response = await fetch(`http://localhost:3000/get-current-tournaments/${groupId}`);
+                    const data = await response.json();
+                    if (data.length > 0) {
+                        setTourneyId(data[0].tournament_id);  // Get tournament ID
+                    }
+                } catch (error) {
+                    console.error('Error fetching tournament data:', error);
+                }
+            }
+        };
+        fetchCurrentTournament();
+    }, [groupId]);
+
     if (!isOpen) return null;
 
-    const submit = () => {
-        onConfirm();
-        onClose();
-    }
+    // When the user confirms ending the tournament
+    const submit = async () => {
+        if (tourneyId) {
+            onConfirm();  // Perform any confirmation logic
+            onClose();    // Close the modal
+
+            try {
+                const response = await fetch(`http://localhost:3000/delete-tournament/${tourneyId}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    window.location.reload();  // Reload the parent component
+                } else {
+                    alert('Error: Unable to end the tournament');
+                }
+            } catch (error) {
+                console.error('Error ending the tournament:', error);
+                alert('Error: Unable to end the tournament');
+            }
+        } else {
+            alert('Tournament ID not found');
+        }
+    };
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
@@ -39,7 +80,7 @@ const EndTournament: React.FC<Props> = ({ isOpen, onConfirm, onClose }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default EndTournament;
